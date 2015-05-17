@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.1'
+ruby '2.1.5'
 gem 'rails', '4.2.0.beta2'
 gem 'sass', '~> 3.2.5'
 gem 'sass-rails'
@@ -53,18 +53,21 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
 end
+
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'sqlite3'
 end
-group :production do
-  gem 'pg'
-  gem 'rails_12factor'
-end
+
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'launchy'
   gem 'selenium-webdriver'
+end
+
+group :production do
+  gem 'pg'
+  gem 'rails_12factor'
 end

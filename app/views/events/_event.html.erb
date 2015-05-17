@@ -1,0 +1,44 @@
+<li id="<%= event.id %>">
+  <p><strong>Teacher: </strong>
+    <%= link_to event.user.name, event.user %></p>
+  <p><strong>Title: </strong>
+    <%= link_to event.title, event %></p>
+  <p><%= event.content %></p>
+  <p> <strong>Location: </strong> <%= link_to School.find(event.user.school_id).name, School.find(event.user.school_id).location %> </p>
+  <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
+  <p><strong>Tags: </strong>
+    <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
+  <p>
+    <% unless event.claims.each.nil? %>
+        <strong>Claimed by: </strong>
+        <%= raw event.claims.each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
+    <% end %>
+  </p>
+  <p>
+    <% if event.claims.where('confirmed_by_teacher = ?', true).count < 1 &&
+            event.claims.where('user_id = ?', current_user.id).count < 1 &&
+            event.user != current_user%>
+        <%= button_to 'claim this event', claim_event_path(:event_id => event.id, :user_id => current_user.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %>
+    <% end %>
+  </p>
+
+  <p>
+  <% event.claims.each do |claim| %>
+      <% if current_user == event.user && !claim.confirmed_by_teacher %>
+        <p> <%= button_to "Confirm #{claim.user.name} as speaker", teacher_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
+      <% end %>
+      <% if current_user.id == claim.user_id && claim.confirmed_by_teacher && !claim.confirmed_by_speaker %>
+          <p> <%= button_to 'Confirm this speaking event', speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
+      <% end %>
+      <% if current_user == event.user && claim.confirmed_by_teacher && claim.confirmed_by_speaker %>
+          <p> <%= button_to "Give badge to #{claim.user.name}", speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
+      <% end %>
+  <% end %>
+  </p>
+
+  <a>
+  <% if current_user == event.user %>
+        <%= button_to 'delete', event, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
+  <% end %>
+  </a>
+</li>

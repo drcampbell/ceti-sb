@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Search for Events by Location</h1>
+
+<div>
+  <%= form_tag locations_path, :method => :get do %>
+      <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag 'Search Near', :name => nil %>
+      </p>
+  <% end %>
+</div>
+
+<%= will_paginate %>
+
+<div id="events">
+  <% for location in @locations %>
+      <% if location.school.present? %>
+          <h2>
+            <strong> School: </strong> <%= link_to location.school.name, location %>
+          </h2>
+          <% for user in location.school.users %>
+              <% if user.school.location.id == location.id%>
+                  <ul>
+                  <h4> <strong> Teacher: </strong> <%= link_to user.name, user %> </h4>
+                  <% unless user.events.nil?%>
+                      <h4> <strong> Events: </strong> </h4>
+                      <ul>
+                      <% for event in user.events %>
+                            <li> <%= link_to event.title, event %> </li>
+                      <% end %>
+                      </ul>
+                  <% end %>
+                    </ul>
+            <% end %>
+          <% end %>
+      <% end %>
+  <% end %>
+</div>
+
+<%= will_paginate %>

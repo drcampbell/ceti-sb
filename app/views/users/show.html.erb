@@ -1,0 +1,50 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h3 align="center">
+        <%= @user.name %>
+      </h3>
+      <h4>
+        <strong> Email: </strong> <%= @user.email %>
+      </h4>
+      <h4>
+        <strong> Role: </strong> <%= @user.role %>
+      </h4>
+      <h4>
+        <strong> Biography: </strong> <%= @user.biography %>
+      </h4>
+      <%  if @user.school_id.present? %>
+          <h4>
+            <strong> School: </strong> <%= School.find(@user.school_id).name %>
+          </h4>
+      <% end %>
+      <h4>
+        <strong> Grades: </strong> <%= @user.grades %>
+      </h4>
+      <h4>
+        <strong>Job Title: </strong> <%= @user.job_title %>
+      </h4>
+      <h4>
+        <strong> Business: </strong> <%= @user.business %>
+      </h4>
+      <% unless @user.location.nil? %>
+          <h4>
+            <strong> Address: </strong> <%= @user.location.address %>
+          </h4>
+      <% end %>
+      <h4>
+        <strong> Tags: </strong> <%= @user.tag_list %>
+      </h4>
+    </section>
+  </aside>
+  <div class="col-md-8">
+    <% if @user.events.any? %>
+        <h3>Events (<%= @user.events.count %>)</h3>
+        <ol class="events">
+          <%= render @events %>
+        </ol>
+        <%= will_paginate @events %>
+    <% end %>
+  </div>
+</div>

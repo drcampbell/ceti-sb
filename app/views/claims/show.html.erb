@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Event:</strong>
+  <% @event = Event.find(@claim.event_id) %>
+  <%= link_to @event.title, @event %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <% @user = User.find(@claim.user_id) %>
+  <%= @user.email %>
+</p>
+
+<%= link_to 'Edit', edit_claim_path(@claim) %> |
+<%= link_to 'Back', claims_path %>

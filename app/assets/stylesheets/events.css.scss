@@ -1,0 +1,13 @@
+// Place all the styles related to the Events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#tag_cloud {
+  width: 640px;
+  line-height: 1.6em;
+  .xs { font-size: 1.2em; }
+  .s { font-size: 1.6em; }
+  .m { font-size: 2.0em; }
+  .l { font-size: 2.4em; }
+  .xl { font-size: 2.8em; }
+}

@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Claims</h1>
+
+<%= will_paginate %>
+
+<div id="events">
+  <% for claim in @claims %>
+      <% if claim.event.present? %>
+      <h2><%= link_to claim.id, claim %></h2>
+      <h4>
+        <strong> Event: </strong> <%= claim.event.title %>
+      </h4>
+      <h4>
+        <strong> Speaker: </strong> <%= claim.user.email %>
+      </h4>
+      <h4>
+        <strong> Confirmed by teacher: </strong> <%= claim.confirmed_by_teacher %>
+      </h4>
+      <h4>
+        <strong> Confirmed by speaker: </strong> <%= claim.confirmed_by_speaker %>
+      </h4>
+      <% end %>
+  <% end %>
+</div>
+
+<%= will_paginate %>

@@ -1,0 +1,17 @@
+<%= f.label :name %>
+<%= f.text_field :name, class: 'form-control' %>
+
+<%= f.label :email %>
+<%= f.text_field :email, class: 'form-control' %>
+
+<% if @user.admin? %>
+    <%= f.select(:role, User.roles.keys.map {|role| [role.titleize,role]}, :selected => current_user.role) %>
+<% else %>
+    <%= f.select(:role, [User.role::Teacher, :Speaker, :Both]) %>
+<% end %>
+
+<%= f.label :password, 'New Password' %>
+<%= f.password_field :password,  :autocomplete => 'off', class: 'form-control' %>
+
+<%= f.label :password_confirmation, 'Confirmation' %>
+<%= f.password_field :password_confirmation, class: 'form-control' %>

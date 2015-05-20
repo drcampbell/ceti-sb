@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141124021154) do
+ActiveRecord::Schema.define(version: 20150519194903) do
 
   create_table "badges", force: true do |t|
     t.string   "file"
@@ -51,8 +51,15 @@ ActiveRecord::Schema.define(version: 20141124021154) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "school_id"
+    t.string   "name"
+    t.integer  "badge_id"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.string   "phone"
   end
 
+  add_index "locations", ["name"], name: "index_locations_on_name"
   add_index "locations", ["user_id"], name: "index_locations_on_user_id"
 
   create_table "schools", force: true do |t|

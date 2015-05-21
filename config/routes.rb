@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :claims
   resources :locations
 
-  root to: 'static_pages#home'
+  root 'application#hello'#to: 'static_pages#home'
   get    'help'    => 'static_pages#help'
   get    'about'   => 'static_pages#about'
   get    'contact' => 'static_pages#contact'

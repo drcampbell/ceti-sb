@@ -6,19 +6,19 @@ class EventsController < ApplicationController
   before_action :admin_user,          only: :destroy
 
   def index
-    @search = Sunspot.search(Event) do
-      fulltext params[:search]
+    #@search = Sunspot.search(Event) do
+#      fulltext params[:search]
       # with(:start).less_than(Time.zone.now)
-      facet(:event_month)
-      with(:event_month, params[:month]) if params[:month].present?
-      paginate(page: params[:page])
-    end
+#      facet(:event_month)
+#      with(:event_month, params[:month]) if params[:month].present?
+#      paginate(page: params[:page])
+ #   end
     if params[:search]
-      @events = @search.results
+ #     @events = @search.results
     elsif params[:tag]
       @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
     else
-      @events = @search.results
+ #     @events = @search.results
     end
     respond_to do |format|
       format.html # index.html.erb

@@ -2,14 +2,13 @@ packages:
   yum:
     postgresql93-devel: []
 
-commands:
-  add_bundle_exec:
+#commands:
+#  add_bundle_exec:
 
 container_commands:
   01deploy:
     command: rake db:schema:load
     command: rake db:seed
-    command: rake sunspot:solr:start
 
   01create_post_dir:
     command: "mkdir -p /opt/elasticbeanstalk/hooks/appdeploy/post"

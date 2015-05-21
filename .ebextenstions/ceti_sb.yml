@@ -11,7 +11,6 @@ container_commands:
     command: rake db:seed
     command: rake sunspot:solr:start
 
-container_commands:
   01create_post_dir:
     command: "mkdir -p /opt/elasticbeanstalk/hooks/appdeploy/post"
     ignoreErrors: true

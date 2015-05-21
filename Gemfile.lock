@@ -310,7 +310,6 @@ GEM
       websocket (~> 1.0)
     sendgrid (1.2.0)
       json
-      json
     shellany (0.0.1)
     simple_form (3.1.0)
       actionpack (~> 4.0)

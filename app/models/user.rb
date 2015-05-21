@@ -15,10 +15,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  searchable do
-    text :name, :boost => 5
-    text :job_title, :business, :school, :biography
-  end
+  #searchable do
+  #  text :name, :boost => 5
+  #  text :job_title, :business, :school, :biography
+  #end
 
   def set_default_role
     self.role ||= :Both

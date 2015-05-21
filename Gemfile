@@ -1,15 +1,15 @@
 source 'https://rubygems.org'
 #ruby '2.1.5' #'2.2.2' #2.1.5
 gem 'rails', '4.2.1' #'4.2.0'
-gem 'sass', '~> 3.2.5'
+
+gem 'bootstrap-sass'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails' #, '~> 4.0.0'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'elastic-beanstalk'
 
 group :development, :test do
   gem 'byebug'
@@ -21,13 +21,13 @@ gem 'devise'
 gem 'sendgrid'
 gem 'simple_form'
 gem 'therubyracer'
-gem 'unicorn'
-gem 'unicorn-rails'
+#gem 'unicorn'
+#gem 'unicorn-rails'
 gem 'upmin-admin'
 gem 'acts-as-taggable-on'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
-gem 'bootstrap-sass'
+
 gem 'less-rails'
 gem 'twitter-bootstrap-rails'
 gem 'geocoder'
@@ -69,7 +69,7 @@ group :test do
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg', '~> 0.18.1'
   #gem 'rails_12factor'
   gem 'puma'
 end

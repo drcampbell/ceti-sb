@@ -13,13 +13,13 @@
 
 ActiveRecord::Schema.define(version: 20150519194903) do
 
-  create_table "badges", force: true do |t|
+  create_table "badges", force: :cascade do |t|
     t.string   "file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "claims", force: true do |t|
+  create_table "claims", force: :cascade do |t|
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at",                           null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20150519194903) do
   add_index "claims", ["event_id"], name: "index_claims_on_event_id"
   add_index "claims", ["user_id"], name: "index_claims_on_user_id"
 
-  create_table "events", force: true do |t|
+  create_table "events", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20150519194903) do
 
   add_index "events", ["user_id"], name: "index_events_on_user_id"
 
-  create_table "locations", force: true do |t|
+  create_table "locations", force: :cascade do |t|
     t.string   "address"
     t.float    "latitude"
     t.float    "longitude"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20150519194903) do
   add_index "locations", ["name"], name: "index_locations_on_name"
   add_index "locations", ["user_id"], name: "index_locations_on_user_id"
 
-  create_table "schools", force: true do |t|
+  create_table "schools", force: :cascade do |t|
     t.integer  "badge_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20150519194903) do
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id"
 
-  create_table "taggings", force: true do |t|
+  create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
     t.string   "taggable_type"
@@ -84,14 +84,14 @@ ActiveRecord::Schema.define(version: 20150519194903) do
   add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
   add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
 
-  create_table "tags", force: true do |t|
+  create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"

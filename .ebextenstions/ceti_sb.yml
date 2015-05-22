@@ -1,32 +1,3 @@
 packages:
   yum:
     postgresql93-devel: []
-
-#commands:
-#  add_bundle_exec:
-
-container_commands:
-  01deploy:
-    command: rake db:schema:load
-    command: rake db:seed
-
-  01create_post_dir:
-    command: "mkdir -p /opt/elasticbeanstalk/hooks/appdeploy/post"
-    ignoreErrors: true
-  02killjava:
-    command: "killall java"
-    test: "ps uax | grep java | grep root"
-    ignoreErrors: true
-
-files:
-  "/opt/elasticbeanstalk/hooks/appdeploy/post/99_start_solr.sh":
-    mode: "755"
-    owner: "root"
-    group: "root"
-    content: |
-        #!/usr/bin/env bash
-        . /opt/elasticbeanstalk/support/envvars
-        cd $EB_CONFIG_APP_CURRENT
-        su -c "RAILS_ENV=production bundle exec rake sunspot:solr:start" $EB_CONFIG_APP_USER
-        su -c "RAILS_ENV=production bundle exec rake db:seed" $EB_CONFIG_APP_USER
-        su -c "RAILS_ENV=production bundle exec rake sunspot:reindex" $EB_CONFIG_APP_USER

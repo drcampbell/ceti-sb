@@ -37,6 +37,13 @@ User.create!(name:                  'Kevin',
 
 # SCHOOLS
 
+Location.create!(name:    'Delphos Jefferson High School',
+                address:  '901 Wildcat Ln'
+                city:     'Delphos',
+                state:    'OH',
+                zip:      '45833',
+                phone:    '(419) 695-1786')
+
 10.times do
   School.create!(name:              Faker::Company.name)
 end

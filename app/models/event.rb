@@ -3,12 +3,12 @@ class Event < ActiveRecord::Base
   has_many :claims, dependent: :destroy
   acts_as_taggable
 
-#  searchable do
-#    text :title, :boost => 5
-#    text :content, :event_month
-#    time :start
-#    string :event_month
-#  end
+ searchable do
+   text :title, :boost => 5
+   text :content, :event_month
+   time :start
+   string :event_month
+ end
 
   def tag_list_commas
     self.tags.map(&:name).join(', ')

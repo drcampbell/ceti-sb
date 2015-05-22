@@ -16,10 +16,20 @@
 <% end %>
 
 <div id="facets">
-  <!-- Check facets file -->
+  <ul>
+    <% @search.facet(:event_month).rows.each do |facet| %>
+        <li>
+          <% if params[:month].blank? %>
+              <%= link_to facet.value, :month => facet.value %> (<%= facet.count %>)
+          <% else %>
+              <strong><%= facet.value %></strong> (<%= link_to 'remove', :month => nil %>)
+          <% end %>
+        </li>
+    <% end %>
+  </ul>
 </div>
 
-<!--TODO Used to %= will_paginate %> -->
+<%= will_paginate %>
 
 <div id="events">
   <% @events.each do |event| %>

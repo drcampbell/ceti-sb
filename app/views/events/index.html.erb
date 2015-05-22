@@ -16,22 +16,10 @@
 <% end %>
 
 <div id="facets">
-  <ul>
-    <!-- TODO REPLACE FUNCTIONALITY
-    <% @search.facet(:event_month).rows.each do |facet| %>
-        <li>
-          <% if params[:month].blank? %>
-              <%= link_to facet.value, :month => facet.value %> (<%= facet.count %>)
-          <% else %>
-              <strong><%= facet.value %></strong> (<%= link_to 'remove', :month => nil %>)
-          <% end %>
-        </li>
-    <% end %>
-  -->
-  </ul>
+  <!-- Check facets file -->
 </div>
 
-<%= will_paginate %>
+<!--TODO Used to %= will_paginate %> -->
 
 <div id="events">
   <% @events.each do |event| %>

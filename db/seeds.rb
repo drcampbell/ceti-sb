@@ -37,20 +37,37 @@ User.create!(name:                  'Kevin',
 
 # SCHOOLS
 
-Location.create!(name:    'Delphos Jefferson High School',
-                address:  '901 Wildcat Ln'
-                city:     'Delphos',
-                state:    'OH',
-                zip:      '45833',
-                phone:    '(419) 695-1786')
+#connection = ActiveRecord::Base.connection
 
-10.times do
-  School.create!(name:              Faker::Company.name)
+schdata = File.read('school_data.txt')
+records = schdata.split("\n")
+cnames = School.column_names
+cnames = ["badge_id"]+cnames[4..cnames.length]
+
+records.each do |r|
+  d = [0] + r.split("\t")
+  if d.last == "Y"
+    d[-1] = true
+  else
+    d[-1] = false
+  end
+  School.create!(Hash[cnames.zip d])
 end
 
-School.all.each do |school|
-  school.create_location!(address:    Faker::Address.street_address)
-end
+# Location.create!(name:    'Delphos Jefferson High School',
+#                 address:  '901 Wildcat Ln'
+#                 city:     'Delphos',
+#                 state:    'OH',
+#                 zip:      '45833',
+#                 phone:    '(419) 695-1786')
+
+# 10.times do
+#   School.create!(name:              Faker::Company.name)
+# end
+
+# School.all.each do |school|
+#   school.create_location!(address:    Faker::Address.street_address)
+# end
 
 # SPEAKERS
 
@@ -127,7 +144,7 @@ end
 
 # SCHOOL LOCATIONS
 
-School.all do |school|
-  school.create_location!(address:    Faker::Address.street_address,
-                          school_id:  school.id)
-end
+#School.all do |school|
+#  school.create_location!(address:    Faker::Address.street_address,
+#                          school_id:  school.id)
+#end

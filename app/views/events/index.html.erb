@@ -35,8 +35,14 @@
   <% @events.each do |event| %>
       <h2><%= link_to event.title, event %></h2>
       <%= simple_format event.content %>
-      <p> <strong>Location: </strong> <%= link_to School.find(event.user.school_id).name, School.find(event.user.school_id).location %> </p>
-      <p> <strong>Teacher: </strong> <%= link_to event.user.name, event.user %> </p>
+
+      <p> <strong>Location: </strong> 
+        <%= link_to handle_abbr(School.find(event.user.school_id).school_name.titlecase), 
+            School.find(event.user.school_id) %> 
+      </p>
+      <p> <strong>Teacher: </strong> 
+        <%= link_to event.user.name, event.user %> 
+      </p>
 
       <p>
         <% unless event.claims.each.nil? %>

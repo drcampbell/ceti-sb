@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   #before_action :admin_user,     only: :destroy
 
   def index
-    search = Sunspot.search(User) do
+    @search = Sunspot.search(User) do
       fulltext params[:search]
       paginate(page: params[:page])
     end

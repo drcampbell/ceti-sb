@@ -1,6 +1,22 @@
+<% provide(:title, 'Schools') %>
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Schools</h1>
+
+<%= form_tag schools_path, :method => :get do %>
+  <p>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag 'Search', :name => nil %>
+  </p>
+<% end %>
+
+<%= will_paginate %>
+
+<ul class="schools">
+  <%= render @schools %>
+</ul>
+
+<%= will_paginate %>
 
 <table>
   <thead>
@@ -9,17 +25,17 @@
     </tr>
   </thead>
 
-  <tbody>
+<!--   <tbody>
     <% @schools.each do |school| %>
       <tr>
         <td><%= link_to 'Show', school %></td>
-        <td><%= link_to 'Edit', edit_school_path(school) %></td>
-        <td><%= link_to 'Destroy', school, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+        <td><%= link_to 'Edit', edit_school_path(school) %></td> -->
+<!--         <td><%= link_to 'Destroy', school, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+ <!--      </tr>
     <% end %>
-  </tbody>
+  </tbody> -->
 </table>
 
 <br>
 
-<%= link_to 'New School', new_school_path %>
+<!-- <%= link_to 'New School', new_school_path %> -->

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519194903) do
+ActiveRecord::Schema.define(version: 20150528161220) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -64,9 +64,40 @@ ActiveRecord::Schema.define(version: 20150519194903) do
 
   create_table "schools", force: :cascade do |t|
     t.integer  "badge_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "name"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "survey_year"
+    t.string   "ncessch"
+    t.string   "fipst"
+    t.string   "leaid"
+    t.string   "schno"
+    t.string   "stid"
+    t.string   "seasch"
+    t.string   "edu_agency"
+    t.string   "school_name"
+    t.string   "phone"
+    t.string   "mail_addr"
+    t.string   "mail_city"
+    t.string   "mail_state"
+    t.string   "mail_zip"
+    t.string   "mail_zip4"
+    t.string   "loc_addr"
+    t.string   "loc_city"
+    t.string   "loc_state"
+    t.string   "loc_zip"
+    t.string   "loc_zip4"
+    t.integer  "school_type"
+    t.integer  "status"
+    t.string   "union"
+    t.string   "urban_local"
+    t.decimal   "latitude"
+    t.decimal   "longitude"
+    t.string   "county_number"
+    t.string   "county_name"
+    t.string   "cdcode"
+    t.string   "grade_lo"
+    t.string   "grade_hi"
+    t.boolean  "charter"
   end
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id"

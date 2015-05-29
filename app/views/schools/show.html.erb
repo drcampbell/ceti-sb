@@ -1,4 +1,21 @@
+<%= provide(:title, handle_abbr(@school.school_name.titlecase)) %>
+<div class="row">
+	<aside class="col-md-4">
+		<section class="school_info">
+			<h3 align="center">
+				<%= handle_abbr(@school.school_name.titlecase).upcase %>
+			</h3>
 <p id="notice"><%= notice %></p>
+<% @fields.each do |key, value| %>
+	<% field=school_process(@school.instance_eval(key), key) %>
+	<h4>
+		<strong><%= value %>: </strong> <%= field %>
+	</h4>
+<% end %>
 
-<%= link_to 'Edit', edit_school_path(@school) %> |
-<%= link_to 'Back', schools_path %>
+<ul class="options">
+	<% if user_signed_in? %>
+		<li><%= link_to 'Make My School', schools_path %></il>
+	<% end %>
+	<li><%= link_to 'Back', schools_path %></il>
+</ul>

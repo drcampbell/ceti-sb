@@ -5,7 +5,24 @@
       <h3 align="center">
         <%= @user.name %>
       </h3>
-      <h4>
+      <% @user_fields = { 'Email' => @user.email,
+                          'Role'  => @user.role,
+                          'Biography' => @user.biography } %>
+      <% if @user.school_id.present? then @teacher_fields = {'School' => School.find(@user.school_id).school_name,
+                            'Grades' => @user.grades }  end %>
+      <% @business_fields = {'Job Title' => @user.job_title,
+                             'Business' => @user.business } %>
+      <% if @user.role = "Speaker" then @user_fields = @user_fields.merge @business_fields end %>
+      <% if @user.role = "Teacher" then @user_fields = @user_fields.merge @teacher_fields end %>
+      <% if @user.role = "Both" then @user_fields = (@user_fields.merge @business_fields).merge @teacher_fields end %>
+      
+      <% @user_fields.each do |key, value| %>
+        <h4>
+          <strong><%= key %>: </strong> <%= value %>
+        </h4>
+      <% end %>
+
+<!--       <h4>
         <strong> Email: </strong> <%= @user.email %>
       </h4>
       <h4>
@@ -16,7 +33,7 @@
       </h4>
       <%  if @user.school_id.present? %>
           <h4>
-            <strong> School: </strong> <%= School.find(@user.school_id).name %>
+            <strong> School: </strong> <%= School.find(@user.school_id).school_name %>
           </h4>
       <% end %>
       <h4>
@@ -35,7 +52,7 @@
       <% end %>
       <h4>
         <strong> Tags: </strong> <%= @user.tag_list %>
-      </h4>
+      </h4> -->
     </section>
   </aside>
   <div class="col-md-8">

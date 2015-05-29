@@ -1,10 +1,27 @@
 class SchoolsController < ApplicationController
-  before_action :set_school, only: [:show, :edit, :update, :destroy]
+  #before_action :set_school, only: [:show, :edit, :update, :destroy]
 
   # GET /schools
   # GET /schools.json
   def index
-    @schools = School.all
+    # @schools = Sunspot.search(School) do
+    #   fulltext params[:search]
+    #   #paginate(:page, params[:page])
+    #   paginate :page =>2, :per_page =>15
+    # end
+    # @schools = School.paginate(:page => 1, :per_page => 2)
+    @search = Sunspot.search(School) do
+      fulltext params[:search]
+      paginate(page: params[:page])
+    end
+    if params[:search]
+      @schools = @search.results
+    elsif params[:tag]
+      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
+    else
+      @schools = School.all.paginate(page: params[:page])
+    end
+    #@schools = School.first
     respond_to do |format|
         format.html {  }
         format.json { render json: @schools.as_json }
@@ -14,6 +31,14 @@ class SchoolsController < ApplicationController
   # GET /schools/1
   # GET /schools/1.json
   def show
+    @fields = {'school_name' => 'Name', 'loc_addr' => 'Address', 'loc_city' => 'City', 'loc_state' => 'State', 'phone' => 'Phone'}
+    @school = School.find(params[:id])
+    respond_to do |format|
+      format.html do
+
+      end
+      format.json { render json: @school}
+    end
   end
 
   # GET /schools/new

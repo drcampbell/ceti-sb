@@ -47,9 +47,9 @@ cnames = ["badge_id"]+cnames[4..cnames.length]
 records.each do |r|
   d = [0] + r.split("\t")
   if d.last == "Y"
-    d[-1] = true
+    d[-2] = true
   else
-    d[-1] = false
+    d[-2] = false
   end
   School.create!(Hash[cnames.zip d])
 end

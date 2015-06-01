@@ -31,7 +31,12 @@ class SchoolsController < ApplicationController
   # GET /schools/1
   # GET /schools/1.json
   def show
-    @fields = {'school_name' => 'Name', 'loc_addr' => 'Address', 'loc_city' => 'City', 'loc_state' => 'State', 'phone' => 'Phone'}
+    @fields = {'school_name'  => 'Name', 
+                  'loc_addr'  => 'Address', 
+                  'loc_city'  => 'City', 
+                  'loc_state' => 'State',
+                  'loc_zip'   => 'Zip',
+                  'phone'     => 'Phone'}
     @school = School.find(params[:id])
     respond_to do |format|
       format.html do

@@ -23,4 +23,7 @@ Rails.application.routes.draw do
   match 'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'
   match 'claims/:id/speaker_confirm' => 'claims#speaker_confirm', :via => [:post], :as => 'speaker_confirm_claim'
   match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
+ 
+  #match '/contacts', to: 'contacts#new',
+  #resources "contacts", only: [:new, :create]
 end

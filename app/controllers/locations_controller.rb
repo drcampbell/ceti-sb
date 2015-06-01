@@ -5,9 +5,9 @@ class LocationsController < ApplicationController
   # GET /locations.json
   def index
     if params[:search].present?
-      @locations = Location.near(params[:search], 50).paginate(page: params[:page])
+      @locations = School.near(params[:search], 50).paginate(page: params[:page])
     else
-      @locations = Location.all.paginate(page: params[:page])
+      @locations = School.all.paginate(page: params[:page])
     end
     respond_to do |format|
       format.html {  }

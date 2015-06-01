@@ -82,6 +82,22 @@ module SchoolsHelper
 			end
 			newvalues.join(" ")
 		end
-	
 
+  def get_events(id)
+    @search = Sunspot.search(Event) do
+      with(:school_id, id)
+    end
+    @events = @search.results
+    # if params[:search]
+    #   @events = @search.results
+    # elsif params[:tag]
+    #   @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
+    # else
+    #   @events = Event.all.paginate(page: params[:page])
+    # end
+    # respond_to do |format|
+    #   format.html # index.html.erb
+    #   format.json { render json: @events.as_json }
+    # end
+  end
 end

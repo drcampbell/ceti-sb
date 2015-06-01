@@ -12,9 +12,10 @@
                             'Grades' => @user.grades }  end %>
       <% @business_fields = {'Job Title' => @user.job_title,
                              'Business' => @user.business } %>
-      <% if @user.role = "Speaker" then @user_fields = @user_fields.merge @business_fields end %>
-      <% if @user.role = "Teacher" then @user_fields = @user_fields.merge @teacher_fields end %>
-      <% if @user.role = "Both" then @user_fields = (@user_fields.merge @business_fields).merge @teacher_fields end %>
+                             
+      <% if @user.role == "Speaker" then @user_fields = @user_fields.merge @business_fields end %>
+      <% if @user.role == "Teacher" then @user_fields = @user_fields.merge @teacher_fields end %>
+      <% if @user.role == "Both" then @user_fields = (@user_fields.merge @business_fields).merge @teacher_fields end %>
       
       <% @user_fields.each do |key, value| %>
         <h4>

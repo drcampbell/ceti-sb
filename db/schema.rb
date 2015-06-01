@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528161220) do
+ActiveRecord::Schema.define(version: 20150529214152) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -39,8 +39,10 @@ ActiveRecord::Schema.define(version: 20150528161220) do
     t.string   "title"
     t.datetime "start"
     t.datetime "end"
+    t.integer  "school_id"
   end
 
+  add_index "events", ["school_id"], name: "index_events_on_school_id"
   add_index "events", ["user_id"], name: "index_events_on_user_id"
 
   create_table "locations", force: :cascade do |t|
@@ -90,17 +92,19 @@ ActiveRecord::Schema.define(version: 20150528161220) do
     t.integer  "status"
     t.string   "union"
     t.string   "urban_local"
-    t.decimal   "latitude"
-    t.decimal   "longitude"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
     t.string   "county_number"
     t.string   "county_name"
     t.string   "cdcode"
     t.string   "grade_lo"
     t.string   "grade_hi"
     t.boolean  "charter"
+    t.integer  "events"
   end
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id"
+  add_index "schools", ["events"], name: "index_schools_on_events"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

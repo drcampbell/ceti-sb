@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class StaticPagesControllerTest < ActionController::TestCase
-
-  pname = "The School Business App"
+  include Devise::TestHelpers
   
+  pname = "The School Business App"
+
   test "should get help" do
     get :help
     assert_response :success
@@ -16,10 +17,10 @@ class StaticPagesControllerTest < ActionController::TestCase
     assert_select "title", "About | #{pname}"
   end
   
-  # test "should get contact" do
-  #   get :contact
-  #   assert_response :success
-  #   assert_select "title", "Contact | #{pname}"
-  # end
+  test "should get contact" do
+    get :contact
+    assert_response :success
+    assert_select "title", "Contact | #{pname}"
+  end
   
 end

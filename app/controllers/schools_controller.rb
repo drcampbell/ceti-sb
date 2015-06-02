@@ -1,5 +1,5 @@
 class SchoolsController < ApplicationController
-  #before_action :set_school, only: [:show, :edit, :update, :destroy]
+  before_action :set_school, only: [:show, :edit, :update]
 
   # GET /schools
   # GET /schools.json
@@ -82,13 +82,17 @@ class SchoolsController < ApplicationController
   # PATCH/PUT /schools/1
   # PATCH/PUT /schools/1.json
   def update
+    @school = School.find params[:id]
+
     respond_to do |format|
-      if @school.update(school_params)
+      if @school && @school.update(school_params)
         format.html { redirect_to @school, notice: 'School was successfully updated.' }
         format.json { render :show, status: :ok, location: @school }
-      else
+        format.all { render_404 }
+      elsif @school != nil
         format.html { render :edit }
         format.json { render json: @school.errors, status: :unprocessable_entity }
+        format.all { render_404 }
       end
     end
   end
@@ -96,11 +100,11 @@ class SchoolsController < ApplicationController
   # DELETE /schools/1
   # DELETE /schools/1.json
   def destroy
-    @school.destroy
-    respond_to do |format|
-      format.html { redirect_to schools_url, notice: 'School was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    School.find(params[:id]).destroy
+      respond_to do |format|
+        format.html { redirect_to schools_path, notice: 'School was successfully destroyed.' }
+        format.json { head :no_content }
+      end
   end
 
   private

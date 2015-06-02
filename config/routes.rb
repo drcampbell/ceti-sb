@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   mount Upmin::Engine => '/admin'
 
-  devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
+  devise_for :users, :controllers => { registrations: 'registrations' }
+
   devise_scope :user do
     post    '/users/sign_up'  =>  'registrations#create'
     post    'users/sign_in'   =>  'sessions#create'
+    #get     'users/edit'      => 'registrations#edit'
   end
 
   resources :users
@@ -20,6 +22,7 @@ Rails.application.routes.draw do
   get    'contact' => 'static_pages#contact'
   get 'tags/:tag',  to: 'events#index', as: :tag
   get 'users/:tag',  to: 'users#index'
+  #get     'users/edit'      => 'registrations#edit'
 
   match 'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'
   match 'claims/:id/speaker_confirm' => 'claims#speaker_confirm', :via => [:post], :as => 'speaker_confirm_claim'

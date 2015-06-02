@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602134032) do
+ActiveRecord::Schema.define(version: 20150602193556) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20150602134032) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
+    t.integer  "user_id"
   end
 
   create_table "schools", force: :cascade do |t|

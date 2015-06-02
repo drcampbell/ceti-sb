@@ -1,6 +1,6 @@
 <h1>Editing School</h1>
 
-<%= render 'form' %>
+<%= if @school then render 'form' end %>
 
 <%= link_to 'Show', @school %> |
 <%= link_to 'Back', schools_path %>

@@ -1,0 +1,8 @@
+user:
+  name: User
+  email: user@gmail.com
+  encrypted_password: <%= Devise.bcrypt(User, '12345678') %>
+
+other_user:
+  email: other@gmail.com
+  encrypted_password: <%= Devise.bcrypt(User, '87654321') %>

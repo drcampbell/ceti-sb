@@ -1,9 +1,9 @@
-<%= provide(:title, handle_abbr(@school.school_name.titlecase)) %>
+<%= provide(:title, handle_abbr(@school.school_name)) %>
 <div class="row">
 	<aside class="col-md-4">
 		<section class="school_info">
 			<h3 align="center">
-				<%= handle_abbr(@school.school_name.titlecase).upcase %>
+				<%= handle_abbr(@school.school_name).upcase %>
 			</h3>
 <p id="notice"><%= notice %></p>
 <% @fields.each do |key, value| %>

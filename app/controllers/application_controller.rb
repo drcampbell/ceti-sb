@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
     render text: "hello cruel world"
   end
   
+  def render_404
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   protected
 
   def configure_permitted_parameters

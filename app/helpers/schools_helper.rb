@@ -1,6 +1,9 @@
 module SchoolsHelper
 
 	def school_process(value, key)
+        if value == nil
+            return nil
+        end
 		states = {    AK: "Alaska", 
                 AL: "Alabama", 
                 AR: "Arkansas", 
@@ -60,7 +63,6 @@ module SchoolsHelper
 		if key == 'phone' && value.length == 10
 			"("+value[0..2]+") "+value[3..5]+"-"+value[6..9]
 		elsif key == 'school_name' || key == 'loc_addr' || key == 'loc_city'
-			value = value.titlecase
 			handle_abbr(value)
 		elsif key == 'loc_state'
 			states[value]
@@ -70,6 +72,10 @@ module SchoolsHelper
 	end
 
 	def handle_abbr(value)
+            if value == nil
+                return nil
+            end
+            value = value.titlecase
 			abbr = {"Sch" => " School ", "Ln" => "Lane", "Elem" => "Elementary"}
 			values = value.split(" ")
 			newvalues =[]

@@ -100,4 +100,11 @@ module SchoolsHelper
     #   format.json { render json: @events.as_json }
     # end
   end
+
+  def near_me
+    @schools = School.near('Columbus, OH', 20)
+    #@search = Sunspot.search(School) do
+    #@schools = @search.results
+
+  end
 end

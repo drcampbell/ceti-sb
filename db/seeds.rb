@@ -38,20 +38,22 @@ User.create!(name:                  'Kevin',
 # SCHOOLS
 
 #connection = ActiveRecord::Base.connection
+if not Rails.env.test?
+  schdata = File.read('school_data.txt')
+  records = schdata.split("\n")
+  cnames = School.column_names
+  cnames = ["badge_id"]+cnames[4..cnames.length]
 
-schdata = File.read('school_data.txt')
-records = schdata.split("\n")
-cnames = School.column_names
-cnames = ["badge_id"]+cnames[4..cnames.length]
-
-records.each do |r|
-  d = [0] + r.split("\t")
-  if d.last == "Y"
-    d[-2] = true
-  else
-    d[-2] = false
+  charter = cnames.index("charter")
+  records.each do |r|
+    d = [0] + r.split("\t")
+    if d[charter] == "Y"
+      d[charter] = true
+    else
+      d[charter] = false
+    end
+    School.create!(Hash[cnames.zip d])
   end
-  School.create!(Hash[cnames.zip d])
 end
 
 # Location.create!(name:    'Delphos Jefferson High School',
@@ -137,10 +139,10 @@ end
 
 # SPEAKER, ADMIN LOCATIONS
 
-User.where('role = ? OR role = ?', 2, 0).each do |user|
-   user.create_location!(address:     Faker::Address.street_address,
-                         user_id:     user.id)
-end
+# User.where('role = ? OR role = ?', 2, 0).each do |user|
+#    user.create_location!(address:     Faker::Address.street_address,
+#                          user_id:     user.id)
+# end
 
 # SCHOOL LOCATIONS
 

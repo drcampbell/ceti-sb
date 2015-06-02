@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529214152) do
+ActiveRecord::Schema.define(version: 20150602134032) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -49,20 +49,13 @@ ActiveRecord::Schema.define(version: 20150529214152) do
     t.string   "address"
     t.float    "latitude"
     t.float    "longitude"
-    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "school_id"
     t.string   "name"
-    t.integer  "badge_id"
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.string   "phone"
   end
-
-  add_index "locations", ["name"], name: "index_locations_on_name"
-  add_index "locations", ["user_id"], name: "index_locations_on_user_id"
 
   create_table "schools", force: :cascade do |t|
     t.integer  "badge_id"
@@ -92,19 +85,18 @@ ActiveRecord::Schema.define(version: 20150529214152) do
     t.integer  "status"
     t.string   "union"
     t.string   "urban_local"
-    t.decimal  "latitude"
-    t.decimal  "longitude"
+    t.float    "latitude"
+    t.float    "longitude"
     t.string   "county_number"
     t.string   "county_name"
     t.string   "cdcode"
     t.string   "grade_lo"
     t.string   "grade_hi"
     t.boolean  "charter"
-    t.integer  "events"
+    t.text     "address"
   end
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id"
-  add_index "schools", ["events"], name: "index_schools_on_events"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

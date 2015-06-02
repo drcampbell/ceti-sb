@@ -12,9 +12,12 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
+  gem 'sqlite3'
   gem 'byebug'
   gem 'web-console', '~> 2.0.0'
   gem 'spring'
+  #gem 'factory_girl_rails'
+  #gem 'rspec-rails'
 end
 
 group :development, :test, :production do
@@ -58,17 +61,16 @@ group :development do
   gem 'rb-inotify', :require=>false
 end
 
-group :development, :test do
-  gem 'factory_girl_rails'
-  gem 'rspec-rails'
-  gem 'sqlite3'
-end
-
 group :test do
-  gem 'capybara'
-  gem 'database_cleaner'
-  gem 'launchy'
-  gem 'selenium-webdriver'
+  #gem 'capybara'
+  #gem 'database_cleaner'
+  #gem 'launchy'
+  #gem 'selenium-webdriver'
+  # Do we even need the above
+  gem 'minitest-rails'
+  gem 'minitest-reporters'
+  #gem 'mini_backtrace'
+  gem 'guard-minitest'
 end
 
 group :production do

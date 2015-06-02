@@ -7,6 +7,7 @@
   <p>
     <%= text_field_tag :search, params[:search] %>
     <%= submit_tag 'Search', :name => nil %>
+    <%= button_tag 'Near Me', :name => 'location', :action => 'near_me' %>
   </p>
 <% end %>
 

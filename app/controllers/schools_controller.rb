@@ -10,6 +10,7 @@ class SchoolsController < ApplicationController
     #   paginate :page =>2, :per_page =>15
     # end
     # @schools = School.paginate(:page => 1, :per_page => 2)
+
     @search = Sunspot.search(School) do
       fulltext params[:search]
       paginate(page: params[:page])
@@ -27,6 +28,13 @@ class SchoolsController < ApplicationController
         format.json { render json: @schools.as_json }
     end
   end
+  
+  # def near_me
+  #   @schools = School.near('Columbus, OH', 20)
+  #   #@search = Sunspot.search(School) do
+  #   #@schools = @search.results
+
+  # end
 
   # GET /schools/1
   # GET /schools/1.json

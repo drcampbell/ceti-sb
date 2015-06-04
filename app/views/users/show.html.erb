@@ -4,11 +4,16 @@
     <section class="user_info">
       <h3 align="center">
         <%= @user.name %>
+        <p>
+        <%= gravatar_for @user, 100 %>
+      </p>
       </h3>
+      <div>
+        <p>
       <% @user_fields = { 'Role'  => @user.role,
                           'Biography' => @user.biography } %>
       <% if (@user.role == "Teacher" || @user.role == "Both") 
-        @teacher_fields = {'School' => School.find(@user.school_id).school_name,
+        @teacher_fields = {'School' => handle_abbr(School.find(@user.school_id).school_name.titlecase),
                             'Grades' => @user.grades } end %>
       <% @business_fields = {'Job Title' => @user.job_title,
                              'Business' => @user.business } %>
@@ -28,7 +33,8 @@
         <%= button_to "Edit", "profile", :method => :get  %>
         </div>
       <% end %>
-    
+      </p>
+      </div>
     </section>
   </aside>
   <div class="col-md-8">

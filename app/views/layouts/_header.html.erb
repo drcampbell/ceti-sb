@@ -32,6 +32,7 @@
             <li><%= link_to 'Claims', claims_path %></li> -->
             <li id="fat-menu" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <%= gravatar_for(user,  20) %>
               <%= user.name %><b class="caret"></b>
             </a>
             <ul class="dropdown-menu">

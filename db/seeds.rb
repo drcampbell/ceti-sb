@@ -36,15 +36,15 @@ User.create!(name:                  'Kevin',
              role:                  :Admin)
 
 # SCHOOLS
-
+School.create!({badge_id: => 1, school_name: "Please Select A School" })
 #connection = ActiveRecord::Base.connection
 if not Rails.env.test?
   if Rails.env.development?
     schdata = File.read('school_data.txt')
   elsif Rails.env.production?
-    s3 = Aws::S3::Client.new(region: 'us-west-1')
+    s3 = Aws::S3::Client.new(region: 'us-west-2')
     obj = s3.get_object(bucket: 'ceti-sb', key: 'data/school_data.txt')
-    schdata = obj.read
+    schdata = obj.body.read
   end
   records = schdata.split("\n")
   cnames = School.column_names

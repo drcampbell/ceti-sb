@@ -4,7 +4,7 @@ class UsersControllerTest < ActionController::TestCase
   include Devise::TestHelpers
 
   def user
-    @user ||= users :user
+    @user ||= users :teacher
   end
 
   def test_index

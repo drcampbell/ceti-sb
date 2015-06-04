@@ -54,6 +54,13 @@ class SchoolsController < ApplicationController
     end
   end
 
+  def make_mine
+    @school = School.find params[:school_id]
+    if user_signed_in?
+      current_user.school_id = @school.id
+    end
+    redirect_to :users
+  end
   # GET /schools/new
   def new
     @school = School.new
@@ -100,7 +107,9 @@ class SchoolsController < ApplicationController
   # DELETE /schools/1
   # DELETE /schools/1.json
   def destroy
-    School.find(params[:id]).destroy
+    @school = School.find params[:id]
+
+    @school.destroy
       respond_to do |format|
         format.html { redirect_to schools_path, notice: 'School was successfully destroyed.' }
         format.json { head :no_content }

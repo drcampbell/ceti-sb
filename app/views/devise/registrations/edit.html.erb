@@ -12,7 +12,13 @@
               <%= f.label :email %>
               <%= f.email_field :email, class: 'form-control' %>
               <% if teacher_user?(resource) %>
-                <%= f.input :school_id, collection: School.all %>
+                <%= f.label :school_id %>
+                <%= if current_user.school_id then @school_name = School.find(current_user.school_id).school_name else "" end %>
+                <%= f.text_area :school_id, class: 'form-control', content: @school_name %>
+
+                <%= text_field_tag :search, params[:search] %>
+                <%= submit_tag 'Find My School', :name => nil %>
+                
                 <%= f.label :grades %>
                 <%= f.text_field :grades, class: 'form-control' %>
               <% end %>

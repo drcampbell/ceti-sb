@@ -14,8 +14,9 @@
 <% end %>
 
 <ul class="options">
-	<% if user_signed_in? %>
-		<li><%= link_to 'Make My School', schools_path %></il>
+	<% if user_signed_in? && 
+		(current_user == 'Teacher' || current_user.role == 'Both') %>
+		<li><%= button_to 'Make My School', {:controller => "schools", :action => "make_mine", :user_id => current_user.id, :school_id => @school.id}, :method => :post %></il>
 	<% end %>
 	<li><%= link_to 'Back', schools_path %></il>
 </ul>

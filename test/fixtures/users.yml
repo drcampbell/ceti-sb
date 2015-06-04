@@ -1,8 +1,23 @@
-user:
+teacher:
   name: User
   email: user@gmail.com
   encrypted_password: <%= Devise.bcrypt(User, '12345678') %>
+  role: Teacher
 
-other_user:
+speaker:
+  name: User1
+  email: user1@gmail.com
+  encrypted_password: <%= Devise.bcrypt(User, '12345678') %>
+  role: Speaker
+
+both:
+  name: User2
+  email: user2@gmail.com
+  encrypted_password: <%= Devise.bcrypt(User, '12345678') %>
+  role: Both
+
+admin:
+  name: Super
   email: other@gmail.com
   encrypted_password: <%= Devise.bcrypt(User, '87654321') %>
+  role: Admin

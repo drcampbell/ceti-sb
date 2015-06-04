@@ -18,4 +18,8 @@ module EventsHelper
 			@events = {}
 		end
 	end
+
+	def valid_event(event)
+		event.user != nil && event.content != nil && event.title != nil
+	end
 end

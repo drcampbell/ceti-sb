@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new('Not Found')
   end
 
+  def must_signin
+    render text: "You must be signed in to complete that action"
+  end
+
   protected
 
   def configure_permitted_parameters
@@ -21,14 +25,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  # Confirms a teacher user.
-  def teacher_user
-    redirect_to(root_url) unless current_user.role == 'Teacher' || current_user.role == 'Both'
-  end
+    # Confirms a teacher user.
+    def teacher_user
+      redirect_to(:signin) unless user_signed_in? && (current_user.role == 'Teacher' || current_user.role == 'Both')
+    end
 
-  # Confirms a speaker user.
-  def speaker_user
-    redirect_to(root_url) unless current_user.role == 'Speaker' || current_user.role == 'Both'
-  end
+    # Confirms a speaker user.
+    def speaker_user
+      redirect_to(:signin) unless user_signed_in? && (current_user.role == 'Speaker' || current_user.role == 'Both')
+    end
 
 end

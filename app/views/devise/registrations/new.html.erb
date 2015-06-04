@@ -18,6 +18,7 @@
           <%= f.password_field :password_confirmation, class: 'form-control' %>
               <div class="form-group">
           <%= f.select :role, ['Speaker', 'Teacher', 'Both'], {}, {class: 'btn btn-default dropdown-toggle'} %>
+          <%= f.select :school_id, ['1'], {}, {class: 'btn btn-default dropdown-toggle'} %>
               </div>
           <%= f.submit 'Create my account', class: 'btn btn-primary' %>
       <% end %>

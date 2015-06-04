@@ -42,9 +42,9 @@ class SchoolsControllerTest < ActionController::TestCase
   end
 
   def test_destroy
-    school = schools(:one)
+    #school = schools :one
     assert_difference('School.count', -1) do
-      delete :destroy, params: { id: school.id }
+      delete :destroy, id: school #params: { id: school.id }
     end
 
     assert_redirected_to schools_path

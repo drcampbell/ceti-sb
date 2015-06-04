@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   devise_scope :user do
     post    '/users/sign_up'  =>  'registrations#create'
     post    'users/sign_in'   =>  'sessions#create'
-    #get     'users/edit'      => 'registrations#edit'
+    get     'profile'      => 'registrations#edit'
   end
 
   resources :users
@@ -20,8 +20,11 @@ Rails.application.routes.draw do
   get    'help'    => 'static_pages#help'
   get    'about'   => 'static_pages#about'
   get    'contact' => 'static_pages#contact'
+  get    'signin'  => 'static_pages#signin'
+  get    'invalid_event'  => 'static_pages#invalid_event'
   get 'tags/:tag',  to: 'events#index', as: :tag
   get 'users/:tag',  to: 'users#index'
+  post 'make_mine', to: 'schools#make_mine'
   #get     'users/edit'      => 'registrations#edit'
 
   match 'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'

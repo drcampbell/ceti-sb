@@ -42,8 +42,8 @@ if not Rails.env.test?
   if Rails.env.development?
     schdata = File.read('school_data.txt')
   elsif Rails.env.production?
-    s3 = Aws::S3.new
-    obj = s3.buckets['my_bucket'].objects['data/school_data.txt']
+    s3 = Aws::S3::Client.new(region: 'us-west-1')
+    obj = s3.get_object(bucket: 'ceti-sb', key: 'data/school_data.txt')
     schdata = obj.read
   end
   records = schdata.split("\n")

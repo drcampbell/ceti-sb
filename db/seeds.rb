@@ -42,7 +42,7 @@ if not Rails.env.test?
   if Rails.env.development?
     schdata = File.read('school_data.txt')
   elsif Rails.env.production?
-    s3 = AWS::S3.new
+    s3 = Aws::S3.new
     obj = s3.buckets['my_bucket'].objects['data/school_data.txt']
     schdata = obj.read
   end

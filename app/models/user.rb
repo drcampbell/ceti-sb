@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   enum role: [:Admin, :Teacher, :Speaker, :Both]
   after_initialize :set_default_role, :if => :new_record?
+  after_update :send_password_change_email, if: :needs_password_change_email?
   has_many :events, dependent: :destroy
   has_many :claims, dependent: :destroy
   has_many :badges
@@ -31,4 +32,15 @@ class User < ActiveRecord::Base
   def tag_list_commas
     self.tags.map(&:name).join(', ')
   end
+
+  private
+  
+    def needs_password_change_email?
+      encrypted_password_changed? && persisted?
+    end
+
+    def send_password_change_email
+      UserMailer.password_changed(id).deliver
+    end
+
 end

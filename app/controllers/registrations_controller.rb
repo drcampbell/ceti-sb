@@ -36,6 +36,18 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def profile
+    build_resource({})
+    respond_with self.resource
+    #render 'views/registrations/profile'
+  end
+
+  protected
+
+  def update_resource(resource, params)
+    resource.update_without_password(params)
+  end
+
   private
 
   def sign_up_params

@@ -1,5 +1,5 @@
-<% provide(:title, 'Edit Account') %>
-<h1>Edit Your Account</h1>
+<% provide(:title, 'Edit user') %>
+<h1>Edit Your Profile</h1>
 <div class="container-fluid">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
@@ -11,7 +11,29 @@
               <%= f.text_field :name, class: 'form-control' %>
               <%= f.label :email %>
               <%= f.email_field :email, class: 'form-control' %>
+              <% if teacher_user?(resource) %>
+                <%= f.label :school_id %>
+                <%= if current_user.school_id then @school_name = School.find(current_user.school_id).school_name else "" end %>
+                <%= f.text_area :school_id, class: 'form-control', content: @school_name %>
 
+                <%= text_field_tag :search, params[:search] %>
+                <%= submit_tag 'Find My School', :name => nil %>
+                
+                <%= f.label :grades %>
+                <%= f.text_field :grades, class: 'form-control' %>
+              <% end %>
+              <% if speaker_user?(resource) %>
+                <%= f.label :job_title %>
+                <%= f.text_field :job_title, class: 'form-control' %>
+                <%= f.label :business %>
+                <%= f.text_field :business, class: 'form-control' %>
+                <div class="field">
+                  <%= f.label :tag_list, 'Tags (separated by commas)' %><br />
+                  <%= f.text_field :tag_list %>
+                </div>
+              <% end %>
+              <%= f.label :biography %>
+              <%= f.text_area :biography, class: 'form-control' %>
               <% unless resource.role == 'Admin' %>
                   <div class="form-group">
                     <%= f.label :role %>
@@ -43,11 +65,9 @@
         <% end %>
       </div>
     </div>
-
     <% unless resource.role == 'Admin' %>
         <h4 align="center">Cancel Account</h4>
         <p align="center"><em>Unhappy? We'll be sad to see you go.</em></p>
-        <%= button_to 'Cancel my account', registration_path(resource_name), :data => { :confirm => 'Are you sure?' }, :method => :delete, :class => 'btn btn-primary' %>
+        <%= button_to 'Cancel my account', registration_path(resource_name), :data => { :confirm => 'Are you sure?' }, :method => :delete, :class => 'btn btn-primary btn-xs' %>
     <% end %>
-    
 </div>

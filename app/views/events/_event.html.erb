@@ -1,12 +1,15 @@
 <li id="<%= event.id %>">
   <p><strong>Teacher: </strong>
     <%= link_to event.user.name, event.user %></p>
+    
   <p><strong>Title: </strong>
     <%= link_to event.title, event %></p>
   <p><%= event.content %></p>
+
   <p> <strong>Location: </strong> 
     <%= link_to handle_abbr(School.find(event.user.school_id).school_name.titlecase), "/schools/#{event.user.school_id}" %> </p>
   <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
+
   <p><strong>Tags: </strong>
     <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
   <p>

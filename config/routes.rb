@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     post    '/users/sign_up'  =>  'registrations#create'
     post    'users/sign_in'   =>  'sessions#create'
-    get     'profile'      => 'registrations#edit'
+    post    'users/account'         => 'registrations#edit'
+    get     'users/profile'         => 'registrations#profile'
   end
 
   resources :users

@@ -70,7 +70,7 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.sendgrid.net",
+    address: Rails.application.secrets.smtp_address,
     port: 587,
     domain: Rails.application.secrets.domain_name,
     authentication: "plain",

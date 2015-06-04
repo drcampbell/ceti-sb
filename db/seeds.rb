@@ -39,7 +39,13 @@ User.create!(name:                  'Kevin',
 
 #connection = ActiveRecord::Base.connection
 if not Rails.env.test?
-  schdata = File.read('school_data.txt')
+  if Rails.env.development?
+    schdata = File.read('school_data.txt')
+  elsif Rails.env.production?
+    s3 = AWS::S3.new
+    obj = s3.buckets['my_bucket'].objects['data/school_data.txt']
+    schdata = obj.read
+  end
   records = schdata.split("\n")
   cnames = School.column_names
   cnames = ["badge_id"]+cnames[4..cnames.length]

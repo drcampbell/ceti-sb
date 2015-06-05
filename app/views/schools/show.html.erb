@@ -7,8 +7,10 @@
 			</h3>
 <p id="notice"><%= notice %></p>
 
-<% get_badge(@school) %>
-
+<% puts Badge.find(1).file.url %>
+<div align="center">
+<%= image_tag Badge.find(@school.badge_id).file.url :class =>"img-responsive"  %>
+</div>
 
 <% @fields.each do |key, value| %>
 	<% field=school_process(@school.instance_eval(key), key) %>

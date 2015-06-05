@@ -117,7 +117,7 @@ module SchoolsHelper
   def get_badge(school)
     badge = Badge.find(school.badge_id).file
     uploader = BadgeUploader.new
-    uploader.retrieve_from_store!(badge)
+    uploader.retrieve_from_store!(badge).url
   end
 
   def upload_badge(school, file)

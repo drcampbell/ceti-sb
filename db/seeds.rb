@@ -34,8 +34,11 @@ User.create!(name:                  'Kevin',
              job_title:             'Bossman',
              business:              'School Business',
              role:                  :Admin)
-
-Badge.create!({file: "def_school_badge_small.jpg"})
+f = File.open("app/assets/images/def_school_badge_small.jpg")
+b = Badge.create({})
+b.file = f.to_s
+b.save
+#Badge.create!({file: f })
 # SCHOOLS
 School.create!({badge_id: 1, school_name: "Please Select A School" })
 #connection = ActiveRecord::Base.connection
@@ -101,7 +104,7 @@ end
                email:                   Faker::Internet.email,
                password:                password,
                password_confirmation:   password,
-               school_id:               rand(2..100),
+               school_id:               rand(2..11),
                grades:                  'Grade ' + Faker::Number.digit,
                job_title:               Faker::Name.title,
                business:                Faker::Company.name,
@@ -117,7 +120,7 @@ end
                email:                   Faker::Internet.email,
                password:                password,
                password_confirmation:   password,
-               school_id:               rand(2..100),
+               school_id:               rand(2..11),
                grades:                  'Grade ' + Faker::Number.digit,
                tag_list:                Faker::Lorem.words(rand(1..5)),
                biography:               Faker::Lorem.sentence(20),
@@ -141,7 +144,7 @@ end
 
 events = Event.order(:created_at).take(20)
 events.each do |event|
-  event.claims.create!(user_id:       rand(4..20))
+  event.claims.create!(user_id:       rand(4..11))
 end
 
 # SPEAKER, ADMIN LOCATIONS

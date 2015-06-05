@@ -4,10 +4,12 @@
     <section class="user_info">
       <h3 align="center">
         <%= @user.name %>
+        </h3>
+        <h4>
         <p>
         <%= gravatar_for @user, 100 %>
       </p>
-      </h3>
+      </h4>
       <div>
         <p>
       <% @user_fields = { 'Role'  => @user.role,

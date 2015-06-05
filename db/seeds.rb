@@ -35,8 +35,9 @@ User.create!(name:                  'Kevin',
              business:              'School Business',
              role:                  :Admin)
 
+Badge.create!({file: "def_school_badge_small.jpg"})
 # SCHOOLS
-School.create!({badge_id: => 1, school_name: "Please Select A School" })
+School.create!({badge_id: 1, school_name: "Please Select A School" })
 #connection = ActiveRecord::Base.connection
 if not Rails.env.test?
   if Rails.env.development?
@@ -52,7 +53,7 @@ if not Rails.env.test?
 
   charter = cnames.index("charter")
   records.each do |r|
-    d = [0] + r.split("\t")
+    d = [1] + r.split("\t")
     if d[charter] == "Y"
       d[charter] = true
     else
@@ -100,7 +101,7 @@ end
                email:                   Faker::Internet.email,
                password:                password,
                password_confirmation:   password,
-               school_id:               rand(1..10),
+               school_id:               rand(2..100),
                grades:                  'Grade ' + Faker::Number.digit,
                job_title:               Faker::Name.title,
                business:                Faker::Company.name,
@@ -116,7 +117,7 @@ end
                email:                   Faker::Internet.email,
                password:                password,
                password_confirmation:   password,
-               school_id:               rand(1..10),
+               school_id:               rand(2..100),
                grades:                  'Grade ' + Faker::Number.digit,
                tag_list:                Faker::Lorem.words(rand(1..5)),
                biography:               Faker::Lorem.sentence(20),

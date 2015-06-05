@@ -6,6 +6,10 @@
 				<%= handle_abbr(@school.school_name).upcase %>
 			</h3>
 <p id="notice"><%= notice %></p>
+
+<% get_badge(@school) %>
+
+
 <% @fields.each do |key, value| %>
 	<% field=school_process(@school.instance_eval(key), key) %>
 	<h4>
@@ -13,13 +17,13 @@
 	</h4>
 <% end %>
 
-<ul class="options">
+<div class="btn-group" style="text-align:center">
 	<% if user_signed_in? && 
 		(current_user == 'Teacher' || current_user.role == 'Both') %>
-		<li><%= button_to 'Make My School', {:controller => "schools", :action => "make_mine", :user_id => current_user.id, :school_id => @school.id}, :method => :post %></il>
+		<%= button_to 'Make My School', {:controller => "schools", :action => "make_mine", :user_id => current_user.id, :school_id => @school.id}, :method => :post, :class => "btn btn-lg btn-primary pull-left" %>
 	<% end %>
-	<li><%= link_to 'Back', schools_path %></il>
-</ul>
+	<%= button_to "Back to Search", {:controller => "schools", :action => "index"}, :method => :get, :class => "btn btn-lg btn-primary pull-right" %>
+</div>
 
  </aside>
   <div class="col-md-8">

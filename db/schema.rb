@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602193556) do
+ActiveRecord::Schema.define(version: 20150605144441) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"

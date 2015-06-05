@@ -113,4 +113,18 @@ module SchoolsHelper
     #@schools = @search.results
 
   end
+
+  def get_badge(school)
+    badge = Badge.find(school.badge_id).file
+    uploader = BadgeUploader.new
+    uploader.retrieve_from_store!(badge)
+  end
+
+  def upload_badge(school, file)
+    badge = Badge.find(school.badge_id)
+    badge.file = file
+    badge.save!
+    uploader = BadgeUploader.new
+    uploader.store!(file)
+  end
 end

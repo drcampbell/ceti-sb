@@ -1,9 +1,9 @@
 if Rails.env.production?
   CarrierWave.configure do |config|
     config.storage        = :aws
-    config.aws_bucket = ENV['S3_BUCKET_NAME']
-    config.aws_acl    = :'public-read'
-    config.asset_host = 'http://example.com'
+    config.aws_bucket = ENV['S3_BUCKET']
+    #config.aws_acl    = :'public-read'
+    #config.asset_host = 'http://example.com'
 
     config.aws_credentials = {
         # Configuration for Amazon S3

@@ -32,7 +32,8 @@
       
       <% if (current_user == @user) %>
         <div>
-        <%= button_to "Edit", "profile", :method => :get  %>
+        <%= button_to "Edit", :profile, :method => :get, class: 'btn-primary'  %>
+        <%= button_to "Change My School", :choose, :method => :get, class: "btn-primary btn-md" %>
         </div>
       <% end %>
       </p>

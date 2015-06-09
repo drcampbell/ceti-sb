@@ -10,22 +10,23 @@ class EventsController < ApplicationController
       redirect_to :signin
     return
     end
-    @search = Sunspot.search(Event) do
-      fulltext params[:search]
-       with(:start).less_than(Time.zone.now)
-     facet(:event_month)
-      with(:event_month, params[:month]) if params[:month].present?
-      paginate(page: params[:page])
 
-    end
-    #debugger
-    if params[:search]
-      @events = @search.results
-    elsif params[:tag]
-      @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-    else
-      @events = @search.results
-    end
+    # @search = Sunspot.search(Event) do
+    #   fulltext params[:search]
+    #    with(:start).less_than(Time.zone.now)
+    #  facet(:event_month)
+    #   with(:event_month, params[:month]) if params[:month].present?
+    #   paginate(page: params[:page])
+
+    # end
+    # #debugger
+    # if params[:search]
+    #   @events = @search.results
+    # elsif params[:tag]
+    #   @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
+    # else
+    #   @events = @search.results
+    # end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @events.as_json }
@@ -164,7 +165,7 @@ class EventsController < ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:content, :title, :tag_list, :start, :end)
+      params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :school_id)
     end
 
   # Confirms the correct user.

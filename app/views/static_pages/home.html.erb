@@ -1,17 +1,23 @@
 <% if user_signed_in? %>
   <div class="row">
-      <aside class="col-md-4">
+      <!-- <aside class="col-md-4"> -->
         <section class="user_info">
           <%= render 'shared/user_info' %>
         </section>
-        <section class="event_form">
-          <%= render 'shared/event_form' %>
+        <% @events = current_user.events.paginate(page: params[:page]) %>
+        <section class="event_calendar">
+          <%= render 'events/week_calendar' %>
         </section>
-      </aside>
+<!--         <section class="event_form">
+          <%= render 'shared/event_form' %>
+        </section> -->
+      <!-- </aside> -->
+      <div class="row">
       <div class="col-md-8">
         <h3>Event Feed</h3>
         <%= render 'shared/feed' %>
       </div>
+    </div>
     </div>
 <% else %>
     <div class="center jumbotron">

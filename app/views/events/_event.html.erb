@@ -1,23 +1,32 @@
 <li id="<%= event.id %>">
-  <p><strong>Teacher: </strong>
-    <%= link_to event.user.name, event.user %></p>
-    
+<div class="row">
+
+  <div class="col-xs-8 col-sm-8"> 
   <p><strong>Title: </strong>
     <%= link_to event.title, event %></p>
-  <p><%= event.content %></p>
-
-  <p> <strong>Location: </strong> 
-    <%= link_to handle_abbr(School.find(event.user.school_id).school_name.titlecase), "/schools/#{event.user.school_id}" %> </p>
-  <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
-
-  <p><strong>Tags: </strong>
-    <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
+    
   <p>
     <% unless event.claims.each.nil? %>
-        <strong>Claimed by: </strong>
+        <strong>Speaker: </strong>
         <%= raw event.claims.each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
     <% end %>
   </p>
+
+  <p><strong>Teacher: </strong>
+    <%= link_to event.user.name, event.user %></p>
+
+  <p> <strong>Location: </strong> 
+    <%= link_to handle_abbr(School.find(event.user.school_id).school_name.titlecase), "/schools/#{event.user.school_id}" %> </p>
+  <p><%= event.content %></p>
+
+  <p><strong>Tags: </strong>
+    <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
+
+  <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
+  </div> <!-- column -->
+    <aside class="col-xs-4 col-sm-4">
+  <%= image_tag Badge.find(School.find(event.school_id).badge_id).file.url class: "img-responsive" %>  
+  </aside>
   <p>
     <% if event.claims.where('confirmed_by_teacher = ?', true).count < 1 &&
             event.claims.where('user_id = ?', current_user.id).count < 1 &&
@@ -40,9 +49,12 @@
   <% end %>
   </p>
 
+
   <a>
   <% if current_user == event.user %>
         <%= button_to 'delete', event, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
   <% end %>
   </a>
+
+</div> <!-- row -->
 </li>

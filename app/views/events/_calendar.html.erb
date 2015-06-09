@@ -1,0 +1,10 @@
+<%= month_calendar events: @events do |date, events| %>
+	<div class="month-day">
+	<%= date.day %>
+	<% events.each do |event| %>
+		<div class="month-event">
+			<%= event.title.titlecase %>
+		</div>
+	<% end %>
+</div>
+<% end %>

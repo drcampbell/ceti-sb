@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605201625) do
+ActiveRecord::Schema.define(version: 20150608152738) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -33,12 +33,12 @@ ActiveRecord::Schema.define(version: 20150605201625) do
 
   create_table "events", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.text     "content"
     t.string   "title"
-    t.datetime "start"
-    t.datetime "end"
+    t.datetime "event_start"
+    t.datetime "event_end"
     t.integer  "school_id"
   end
 

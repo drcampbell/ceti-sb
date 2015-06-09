@@ -71,6 +71,20 @@ module SchoolsHelper
 		end
 	end
 
+    def get_schools(params)
+        @search = Sunspot.search(School) do
+          fulltext params[:search]
+          paginate(page: params[:page])
+        end
+        if params[:search]
+          @schools = @search.results
+        elsif params[:tag]
+          @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
+        else
+          @schools = School.all.paginate(page: params[:page])
+        end
+    end
+
 	def handle_abbr(value)
             if value == nil
                 return nil
@@ -88,24 +102,6 @@ module SchoolsHelper
 			end
 			newvalues.join(" ")
 		end
-
-  def get_events(id)
-    @search = Sunspot.search(Event) do
-      with(:school_id, id)
-    end
-    @events = @search.results
-    # if params[:search]
-    #   @events = @search.results
-    # elsif params[:tag]
-    #   @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-    # else
-    #   @events = Event.all.paginate(page: params[:page])
-    # end
-    # respond_to do |format|
-    #   format.html # index.html.erb
-    #   format.json { render json: @events.as_json }
-    # end
-  end
 
   def near_me
     @schools = School.near('Columbus, OH', 20)

@@ -1,0 +1,47 @@
+table {
+  width: 100%;
+}
+
+.calendar td {
+	height: 100px; 
+	width: 14.28%; 
+}
+.day {
+  width: 14.3%;
+}
+
+.day-hour {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  min-height: 40px;
+  padding: 4px;
+}
+
+.month-day {
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	min-height:100px;
+	padding: 4px;
+}
+
+.month-event {
+	font: courier;
+	font-size: 1.0em;
+}
+
+.week-day {
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	min-height:100px;
+	min-width: 100px;
+	padding: 4px;
+}
+
+.week-event {
+	font: courier;
+	font-size: 1.0em;
+}

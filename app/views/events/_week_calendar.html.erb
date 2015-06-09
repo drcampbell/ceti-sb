@@ -1,0 +1,10 @@
+<%= week_calendar events: @events do |date, events| %>
+	<div class="week-day">
+	<%= date.day %>
+	<% events.each do |event| %>
+		<div class="week-event">
+			<%= link_to event.title.titlecase, "events/#{event.id}" %>
+		</div>
+	<% end %>
+</div>
+<% end %>

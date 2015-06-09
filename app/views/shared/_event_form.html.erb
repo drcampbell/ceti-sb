@@ -4,7 +4,10 @@
       <%= f.label :title, 'Title' %><br />
       <%= f.text_field :title %>
     </div>
-
+    <div class="field"> 
+      <%= puts current_user.school_id %>
+      <%= f.hidden_field :school_id, :value => current_user.school_id %>
+    </div>
     <div class="field">
       <%= f.text_area :content, placeholder: 'Compose new event...' %>
     </div>
@@ -15,16 +18,19 @@
     </div>
     <div class="form-group">
       <label>Start</label>
-      <%= f.datetime_select :start %>
+      <%= f.datetime_select :event_start %>
     </div>
     <div class="form-group">
       <label>End</label>
-      <%= f.datetime_select :end %>
+      <%= f.datetime_select :event_end %>
     </div>
     <%= f.submit 'Post', class: 'btn btn-primary' %>
 <% end %>
 
 <script type="text/javascript">
-    $('.datetimepicker').datetimepicker({});
+    $('.datetimepicker').datetimepicker({
+      inline: true,
+      sideBySide: true
+    });
 </script>
 

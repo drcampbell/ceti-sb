@@ -2,6 +2,8 @@
 
 <h1>Events</h1>
 
+
+
 <div id="tag_cloud">
   <% tag_cloud Event.tag_counts.most_used(100).shuffle, %w[xs s m l xl] do |tag, css_class| %>
       <%= link_to tag.name, tag_path(tag.name), class: css_class %>
@@ -14,6 +16,8 @@
       <%= submit_tag 'Search', :name => nil %>
     </p>
 <% end %>
+
+<% @events = get_events(params) %>
 
 <div id="facets">
   <ul>
@@ -30,6 +34,7 @@
 </div>
 
 <%= will_paginate %>
+
 
 <div id="events">
   <% @events.each do |event| %>

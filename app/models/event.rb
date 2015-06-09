@@ -1,13 +1,15 @@
 class Event < ActiveRecord::Base
+  extend SimpleCalendar
   belongs_to :user
   belongs_to :school
+  has_calendar({:attribute => :event_start})
   has_many :claims, dependent: :destroy
   acts_as_taggable
 
  searchable do
    text :title, :boost => 5
    text :content, :event_month
-   time :start
+   time :event_start
    string :event_month
    integer :school_id
  end
@@ -17,6 +19,6 @@ class Event < ActiveRecord::Base
   end
 
   def event_month
-    self.start.strftime('%B %Y')
+    self.event_start.strftime('%B %Y')
   end
 end

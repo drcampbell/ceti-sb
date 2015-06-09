@@ -135,8 +135,9 @@ users = User.where('role = ? OR role = ?', 1, 3)
     user.events.create!(content:  Faker::Lorem.sentence(10),
                         tag_list: ['Technology', 'Engineering', 'Nutrition', 'Business', 'Finance', 'Volunteer'].sample,
                         title:    Faker::Lorem.sentence(rand(1..5)),
-                        start:    Time.zone.now,
-                        end:      Time.zone.now)
+                        event_start:    Time.zone.now,
+                        event_end:      Time.zone.now,
+                        school_id: user.school_id)
   end
 end
 
@@ -144,7 +145,7 @@ end
 
 events = Event.order(:created_at).take(20)
 events.each do |event|
-  event.claims.create!(user_id:       rand(4..11))
+  event.claims.create!(user_id: rand(4..11), )
 end
 
 # SPEAKER, ADMIN LOCATIONS

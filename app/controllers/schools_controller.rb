@@ -11,17 +11,6 @@ class SchoolsController < ApplicationController
     # end
     # @schools = School.paginate(:page => 1, :per_page => 2)
 
-    @search = Sunspot.search(School) do
-      fulltext params[:search]
-      paginate(page: params[:page])
-    end
-    if params[:search]
-      @schools = @search.results
-    elsif params[:tag]
-      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
-    else
-      @schools = School.all.paginate(page: params[:page])
-    end
     #@schools = School.first
     respond_to do |format|
         format.html {  }
@@ -52,6 +41,18 @@ class SchoolsController < ApplicationController
       end
       format.json { render json: @school}
     end
+  end
+
+  def choose
+
+  end
+
+  def claim_school
+    #@school = School.find(params[:school_id])
+    @user = User.find(params[:user_id])
+    @user.school_id = params[:school_id]
+    @user.save
+    redirect_to :profile
   end
 
   def make_mine

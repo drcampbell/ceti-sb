@@ -1,4 +1,4 @@
-<% provide(:title, 'Schools') %>
+<% provide(:title, 'Find My School') %>
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Schools</h1>
@@ -11,22 +11,13 @@
   </p>
 <% end %>
 
+<% @schools = get_schools(params) %>
 <%= will_paginate %>
 
-<% @schools = get_schools(params) %>
+
 
 <ul class="schools">
   <%= render @schools %>
 </ul>
 
 <%= will_paginate %>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-</table>
-
-<br>

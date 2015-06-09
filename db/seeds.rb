@@ -34,10 +34,14 @@ User.create!(name:                  'Kevin',
              job_title:             'Bossman',
              business:              'School Business',
              role:                  :Admin)
-f = File.open("app/assets/images/def_school_badge_small.jpg")
-b = Badge.create({})
-b.file = f.to_s
-b.save
+if Rails.env.development?
+  f = File.open("app/assets/images/def_school_badge_small.jpg")
+  b = Badge.create({})
+  b.file = f.to_s
+  b.save
+elsif Rails.env.production?
+
+end
 #Badge.create!({file: f })
 # SCHOOLS
 School.create!({badge_id: 1, school_name: "Please Select A School" })
@@ -46,7 +50,7 @@ if not Rails.env.test?
   if Rails.env.development?
     schdata = File.read('school_data.txt')
   elsif Rails.env.production?
-    s3 = Aws::S3::Client.new(region: 'us-west-2')
+    s3 = Aws::S3::Client.new(endpoint: 'ceti-sb.s3-website-us-west-1.amazonaws.com')
     obj = s3.get_object(bucket: 'ceti-sb', key: 'data/school_data.txt')
     schdata = obj.body.read
   end

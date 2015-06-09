@@ -44,9 +44,10 @@ group :development, :test, :production do
   gem 'sunspot_rails'
   gem 'sunspot_solr'
   gem 'simple_calendar', "~> 1.1.0"
-  gem 'carrierwave',             '0.10.0'
+  #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'
-  gem 'fog',                     '1.23.0'
+  #gem 'fog',                     '1.23.0'
+  gem 'carrierwave-aws'
 end
 
 group :development do

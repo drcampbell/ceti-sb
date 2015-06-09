@@ -43,6 +43,10 @@ GEM
     autoprefixer-rails (5.1.11)
       execjs
       json
+    aws-s3 (0.6.3)
+      builder
+      mime-types
+      xml-simple
     aws-sdk (2.0.47)
       aws-sdk-resources (= 2.0.47)
     aws-sdk-core (2.0.47)
@@ -360,12 +364,14 @@ GEM
       railties (~> 4.0)
       sprockets-rails (>= 2.0, < 4.0)
     will_paginate (3.0.7)
+    xml-simple (1.1.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   acts-as-taggable-on
+  aws-s3
   aws-sdk (~> 2)
   better_errors
   binding_of_caller

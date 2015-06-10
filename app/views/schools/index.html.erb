@@ -1,7 +1,12 @@
 <% provide(:title, 'Schools') %>
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Schools</h1>
+<% if user_signed_in? && (!current_user.school_id || current_user.school_id > 1) %>
+  <h1>Listing Schools</h1>
+<% else %>
+  <h1>Find Your School</h1>
+<% end %>
+
 
 <%= form_tag schools_path, :method => :get do %>
   <p>

@@ -104,7 +104,7 @@ module SchoolsHelper
 		end
 
   def near_me
-    @schools = School.near('Columbus, OH', 20)
+    #@schools = School.near('Columbus, OH', 20)
     #@search = Sunspot.search(School) do
     #@schools = @search.results
 

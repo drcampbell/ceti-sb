@@ -33,7 +33,7 @@
  </aside>
   <div class="col-md-8">
   	<% puts @school.class %>
-  	<% @events = get_events2(@school) %>
+  	<% @events = get_events(@school) %>
   	<% puts @events %>
     <% if @events.any? %>
         <h3>Events (<%= @events.count %>)</h3>

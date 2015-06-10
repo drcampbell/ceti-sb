@@ -35,9 +35,10 @@ User.create!(name:                  'Kevin',
              business:              'School Business',
              role:                  :Admin)
 if Rails.env.development?
-  f = File.open("app/assets/images/def_school_badge_small.jpg")
   b = Badge.create({})
-  b.file = f.to_s
+  File.open("app/assets/images/def_school_badge_small.jpg") do |f|
+    b.file = f
+  end
   b.save
 elsif Rails.env.production?
 
@@ -50,7 +51,7 @@ if not Rails.env.test?
   if Rails.env.development?
     schdata = File.read('school_data.txt')
   elsif Rails.env.production?
-    s3 = Aws::S3::Client.new(endpoint: 'ceti-sb.s3-website-us-west-1.amazonaws.com')
+    s3 = Aws::S3::Client.new(region: 'us-west-1')
     obj = s3.get_object(bucket: 'ceti-sb', key: 'data/school_data.txt')
     schdata = obj.body.read
   end

@@ -11,9 +11,9 @@
   </p>
 <% end %>
 
-<%= will_paginate %>
-
 <% @schools = get_schools(params) %>
+
+<%= will_paginate %>
 
 <ul class="schools">
   <%= render @schools %>

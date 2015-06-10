@@ -105,7 +105,11 @@ class EventsController < ApplicationController
 
   def new
     if user_signed_in?
-      @event = current_user.events.build
+      if current_user.school_id > 1
+        @event = current_user.events.build
+      else
+        redirect_to :choose
+      end
     else
       redirect_to :signin
     end

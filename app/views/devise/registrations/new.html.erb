@@ -17,9 +17,10 @@
           <%= f.label :password_confirmation, 'Password Confirmation' %>
           <%= f.password_field :password_confirmation, class: 'form-control' %>
               <div class="form-group">
+                <%= f.label :role, 'Role: Speaker | Teacher | Both' %>
           <%= f.select :role, ['Speaker', 'Teacher', 'Both'], {}, {class: 'btn btn-default dropdown-toggle'} %>
-          <%= f.select :school_id, ['1'], {}, {class: 'btn btn-default dropdown-toggle'} %>
-              </div>
+          <%= f.hidden_field :school_id, :value => 1 %>
+
           <%= f.submit 'Create my account', class: 'btn btn-primary' %>
       <% end %>
     </div>

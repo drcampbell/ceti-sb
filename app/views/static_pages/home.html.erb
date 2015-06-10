@@ -13,6 +13,12 @@
         </section> -->
       <!-- </aside> -->
       <div class="row">
+        <p>  </p>
+        <div class="col-md-8">
+        <%= button_to "Create New Event", 'events/new', class: 'btn-primary', method: :get %>
+      </div>
+      </div>
+      <div class="row">
       <div class="col-md-8">
         <h3>Event Feed</h3>
         <%= render 'shared/feed' %>

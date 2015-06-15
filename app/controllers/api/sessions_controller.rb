@@ -1,19 +1,15 @@
-class SessionsController < Devise::SessionsController
+class API::SessionsController < Devise::SessionsController
 # before_filter :ensure_params_exist
 prepend_before_filter :require_no_authentication, :only => [:create ]
 prepend_before_filter :allow_params_authentication!, only: :create
 prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeout"] = true}
+
+#after_filter :set_csrf_header, only: [:new, :create]
+
 respond_to :json
 
 def create
   respond_to do |format|
-    format.html do
-      self.resource = warden.authenticate!(auth_options)
-      set_flash_message(:notice, :signed_in) if is_flashing_format?
-      sign_in(resource_name, resource)
-      yield resource if block_given?
-      respond_with resource, location: after_sign_in_path_for(resource)
-    end
     format.json do
       self.resource = warden.authenticate!(:scope => resource_name)
       sign_in(resource_name, resource)
@@ -23,25 +19,26 @@ def create
 end
 
 def destroy
+  puts "what FFFFFFF"
   respond_to do |format|
-    format.html do
-      signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-      set_flash_message :notice, :signed_out if signed_out && is_flashing_format?
-      yield if block_given?
-      respond_to_on_destroy
-    end
     format.json do
+      puts "what FFFFFFF"
       if user.nil?
         render status: 404, json: { message: 'Invalid token.' }
       else
+        user.update(:authentication_token => nil)
         user.save!
-        render status: 204, json: nil
+        render status: 204, json: { message: "You have signed out."}
       end
     end
   end
 end
 
   protected
+    # def set_csrf_header
+    #   response.headers['X-CSRF-Token'] = form_authenticity_token
+    # end
+
     def ensure_params_exist
       return unless params[:user_login].blank?
       render :json=>{:success=>false, :message=> 'missing user_login parameter'}, :status=>422
@@ -75,8 +72,8 @@ end
     # to the after_sign_out path.
       def verify_signed_out_user
         if all_signed_out?
-          set_flash_message :notice, :already_signed_out if is_flashing_format?
-          respond_to_on_destroy
+          #set_flash_message :notice, :already_signed_out if is_flashing_format?
+          #respond_to_on_destroy
         end
       end
       def all_signed_out?

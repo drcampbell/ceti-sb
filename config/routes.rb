@@ -1,13 +1,27 @@
 Rails.application.routes.draw do
   mount Upmin::Engine => '/admin'
 
-  devise_for :users, :controllers => { registrations: 'registrations' }
+  devise_for :users, :controllers => { registrations: 'registrations', sessions: "sessions" }
 
   devise_scope :user do
     post    '/users/sign_up'  =>  'registrations#create'
     post    'users/sign_in'   =>  'sessions#create'
+    delete    'users/sign_out'  =>  'sessions#destroy'
     post    'account'         => 'registrations#edit'
     get     'profile'         => 'registrations#profile'
+  end
+
+  namespace :api do
+#    namespace :v1 do
+    devise_scope :user do
+      post 'users/sign_in' => 'sessions#create'
+      delete    'users/sign_out'  =>  'sessions#destroy'
+    end
+    resources :sessions
+    resources :users
+    resources :schools
+    resources :events
+#  end
   end
 
   resources :users
@@ -24,6 +38,7 @@ Rails.application.routes.draw do
   get    'contact' => 'static_pages#contact'
   get    'signin'  => 'static_pages#signin'
   get    'invalid_event'  => 'static_pages#invalid_event'
+  get     'message' => 'users#message'
   get 'tags/:tag',  to: 'events#index', as: :tag
   get 'users/:tag',  to: 'users#index'
   post 'make_mine', to: 'schools#make_mine'

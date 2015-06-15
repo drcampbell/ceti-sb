@@ -1,6 +1,6 @@
-class SchoolsController < ApplicationController
+class API::SchoolsController < ApplicationController
   before_action :set_school, only: [:show, :edit, :update]
-  respond_to :html, :json
+  respond_to :json
   # GET /schools
   # GET /schools.json
   def index
@@ -11,9 +11,8 @@ class SchoolsController < ApplicationController
     # end
     # @schools = School.paginate(:page => 1, :per_page => 2)
 
-    #@schools = School.first
+    @schools = School.first
     respond_to do |format|
-        format.html {  }
         format.json { render json: @schools.as_json }
     end
   end

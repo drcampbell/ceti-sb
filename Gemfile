@@ -22,6 +22,7 @@ end
 
 group :development, :test, :production do
   gem 'devise'
+  gem 'simple_token_authentication', '~> 1.0'
   gem 'sendgrid'
   gem 'simple_form'
   gem 'mail_form'

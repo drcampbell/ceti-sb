@@ -8,7 +8,9 @@ Bundler.require(*Rails.groups)
 
 module RailsDevise
   class Application < Rails::Application
-    
+    config.to_prepare do
+        DeviseController.respond_to :html, :json
+    end
     config.paths['app/views'] << 'app/views/devise'
 
     config.generators do |g|

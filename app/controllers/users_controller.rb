@@ -57,6 +57,9 @@ class UsersController < ApplicationController
     end
   end
 
+  def message
+  end
+  
   private
 
   # Confirms an admin user.

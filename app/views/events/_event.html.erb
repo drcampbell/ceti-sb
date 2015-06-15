@@ -2,8 +2,8 @@
 <div class="row">
 
   <div class="col-xs-8 col-sm-8"> 
-  <p><strong>Title: </strong>
-    <%= link_to event.title, event %></p>
+  <p><!--<strong>Title: </strong>-->
+    <h1><%= link_to event.title, event %></h1></p>
     
   <p>
     <% unless event.claims.each.nil? %>
@@ -52,7 +52,9 @@
 
   <a>
   <% if current_user == event.user %>
-        <%= button_to 'delete', event, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
+    <%= button_to 'Cancel The Event', event, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
+  <% else %>
+    <%= button_to 'Message The Organizer', :message, class:"btn-primary", method: :get %>    
   <% end %>
   </a>
 

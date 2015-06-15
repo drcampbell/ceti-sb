@@ -1,10 +1,14 @@
 class ApplicationController < ActionController::Base
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  #before_filter :authenticate_user_from_token!
+  acts_as_token_authentication_handler_for User
+  before_filter :authenticate_user!
+  #before_filter :configure_permitted_parameters, if: :devise_controller?
   include ActionController::MimeResponds
   include ActionController::StrongParameters
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  # protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
+
 
   def hello
     render text: "hello cruel world"
@@ -34,5 +38,14 @@ class ApplicationController < ActionController::Base
     def speaker_user
       redirect_to(:signin) unless user_signed_in? && (current_user.role == 'Speaker' || current_user.role == 'Both')
     end
+
+    # def authenticate_user_from_token!
+    #   user_email = params[:email].presence
+    #   user = user_email && User.find_by_email(user_email)
+
+    #   if user && Devise.secure_compare(user.authentication_token, params[:user_token])
+    #     sign_in user, store: false
+    #   end
+    # end
 
 end

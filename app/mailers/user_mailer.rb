@@ -10,4 +10,10 @@ class UserMailer < ApplicationMailer
 
     mail to: @user.email, subject: "School Business: Your Password Has Changed"
   end
+
+  def send_message(send_id, recip_id)
+    @sender = User.find(send_id)
+    @recip = User.find(recip_id)
+    mail to: @recip.email, subject: "School Business: #{@sender.name} has sent you a message."
+  end
 end

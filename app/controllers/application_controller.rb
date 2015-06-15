@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   #before_filter :authenticate_user_from_token!
-  acts_as_token_authentication_handler_for User
+  #acts_as_token_authentication_handler_for User, 
+    #unless: lambda { |StaticPagesController| }
   before_filter :authenticate_user!
   #before_filter :configure_permitted_parameters, if: :devise_controller?
   include ActionController::MimeResponds

@@ -1,5 +1,6 @@
 class API::SessionsController < Devise::SessionsController
 # before_filter :ensure_params_exist
+acts_as_token_authentication_handler_for User
 prepend_before_filter :require_no_authentication, :only => [:create ]
 prepend_before_filter :allow_params_authentication!, only: :create
 prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeout"] = true}
@@ -9,13 +10,9 @@ prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeou
 respond_to :json
 
 def create
-  respond_to do |format|
-    format.json do
-      self.resource = warden.authenticate!(:scope => resource_name)
-      sign_in(resource_name, resource)
-      render :json => resource, :status => 200
-    end
-  end
+  self.resource = warden.authenticate!(:scope => resource_name)
+  sign_in(resource_name, resource)
+  render :json => resource, :status => 200
 end
 
 def destroy

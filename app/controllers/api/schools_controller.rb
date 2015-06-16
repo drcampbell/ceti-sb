@@ -1,4 +1,4 @@
-class API::SchoolsController < ApplicationController
+class API::SchoolsController < API::ApplicationController
   before_action :set_school, only: [:show, :edit, :update]
   respond_to :json
   # GET /schools

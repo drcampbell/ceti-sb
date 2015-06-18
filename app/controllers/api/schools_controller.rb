@@ -4,16 +4,28 @@ class API::SchoolsController < API::ApplicationController
   # GET /schools
   # GET /schools.json
   def index
-    # @schools = Sunspot.search(School) do
-    #   fulltext params[:search]
-    #   #paginate(:page, params[:page])
-    #   paginate :page =>2, :per_page =>15
-    # end
-    # @schools = School.paginate(:page => 1, :per_page => 2)
+    puts :controller 
+    puts params
+    @search = Sunspot.search(School) do
+      fulltext params[:search]
+      paginate(page: params[:page])
+    end
+    if params[:search]
+      @schools = @search.results
+    elsif params[:tag]
+      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
+    else
+      @schools = School.all.paginate(page: params[:page])
+    end
+    results = Array.new(@schools.count) { Hash.new }
+    for i in 0..@schools.count-1
+      results[i] = {"id" => @schools[i].id, "school_name" => @schools[i].school_name}
+    end
 
-    @schools = School.first
+    #@schools = @search.results#{:school_name => @schools
+    #@schools = get_schools("") #School.first
     respond_to do |format|
-        format.json { render json: @schools.as_json }
+        format.json { render json: {"schools"=> results}.as_json }
     end
   end
   

@@ -50,7 +50,7 @@ class API::SchoolsController < API::ApplicationController
                       address: @school.loc_addr, city: @school.loc_city,
                       state: @school.loc_state, zip: @school.loc_zip,
                       phone: @school.phone}
-    render json: @school
+    render json: school_message
 
   end
 

@@ -46,12 +46,12 @@ class API::SchoolsController < API::ApplicationController
                   'loc_zip'   => 'Zip',
                   'phone'     => 'Phone'}
     @school = School.find(params[:id])
-    respond_to do |format|
-      format.html do
+    school_message = {id: @school.id, name: @school.school_name,
+                      address: @school.loc_addr, city: @school.loc_city,
+                      state: @school.loc_state, zip: @school.loc_zip,
+                      phone: @school.phone}
+    render json: @school
 
-      end
-      format.json { render json: @school}
-    end
   end
 
   def choose

@@ -3,6 +3,7 @@ class API::UsersController < API::ApplicationController
   #before_filter :authenticate_user!
   #before_action :correct_user,   only: [:update, :destroy]
   #before_action :admin_user,     only: :destroy
+  respond_to :json
 
   def index
     @search = Sunspot.search(User) do
@@ -17,14 +18,24 @@ class API::UsersController < API::ApplicationController
       @users = User.all.paginate(page: params[:page])
     end
 
-  render json: @users.as_json
+    results = Array.new(@users.count) { Hash.new }
+    for i in 0..@users.count-1
+      results[i] = {"id" => @users[i].id, "name" => @users[i].name}
+    end
+
+    render json: @users.as_json
 
   end
 
   def show
     @user = User.find(params[:id])
 
-    render json: @user
+    user_message = {id: @user.id, name:@user.name, role:@user.role, 
+                    grades:@user.grades, job_title:@user.job_title,
+                    business:@user.business, biography:@user.biography,
+                    category:@user.speaking_category, school_id:@user.school_id,
+                    school_name:School.find(@user.school_id).school_name}
+    render json: user_message
 
   end
 

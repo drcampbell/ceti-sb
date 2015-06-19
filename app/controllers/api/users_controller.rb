@@ -6,6 +6,7 @@ class API::UsersController < API::ApplicationController
   respond_to :json
 
   def index
+    puts params
     @search = Sunspot.search(User) do
       fulltext params[:search]
       paginate(page: params[:page])
@@ -19,22 +20,28 @@ class API::UsersController < API::ApplicationController
     end
 
     results = Array.new(@users.count) { Hash.new }
-    for i in 0..@users.count-1
+    for i in 0..results.count-1
       results[i] = {"id" => @users[i].id, "name" => @users[i].name}
     end
 
-    render json: @users.as_json
+    render json: results.as_json
 
   end
 
   def show
     @user = User.find(params[:id])
 
+    if @user.school_id && @user.school_id != ""
+      school_name =School.find(@user.school_id).school_name
+    else
+      school_name = nil
+    end
+
     user_message = {id: @user.id, name:@user.name, role:@user.role, 
                     grades:@user.grades, job_title:@user.job_title,
                     business:@user.business, biography:@user.biography,
                     category:@user.speaking_category, school_id:@user.school_id,
-                    school_name:School.find(@user.school_id).school_name}
+                    school_name:school_name}
     render json: user_message
 
   end

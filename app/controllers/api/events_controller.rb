@@ -5,7 +5,7 @@ class API::EventsController < API::ApplicationController
   before_action :correct_user,        only: [:edit, :update]
   before_action :admin_user,          only: :destroy
   respond_to :json
-  
+
   def index
     if not user_signed_in?
       redirect_to :signin
@@ -14,7 +14,7 @@ class API::EventsController < API::ApplicationController
 
     @search = Sunspot.search(Event) do
       fulltext params[:search]
-       with(:start).less_than(Time.zone.now)
+       with(:event_start).less_than(Time.zone.now)
      facet(:event_month)
       with(:event_month, params[:month]) if params[:month].present?
       paginate(page: params[:page])
@@ -34,7 +34,19 @@ class API::EventsController < API::ApplicationController
   def show
     if user_signed_in?
       @event = Event.find(params[:id])
-      render json: @event.as_json
+      school_name = nil
+      user_name = nil
+      if @event.school_id
+        school_name = School.find(@event.school_id).school_name
+      end
+      if @event.user_id
+        user_name = User.find(@event.user_id).name
+      end
+
+      result = @event.attributes
+      result[:user_name] = user_name
+      result[:school_name] = school_name
+      render json: result.as_json
     end
   end
 

@@ -12,6 +12,7 @@ class Event < ActiveRecord::Base
    time :event_start
    string :event_month
    integer :school_id
+   integer :user_id
  end
 
   def tag_list_commas

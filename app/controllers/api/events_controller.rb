@@ -33,7 +33,7 @@ class API::EventsController < API::ApplicationController
       results[i] = {"id" => @events[i].id, "event_title" => @events[i].title, "event_start" => @events[i].event_start}
     end
 
-    render json: @events.as_json
+    render json: results.as_json
   end
 
   def show

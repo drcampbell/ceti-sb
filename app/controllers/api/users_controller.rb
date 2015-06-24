@@ -22,7 +22,7 @@ class API::UsersController < API::ApplicationController
     results = Array.new(@users.count) { Hash.new }
     for i in 0..results.count-1
       if @users[i].role == "Teacher" || @users[i].role == "Both"
-        association = @users[i].school_name
+        association = handle_abbr(School.find(@users[i].school_id).school_name)
       elsif @users[i].role == "Speaker"
         association == @users[i].business
       end

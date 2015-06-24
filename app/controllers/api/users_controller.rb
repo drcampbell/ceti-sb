@@ -29,7 +29,7 @@ class API::UsersController < API::ApplicationController
       results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
     end
 
-    render json: results.as_json
+    render json: {:users => results}.as_json
 
   end
 

@@ -17,9 +17,11 @@ class API::SchoolsController < API::ApplicationController
     else
       @schools = School.all.paginate(page: params[:page])
     end
+    
     results = Array.new(@schools.count) { Hash.new }
     for i in 0..@schools.count-1
-      results[i] = {"id" => @schools[i].id, "school_name" => @schools[i].school_name}
+      city_state = @schools[i].loc_city+", "+@schools[i].loc_state
+      results[i] = {"id" => @schools[i].id, "school_name" => @schools[i].school_name, "city_state" => city_state}
     end
 
     #@schools = @search.results#{:school_name => @schools

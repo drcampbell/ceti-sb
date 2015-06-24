@@ -21,7 +21,12 @@ class API::UsersController < API::ApplicationController
 
     results = Array.new(@users.count) { Hash.new }
     for i in 0..results.count-1
-      results[i] = {"id" => @users[i].id, "name" => @users[i].name}
+      if @users[i].role == "Teacher" || @users[i].role == "Both"
+        association = @users[i].school_name
+      elsif @users[i].role == "Speaker"
+        association == @users[i].business
+      end
+      results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
     end
 
     render json: results.as_json

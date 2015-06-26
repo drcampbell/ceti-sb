@@ -59,28 +59,14 @@ class API::EventsController < API::ApplicationController
   def create
     if user_signed_in?
       @event = current_user.events.build(event_params)
-      respond_to do |format|
-        format.html do
-          if @event.save
-            flash[:success] = 'Event created!'
-            redirect_to root_path
-          else
-            @feed_items = []
-            flash[:notice] = 'Event creation failed!'
-            render 'static_pages/home'
-          end
-        end
-        format.json do
-          if @event.save
-            render :json => {:state => {:code => 0}, :data => @event.to_json }
-          else
-            @feed_items = []
-            render :json => {:state => {:code => 1, :messages => @event.errors.full_messages} }
-          end
-        end
+      if @event.save
+        render :json => {:state => {:code => 0}, :data => @event.to_json }
+      else
+        @feed_items = []
+        render :json => {:state => {:code => 1, :messages => @event.errors.full_messages} }
       end
     else
-      redirect_to signin
+      render_401
     end
   end
 

@@ -3,7 +3,7 @@ class API::EventsController < API::ApplicationController
   #before_action :authenticate_user!
   before_action :teacher_user,        only: [:create]
   before_action :correct_user,        only: [:edit, :update]
-  before_action :admin_user,          only: :destroy
+  #before_action :admin_user,          only: :destroy
   respond_to :json
 
   def index
@@ -60,7 +60,7 @@ class API::EventsController < API::ApplicationController
     if user_signed_in?
       @event = current_user.events.build(event_params)
       if @event.save
-        render :json => {:state => {:code => 0}, :data => @event.to_json }
+        render :json => {:state => {:code => 0}, :event => @event.to_json }
       else
         @feed_items = []
         render :json => {:state => {:code => 1, :messages => @event.errors.full_messages} }
@@ -108,18 +108,13 @@ class API::EventsController < API::ApplicationController
 
   def destroy
     if user_signed_in?
+      puts params
       @event = Event.find params[:id]
-      respond_to do |format|
-        format.html do
-          @event.destroy
-        end
-        format.json do
-          if @event.destroy
-            render :json => {:state => {:code => 0}}
-          else
-            render :json => {:state => {:code => 1, :messages => @user.errors.full_messages} }
-          end
-        end
+      if User.find(@event.user_id).email == params[:user_email] #|| isAdmin(current_user)
+        Event.destroy(params[:id])
+        render :json => {:state => {:code => 0}}
+      else
+        render :json => {:state => {:code => 1, :messages => "Not authorized to delete this event"} }
       end
     end
   end

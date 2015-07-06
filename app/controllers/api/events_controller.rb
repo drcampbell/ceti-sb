@@ -49,6 +49,7 @@ class API::EventsController < API::ApplicationController
         user_name = User.find(@event.user_id).name
       end
 
+
       result = @event.attributes
       result[:user_name] = user_name
       result[:school_name] = school_name
@@ -56,6 +57,11 @@ class API::EventsController < API::ApplicationController
         result[:speaker] = User.find(@event.speaker_id).name
       else
         result[:speaker] = "TBA"
+      end
+      if Claim.exists?(event_id: @event.id, user_id: current_user)
+        result[:claim] = true
+      else
+        result[:claim] = false
       end
       render json: result.as_json
     end
@@ -127,7 +133,8 @@ class API::EventsController < API::ApplicationController
   def claim_event
     begin
       @event = Event.find(params[:event_id])
-      @event.claims.create!(:user_id => params[:user_id])
+      puts current_user.id
+      @event.claims.create!(:user_id => current_user.id)#params[:user_id])
       render :json => {:state => 0, :event => @event }
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }

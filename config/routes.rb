@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     resources :users
     resources :schools
     resources :events
+    match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
+ 
 #  end
   end
 

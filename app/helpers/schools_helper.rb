@@ -73,11 +73,8 @@ module SchoolsHelper
 
     def get_schools(params)
         @search = Sunspot.search(School) do
-            puts "FUCK"
-            puts params
-            puts "FUCK"
           fulltext params[:search]
-          puts params[:page]
+          #puts params[:page]
           paginate(page: params[:page])
         end
         if params[:search]

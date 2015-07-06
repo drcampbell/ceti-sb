@@ -52,6 +52,11 @@ class API::EventsController < API::ApplicationController
       result = @event.attributes
       result[:user_name] = user_name
       result[:school_name] = school_name
+      if @event.speaker_id
+        result[:speaker] = User.find(@event.speaker_id).name
+      else
+        result[:speaker] = "TBA"
+      end
       render json: result.as_json
     end
   end
@@ -60,10 +65,10 @@ class API::EventsController < API::ApplicationController
     if user_signed_in?
       @event = current_user.events.build(event_params)
       if @event.save
-        render :json => {:state => {:code => 0}, :event => @event.to_json }
+        render :json => {:state => 0, :event => @event.to_json }
       else
         @feed_items = []
-        render :json => {:state => {:code => 1, :messages => @event.errors.full_messages} }
+        render :json => {:state => 1, :messages => @event.errors.full_messages }
       end
     else
       render_401
@@ -114,15 +119,19 @@ class API::EventsController < API::ApplicationController
         Event.destroy(params[:id])
         render :json => {:state => {:code => 0}}
       else
-        render :json => {:state => {:code => 1, :messages => "Not authorized to delete this event"} }
+        render :json => {:state => {:code => 1, :message => "Not authorized to delete this event"} }
       end
     end
   end
 
   def claim_event
-    @event = Event.find(params[:event_id])
-    @event.claims.create!(:user_id => params[:user_id])
-    redirect_to(root_url)
+    begin
+      @event = Event.find(params[:event_id])
+      @event.claims.create!(:user_id => params[:user_id])
+      render :json => {:state => 0, :event => @event }
+    rescue ActiveRecord::RecordNotFound
+      render :json => {:state => 1, :message => "Event not found" }
+    end
   end
 
   private

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150615210714) do
+ActiveRecord::Schema.define(version: 20150706151555) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20150615210714) do
     t.datetime "event_start"
     t.datetime "event_end"
     t.integer  "school_id"
+    t.integer  "speaker_id"
   end
 
   add_index "events", ["school_id"], name: "index_events_on_school_id"

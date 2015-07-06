@@ -64,8 +64,6 @@ class EventsController < ApplicationController
       respond_to do |format|
         format.html do
           @event = Event.find(params[:id])
-          puts "FUCK"
-          puts @event.event_start
         end
         format.json do
           @event = Event.find(params[:id])

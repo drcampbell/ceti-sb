@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get 'events/pending_claims' => 'events#pending_claims'
     get 'events/pending_events' => 'events#pending_events'
     get 'events/my_events' => 'events#my_events'
+    get 'events/confirmed' => 'events#confirmed'
     get 'claims/pending_claims' => 'claims#pending_claims'
     resources :sessions
     resources :users

@@ -41,6 +41,12 @@ class API::EventsController < API::ApplicationController
     render json: {:events => list_events(events)}.as_json
   end    
 
+  def confirmed
+    id = current_user.id
+    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: nil)
+    render json: {:events => list_events(events)}.as_json
+  end
+
   def list_events(events)
     results = Array.new(events.count){Hash.new}
     for i in 0..events.count-1

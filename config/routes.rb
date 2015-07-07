@@ -18,10 +18,15 @@ Rails.application.routes.draw do
       delete    'users/sign_out'  =>  'sessions#destroy'
     end
     post 'events/create' => 'events#create'
+    get 'events/pending_claims' => 'events#pending_claims'
+    get 'events/pending_events' => 'events#pending_events'
+    get 'events/my_events' => 'events#my_events'
+    get 'claims/pending_claims' => 'claims#pending_claims'
     resources :sessions
     resources :users
     resources :schools
     resources :events
+    resources :claims
     match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
  
 #  end

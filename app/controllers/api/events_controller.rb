@@ -7,11 +7,6 @@ class API::EventsController < API::ApplicationController
   respond_to :json
 
   def index
-    if not user_signed_in?
-      redirect_to :signin
-    return
-    end
-
     @search = Sunspot.search(Event) do
         #with(:user_id, params[:user].to_i)
         fulltext(params[:search])
@@ -28,13 +23,30 @@ class API::EventsController < API::ApplicationController
     else
       @events = @search.results
     end
+    render json: {:events => list_events(@events)}.as_json
+  end
 
-    results = Array.new(@events.count) { Hash.new }
-    for i in 0..@events.count-1
-      results[i] = {"id" => @events[i].id, "event_title" => @events[i].title, "event_start" => @events[i].event_start}
+  def pending_claims
+    events = Event.joins(:claims).where('claims.user_id' => current_user.id)
+    render json: {:events => list_events(events)}.as_json
+  end
+
+  def pending_events
+    events = Event.joins(:claims).where('events.user_id' => current_user.id)
+    render json: {:events => list_events(events)}.as_json
+  end
+
+  def my_events
+    events = Event.where(user_id: current_user.id, speaker_id: current_user.id)
+    render json: {:events => list_events(events)}.as_json
+  end    
+
+  def list_events(events)
+    results = Array.new(events.count){Hash.new}
+    for i in 0..events.count-1
+      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
     end
-
-    render json: {:events => results}.as_json
+    return results
   end
 
   def show

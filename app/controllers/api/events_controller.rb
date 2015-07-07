@@ -37,7 +37,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def my_events
-    events = Event.where(user_id: current_user.id, speaker_id: current_user.id)
+    events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id)#speaker_id: current_user.id)
     render json: {:events => list_events(events)}.as_json
   end    
 

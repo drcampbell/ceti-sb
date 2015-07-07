@@ -2,6 +2,8 @@ class API::ClaimsController < API::ApplicationController
   before_action :set_claim, only: [:show, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
 
+  respond_to :json
+  
   def index
     respond_to do |format|
       format.html do

@@ -36,7 +36,7 @@ class API::ClaimsController < API::ApplicationController
   def show
     @claim = Claim.find(params[:id])
     user = User.find(@claim.user_id)
-    result = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claims[i].id}
+    result = {"user_id" => user.id, "event_id"=>@claim.event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> @claim.id}
     render json: result.as_json
   end
 

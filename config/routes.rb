@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get 'events/my_events' => 'events#my_events'
     get 'events/confirmed' => 'events#confirmed'
     get 'claims/pending_claims' => 'claims#pending_claims'
+    post 'claims/teacher_confirm' => 'claims#teacher_confirm'#, :via => [:post], :as => 'teacher_confirm_claim'
+
     resources :sessions
     resources :users
     resources :schools

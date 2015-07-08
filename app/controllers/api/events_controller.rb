@@ -32,7 +32,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_events
-    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker'=> "TBA")
+    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil)
     render json: {:events => list_events(events)}.as_json
   end
 

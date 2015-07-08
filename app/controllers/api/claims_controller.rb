@@ -27,7 +27,7 @@ class API::ClaimsController < API::ApplicationController
     results = Array.new(claims.count){Hash.new}
     for i in 0..claims.count-1
       user = User.find(claims[i].user_id)
-      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id}
+      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> id}
     end
     render json: {:claims => results}.as_json
   end
@@ -82,9 +82,11 @@ class API::ClaimsController < API::ApplicationController
   def teacher_confirm
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:id])
-    if @claim.update_attribute(:confirmed_by_teacher, true)
-      redirect_to(root_url)
-      flash[:notice] = 'Claim was successfully confirmed.'
+    if current_user.id == @event.user_id and @claim.update_attribute(:confirmed_by_teacher, true)
+      @event.speaker_id = @claim.user_id
+      render json: {status: 0, event: jsonEvent(@event)}
+    else
+      render json: {status: 1}
     end
   end
 
@@ -117,4 +119,29 @@ class API::ClaimsController < API::ApplicationController
     def admin_user
       redirect_to(root_url) unless current_user.role == 'Admin'
     end
+
+  def jsonEvent(event)
+    school_name = nil
+    user_name = nil
+    if event.school_id
+      school_name = School.find(event.school_id).school_name
+    end
+    if event.user_id
+      user_name = User.find(event.user_id).name
+    end
+    result = event.attributes
+    result[:user_name] = user_name
+    result[:school_name] = school_name
+    if event.speaker_id
+      result[:speaker] = User.find(event.speaker_id).name
+    else
+      result[:speaker] = "TBA"
+    end
+    if Claim.exists?(event_id: event.id, user_id: current_user.id)
+      result[:claim] = true
+    else
+      result[:claim] = false
+    end
+  end
+
 end

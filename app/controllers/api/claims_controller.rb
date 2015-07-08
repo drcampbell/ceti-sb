@@ -3,7 +3,7 @@ class API::ClaimsController < API::ApplicationController
   before_action :correct_user, only: [:edit, :update]
 
   respond_to :json
-  
+
   def index
     respond_to do |format|
       format.html do
@@ -21,13 +21,13 @@ class API::ClaimsController < API::ApplicationController
     if params[:event_id]
       event_id = params[:event_id]
     else
-      render_401 
+      #render_401 
     end
     claims = Claim.where(event_id: event_id)
     results = Array.new(claims.count){Hash.new}
     for i in 0..claims.count-1
       user = User.find(claims[i].user_id)
-      results[i] = {"user_id" => user.id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id}
+      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id}
     end
     render json: {:claims => results}.as_json
   end

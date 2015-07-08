@@ -27,7 +27,7 @@ class API::ClaimsController < API::ApplicationController
     results = Array.new(claims.count){Hash.new}
     for i in 0..claims.count-1
       user = User.find(claims[i].user_id)
-      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> id}
+      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claim[i].id}
     end
     render json: {:claims => results}.as_json
   end

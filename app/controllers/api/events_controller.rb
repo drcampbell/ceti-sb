@@ -32,7 +32,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_events
-    events = Event.joins(:claims).where('events.user_id' => current_user.id)
+    events = Event.joins(:claims).where('events.user_id' => current_user.id).where(speaker: "TBA")
     render json: {:events => list_events(events)}.as_json
   end
 
@@ -55,32 +55,35 @@ class API::EventsController < API::ApplicationController
     return results
   end
 
+  def jsonEvent(event)
+    school_name = nil
+    user_name = nil
+    if event.school_id
+      school_name = School.find(event.school_id).school_name
+    end
+    if event.user_id
+      user_name = User.find(event.user_id).name
+    end
+    result = event.attributes
+    result[:user_name] = user_name
+    result[:school_name] = school_name
+    if event.speaker_id
+      result[:speaker] = User.find(event.speaker_id).name
+    else
+      result[:speaker] = "TBA"
+    end
+    if Claim.exists?(event_id: event.id, user_id: current_user.id)
+      result[:claim] = true
+    else
+      result[:claim] = false
+    end
+    return result
+  end
+
   def show
     if user_signed_in?
       @event = Event.find(params[:id])
-      school_name = nil
-      user_name = nil
-      if @event.school_id
-        school_name = School.find(@event.school_id).school_name
-      end
-      if @event.user_id
-        user_name = User.find(@event.user_id).name
-      end
-
-
-      result = @event.attributes
-      result[:user_name] = user_name
-      result[:school_name] = school_name
-      if @event.speaker_id
-        result[:speaker] = User.find(@event.speaker_id).name
-      else
-        result[:speaker] = "TBA"
-      end
-      if Claim.exists?(event_id: @event.id, user_id: current_user)
-        result[:claim] = true
-      else
-        result[:claim] = false
-      end
+      result = jsonEvent(@event)   
       render json: result.as_json
     end
   end

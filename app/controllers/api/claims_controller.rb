@@ -92,7 +92,7 @@ class API::ClaimsController < API::ApplicationController
 
   def speaker_confirm
     @event = Event.find(params[:event_id])
-    @claim = Claim.find(params[:id])
+    @claim = Claim.find(params[:claim_id])
     if @claim.update_attribute(:confirmed_by_speaker, true)
       redirect_to(root_url)
       flash[:notice] = 'Event was successfully confirmed.'

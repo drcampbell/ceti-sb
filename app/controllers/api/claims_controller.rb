@@ -32,16 +32,12 @@ class API::ClaimsController < API::ApplicationController
     render json: {:claims => results}.as_json
   end
 
+
   def show
-    respond_to do |format|
-      format.html do
-        @claim = Claim.find(params[:id])
-      end
-      format.json do
-        @claim = Claim.find(params[:id])
-        render json: @claim.as_json
-      end
-    end
+    @claim = Claim.find(params[:id])
+    user = User.find(@claim.user_id)
+    result = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claims[i].id}
+    render json: result.as_json
   end
 
   def create

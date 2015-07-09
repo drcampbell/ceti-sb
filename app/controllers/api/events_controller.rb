@@ -119,6 +119,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def update
+    params = params[:event] 
     params = event_params
     @event = Event.find params[:id]
 

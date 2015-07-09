@@ -119,9 +119,9 @@ class API::EventsController < API::ApplicationController
   end
 
   def update
+    #params = event_params
+    @event = Event.find(params[:id])
     params = event_params
-    @event = Event.find params[:id]
-
     if @event && @event.update(params)
       render :json => {:state => 0, :event => @event.to_json }
     elsif @event != nil
@@ -164,8 +164,8 @@ class API::EventsController < API::ApplicationController
 
   # Confirms the correct user.
   def correct_user
-    @user = Event.find(params[:id]).user
-    redirect_to(root_url) unless current_user == @user
+    @user = User.find(Event.find(params[:id]).user_id)
+    redirect_to(root_url) unless current_user.id == @user.id
   end
 
   # Confirms an admin user.

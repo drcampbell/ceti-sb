@@ -122,19 +122,10 @@ class API::EventsController < API::ApplicationController
     params = event_params
     @event = Event.find params[:id]
 
-    respond_to do |format|
-      if @event && @event.update(params)
-        format.html do       
-          flash[:success] = 'Event updated'
-          redirect_to @event
-        end
-        format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
-        format.all { render_404 }
-      elsif @event != nil
-        format.html {render :edit, :alert => 'Unable to update event.'}
-        format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
-        format.all {render_404}
-      end
+    if @event && @event.update(params)
+      render :json => {:state => 0, :event => @event.to_json }
+    elsif @event != nil
+      render :json => {:state => 1, :message => @user.errors.full_messages} }
     end
   end
 

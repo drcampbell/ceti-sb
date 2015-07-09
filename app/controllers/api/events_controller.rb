@@ -123,7 +123,7 @@ class API::EventsController < API::ApplicationController
     @event = Event.find(params[:id])
     params = event_params
     if @event && @event.update(params)
-      render :json => {:state => 0, :event => @event.to_json }
+      render :json => {:state => 0, :event => jsonEvent(@event) }
     elsif @event != nil
       render :json => {:state => 1, :message => @user.errors.full_messages}
     end

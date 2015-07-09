@@ -125,7 +125,7 @@ class API::EventsController < API::ApplicationController
     if @event && @event.update(params)
       render :json => {:state => 0, :event => @event.to_json }
     elsif @event != nil
-      render :json => {:state => 1, :message => @user.errors.full_messages} }
+      render :json => {:state => 1, :message => @user.errors.full_messages}
     end
   end
 

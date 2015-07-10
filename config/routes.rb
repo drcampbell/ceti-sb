@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     devise_scope :user do
       post 'users/sign_in' => 'sessions#create'
       delete    'users/sign_out'  =>  'sessions#destroy'
+      post '/users/sign_up' => 'registrations#create'
+      post    'account'         => 'registrations#edit'
+      get     'profile'         => 'registrations#profile'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

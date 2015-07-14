@@ -1,0 +1,12 @@
+<ul class="nav nav-tabs" role="tablist">
+	<li ><%= link_to "All", root_path(:tab => "tab_all") %></li>
+	<li ><%= link_to "Approvals", root_path(:tab => "tab_approvals") %></li>
+	<li class="active"><%= link_to "Claims", root_path(:tab => "tab_claims") %></li>
+	<li ><%= link_to "Confirmed", root_path(:tab => "tab_confirmed") %></li>
+</ul>
+<% @items = get_claims() %>
+<% if @items.present? %>
+    <ol class="events">
+      <%= render @items %>
+    </ol>
+<% end %>

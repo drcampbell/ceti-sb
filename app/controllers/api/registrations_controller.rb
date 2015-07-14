@@ -26,9 +26,9 @@ respond_to :json
       # format.json do
         @user = User.create(sign_up_params)
         if @user.save
-          render :json => {:state => {:code => 0}, status: :ok, :data => @user }
+          render :json => {:state => 0, status: :ok, :data => @user.attributes }
         else
-          render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }
+          render :json => {:state => 1, status: :error, :messages => @user.errors.full_messages}
         end
     #   end
     # end

@@ -35,4 +35,31 @@ module EventsHelper
 	def valid_event(event)
 		event.user != nil && event.content != nil && event.title != nil
 	end
+
+	def present_time(event_start, event_end)
+		s = event_start
+		e = event_end
+			return [s.strftime("%a"),s.strftime("%B"),(s.strftime("%d")).sub(/^0/, "")+",",s.strftime("%Y"),s.strftime("%l")+":"+s.strftime("%M"),
+			"-",
+		  e.strftime("%l")+":"+e.strftime("%M"),e.strftime("%p")].join(" ")
+	end
+
+	def get_all()
+		return Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id)
+	end
+
+	def get_approvals()
+		return Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil)
+	end
+
+	def get_claims()
+		return Event.joins(:claims).where('claims.user_id' => current_user.id)
+	end
+	
+	def get_confirmed()
+		id = current_user.id
+    return Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => nil)    
+	end
+
+
 end

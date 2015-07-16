@@ -7,21 +7,25 @@ class API::EventsController < API::ApplicationController
   respond_to :json
 
   def index
-    @search = Sunspot.search(Event) do
-        #with(:user_id, params[:user].to_i)
-        fulltext(params[:search])
-         with(:event_start).less_than(Time.zone.now)    
-       facet(:event_month)
-        with(:event_month, params[:month]) if params[:month].present?
-        paginate(page: params[:page])
-    end
+    if params[:search]
+      @search = Sunspot.search(Event) do
+          #with(:user_id, params[:user].to_i)
+          fulltext(params[:search])
+           with(:event_start).less_than(Time.zone.now)    
+         facet(:event_month)
+          with(:event_month, params[:month]) if params[:month].present?
+          paginate(page: params[:page])
+      end
 
-    if params[:search]# || params[:user]
-      @events = @search.results
-    elsif params[:tag]
-      @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-    else
-      @events = @search.results
+      if params[:search]# || params[:user]
+        @events = @search.results
+      elsif params[:tag]
+        @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
+      else
+        @events = @search.results
+      end
+    elsif params[:school_id]
+      @events = Event.where("school_id" => params[:school_id])
     end
     render json: {:events => list_events(@events)}.as_json
   end

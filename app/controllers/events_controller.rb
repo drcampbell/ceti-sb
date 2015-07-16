@@ -8,7 +8,7 @@ class EventsController < ApplicationController
   def index
     if not user_signed_in?
       redirect_to :signin
-    return
+      return
     end
 
     # @search = Sunspot.search(Event) do

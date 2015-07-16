@@ -69,11 +69,14 @@ class API::SchoolsController < API::ApplicationController
   end
 
   def make_mine
-    @school = School.find params[:school_id]
+    @school = School.find params[:id]
     if user_signed_in?
       current_user.school_id = @school.id
+      render json: {state: 0, profile: current_user}
+    else
+      render json: {state: 1}
     end
-    redirect_to :users
+
   end
   # GET /schools/new
   def new

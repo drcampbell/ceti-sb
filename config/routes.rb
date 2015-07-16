@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     get 'events/confirmed' => 'events#confirmed'
     get 'claims/pending_claims' => 'claims#pending_claims'
     post 'claims/teacher_confirm' => 'claims#teacher_confirm'#, :via => [:post], :as => 'teacher_confirm_claim'
-    get ':schools(/:make_mine(/:id))' => 'schools#make_mine'#, :via => [:post]
+    get 'schools/make_mine/:id' => 'schools#make_mine'#, :via => [:post]
     resources :sessions
     resources :users
     resources :schools

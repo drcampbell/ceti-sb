@@ -1,13 +1,16 @@
 class API::SessionsController < Devise::SessionsController
 # before_filter :ensure_params_exist
-acts_as_token_authentication_handler_for User
-prepend_before_filter :require_no_authentication, :only => [:create ]
-prepend_before_filter :allow_params_authentication!, only: :create
-prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeout"] = true}
+  skip_before_filter :verify_authenticity_token, :if => Proc.new { |c| c.request.format == 'application/json' }
+  
+  prepend_before_filter :require_no_authentication, only: [:new, :create]
+  prepend_before_filter :allow_params_authentication!, only: :create
+  prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeout"] = true}
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
+  #skip_before_filter :authenticate_scope!, :only => [:update]
 
-#after_filter :set_csrf_header, only: [:new, :create]
+  acts_as_token_authentication_handler_for User
 
-respond_to :json
+  respond_to :json
 
 def create
   self.resource = warden.authenticate!(:scope => resource_name)

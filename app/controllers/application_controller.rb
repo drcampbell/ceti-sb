@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   #acts_as_token_authentication_handler_for User, 
     #unless: lambda { |StaticPagesController| }
   before_filter :authenticate_user!
-  #before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :configure_permitted_parameters, if: :devise_controller?
   include ActionController::MimeResponds
   include ActionController::StrongParameters
   # Prevent CSRF attacks by raising an exception.
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :school, :grades, :job_title, :business) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :school, :grades, :job_title, :business) }
   end
 
   private

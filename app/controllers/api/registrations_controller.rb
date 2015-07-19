@@ -1,5 +1,12 @@
 class API::RegistrationsController < Devise::RegistrationsController
-respond_to :json
+  skip_before_filter :verify_authenticity_token, :if => Proc.new { |c| c.request.format == 'application/json' }
+  #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
+  skip_before_filter :authenticate_scope!, :only => [:update]
+
+  acts_as_token_authentication_handler_for User
+
+  respond_to :json
+
   def create
       #   build_resource(sign_up_params)
       #   resource_saved = resource.save
@@ -34,6 +41,20 @@ respond_to :json
     # end
   end
 
+  def update
+    self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
+    @user = User.find(current_user.id)
+    puts resource
+    #puts account_update_params
+    successfully_updated = update_resource(resource, account_update_params)
+    if successfully_updated
+      sign_in user, resource, :bypass => true
+      render json: {state:0,user:@user}
+    else
+      render json: {state:1}
+    end
+  end
+
   def profile
     if current_user.school_id == 1
       return redirect_to :choose
@@ -46,7 +67,7 @@ respond_to :json
   protected
 
   def update_resource(resource, params)
-    resource.update_without_password(params)
+    resource.update_with_password(params)#params.except(:current_password))
   end
 
   private
@@ -56,6 +77,6 @@ respond_to :json
   end
 
   def account_update_params
-    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password, location_attributes: [:address])
+    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password)#, location_attributes: [:address])
   end
 end

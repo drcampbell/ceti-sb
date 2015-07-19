@@ -45,10 +45,22 @@ class RegistrationsController < Devise::RegistrationsController
     #return render "users/#{current_user.id}"
   end
 
+  def update
+    @user = User.find(current_user.id)
+    successfully_updated = @user.update_with_password(devise_parameter_sanitizer.sanitize(:account_update))
+    if successfully_updated
+      set_flash_message :notice, :update_with_password
+      sign_in @user, :bypass => true
+      redirect_to after_update_path_for(@user)
+    else
+      render "edit"
+    end
+  end
+
   protected
 
   def update_resource(resource, params)
-    resource.update_without_password(params)
+    resource.update_with_password(params.except(:current_password))
   end
 
   private

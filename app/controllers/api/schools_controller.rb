@@ -78,6 +78,7 @@ class API::SchoolsController < API::ApplicationController
     end
 
   end
+  
   # GET /schools/new
   def new
     @school = School.new

@@ -36,19 +36,34 @@ class API::UsersController < API::ApplicationController
   def show
     @user = User.find(params[:id])
 
-    if @user.school_id && @user.school_id != ""
-      school_name =School.find(@user.school_id).school_name
+    # if @user.school_id && @user.school_id != ""
+    #   school_name =School.find(@user.school_id).school_name
+    # else
+    #   school_name = nil
+    # end
+
+    # user_message = {id: @user.id, name:@user.name, role:@user.role, 
+    #                 grades:@user.grades, job_title:@user.job_title,
+    #                 business:@user.business, biography:@user.biography,
+    #                 category:@user.speaking_category, school_id:@user.school_id,
+    #                 school_name:school_name}
+    render json: format_user(@user)
+
+  end
+
+  def format_user(user)
+    if user.school_id && user.school_id != ""
+      school_name =School.find(user.school_id).school_name
     else
       school_name = nil
     end
 
-    user_message = {id: @user.id, name:@user.name, role:@user.role, 
-                    grades:@user.grades, job_title:@user.job_title,
-                    business:@user.business, biography:@user.biography,
-                    category:@user.speaking_category, school_id:@user.school_id,
+    user_message = {id: user.id, name:user.name, role:user.role, 
+                    grades:user.grades, job_title:user.job_title,
+                    business:user.business, biography:user.biography,
+                    category:user.speaking_category, school_id:user.school_id,
                     school_name:school_name}
-    render json: user_message
-
+    return user_message
   end
 
   def edit
@@ -58,10 +73,9 @@ class API::UsersController < API::ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(secure_params)
-      flash[:success] = 'Profile updated'
-      redirect_to @user
+      render json: {state:0, user:format_user(@user)}
     else
-      redirect_to @user, :alert => 'Unable to update user.'
+      render json: {state:1}
     end
   end
 
@@ -87,7 +101,7 @@ class API::UsersController < API::ApplicationController
   end
 
   def secure_params
-    params.require(:user).permit(:id, :role, :name, :email, :school_id, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
+    params.require(:user).permit(:id, :role, :name, :email, :biography, :school_id, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
   end
 
   def correct_user

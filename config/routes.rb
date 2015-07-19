@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       delete    'users/sign_out'  =>  'sessions#destroy'
       post '/users/sign_up' => 'registrations#create'
       put    'account'         => 'registrations#update'
-      get     'profile'         => 'registrations#profile'
+      get     'users/profile'         => 'registrations#profile'
       put 'users'     => 'users#update'
     end
     post 'events/create' => 'events#create'

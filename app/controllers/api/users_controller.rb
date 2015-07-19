@@ -71,7 +71,7 @@ class API::UsersController < API::ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = User.find(current_user.id)
     if @user.update_attributes(secure_params)
       render json: {state:0, user:format_user(@user)}
     else

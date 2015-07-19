@@ -59,8 +59,8 @@ class API::RegistrationsController < Devise::RegistrationsController
     if current_user.school_id == 1
       return redirect_to :choose
     end
-    build_resource({})
-    respond_with self.resource
+    #build_resource({})
+    render json: current_user.as_json.except("authentication_token","created_at","updated_at")
     #return render "users/#{current_user.id}"
   end
 

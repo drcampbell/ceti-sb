@@ -18,9 +18,14 @@
   <div class="col-xs-6 col-md-6">
 
   <p>
-    <% unless event.claims.each.nil? %>
-        <strong>Speaker: </strong>
+    <% if event.speaker_id != nil %>
+      <strong>Speaker: </strong>
+      <%= User.find(event.speaker_id) %>
+    <% else %>
+      <% unless event.claims.each.nil? %>
+        <strong>Claims: </strong>
         <%= raw event.claims.each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
+      <% end %>
     <% end %>
   </p>
   <p><strong>Organizer: </strong>
@@ -31,10 +36,6 @@
   <div class="col-xs-12 col-md-12">
   <p><strong>Tags: </strong>
     <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
-
-  
-
-  
 
   <p><strong>Description: </strong><%= event.content %></p>
   </div> <!-- column -->

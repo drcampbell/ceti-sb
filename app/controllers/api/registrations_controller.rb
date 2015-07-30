@@ -49,7 +49,9 @@ class API::RegistrationsController < Devise::RegistrationsController
     successfully_updated = update_resource(resource, account_update_params)
     if successfully_updated
       sign_in user, resource, :bypass => true
-      render json: {state:0,user:@user}
+      profile = @user.attributes
+      profile[:school_name] = School.find(profile["school_id"]).school_name
+      render json: {state:0,user:profile}
     else
       render json: {state:1}
     end

@@ -31,7 +31,7 @@ def destroy
       else
         user.update(:authentication_token => nil)
         user.save!
-        render status: 204, json: { message: "You have signed out."}
+        render json: {status:0, message: "You have signed out."}
       end
     end
   end

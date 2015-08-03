@@ -94,15 +94,13 @@ class API::EventsController < API::ApplicationController
 
   def create
     if user_signed_in?
-      @event = current_user.events.build(event_params)
-      if @event.save
+      begin 
+        @event = current_user.events.build(event_params)
+        @event.save
         render :json => {:state => 0, :event => @event.to_json }
-      else
-        @feed_items = []
-        render :json => {:state => 1, :messages => @event.errors.full_messages }
+      rescue ActionController::ParameterMissing => e
+          render :json => {:state => 1, :messages => "Parameter #{e.param} is required"}#@event.errors.full_messages }      
       end
-    else
-      render_401
     end
   end
 
@@ -163,7 +161,7 @@ class API::EventsController < API::ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:content, :title, :event_start, :event_end, :school_id) #:tag_list, 
+      params.require(:event).require(:title).require(:event_start).require(:event_end).permit(:content, :school_id) #:tag_list, 
     end
 
   # Confirms the correct user.

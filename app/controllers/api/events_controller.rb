@@ -160,8 +160,14 @@ class API::EventsController < API::ApplicationController
       @event = Event.find(params[:id])
     end
 
-    def event_params
-      params.require(:event).require(:title).require(:event_start).require(:event_end).permit(:content, :school_id) #:tag_list, 
+    def event_params   
+      permitted = params.require(:event).permit(:content, :title, :school_id, :event_start, :event_end) #:tag_list,       
+      [:title, :event_start, :event_end].each do |x|
+        if not permitted.has_key?(x)
+          raise ActionController::ParameterMissing, x
+        end
+      end
+      permitted
     end
 
   # Confirms the correct user.

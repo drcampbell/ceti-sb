@@ -22,10 +22,8 @@ def create
 end
 
 def destroy
-  puts "what FFFFFFF"
   respond_to do |format|
     format.json do
-      puts "what FFFFFFF"
       if user.nil?
         render status: 404, json: { message: 'Invalid token.' }
       else

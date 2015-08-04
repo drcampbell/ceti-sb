@@ -163,7 +163,7 @@ class API::EventsController < API::ApplicationController
     def event_params   
       permitted = params.require(:event).permit(:content, :title, :school_id, :event_start, :event_end) #:tag_list,       
       [:title, :event_start, :event_end].each do |x|
-        if not permitted.has_key?(x)
+        if not permitted.has_key?(x) or permitted[x] == ""
           raise ActionController::ParameterMissing, x
         end
       end

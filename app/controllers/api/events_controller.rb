@@ -63,14 +63,14 @@ class API::EventsController < API::ApplicationController
     school_name = nil
     user_name = nil
     if event.loc_id
-      school_name = School.find(event.loc_id).school_name
+      location_name = School.find(event.loc_id).school_name
     end
     if event.user_id
       user_name = User.find(event.user_id).name
     end
     result = event.attributes
     result[:user_name] = user_name
-    result[:school_name] = school_name
+    result[:loc_name] = location_name
     if event.speaker_id
       result[:speaker] = User.find(event.speaker_id).name
     else

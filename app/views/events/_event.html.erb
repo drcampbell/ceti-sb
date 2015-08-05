@@ -20,7 +20,7 @@
   <p>
     <% if event.speaker_id != nil %>
       <strong>Speaker: </strong>
-      <%= User.find(event.speaker_id) %>
+      <%= User.find(event.speaker_id).name %>
     <% else %>
       <% unless event.claims.each.nil? %>
         <strong>Claims: </strong>

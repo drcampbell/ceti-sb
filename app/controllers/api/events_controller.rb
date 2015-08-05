@@ -11,7 +11,7 @@ class API::EventsController < API::ApplicationController
       @search = Sunspot.search(Event) do
           #with(:user_id, params[:user].to_i)
           fulltext(params[:search])
-           with(:event_start).less_than(Time.zone.now)    
+           with(:event_start).greater_than(1.week.ago)    
          facet(:event_month)
           with(:event_month, params[:month]) if params[:month].present?
           paginate(page: params[:page])
@@ -161,7 +161,7 @@ class API::EventsController < API::ApplicationController
     end
 
     def event_params   
-      permitted = params.require(:event).permit(:content, :title, :school_id, :event_start, :event_end) #:tag_list,       
+      permitted = params.require(:event).permit(:content, :title, :school_id, :event_start, :event_end, :tags) #:tag_list,       
       [:title, :event_start, :event_end].each do |x|
         if not permitted.has_key?(x) or permitted[x] == ""
           raise ActionController::ParameterMissing, x

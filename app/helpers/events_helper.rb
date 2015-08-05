@@ -9,7 +9,7 @@ module EventsHelper
 		elsif params.class == ActionController::Parameters
     	@search = Sunspot.search(Event) do
 	      fulltext params[:search]
-	       with(:event_start).less_than(Time.zone.now)
+	       with(:event_start).greater_than(Time.zone.now)
 	     facet(:event_month)
 	      with(:event_month, params[:month]) if params[:month].present?
 	      paginate(page: params[:page])

@@ -169,7 +169,7 @@ class EventsController < ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :school_id)
+      params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :loc_id)
     end
 
   # Confirms the correct user.

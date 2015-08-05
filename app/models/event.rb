@@ -11,7 +11,7 @@ class Event < ActiveRecord::Base
    text :content, :event_month
    time :event_start
    string :event_month
-   integer :school_id
+   integer :loc_id
    integer :user_id
  end
 

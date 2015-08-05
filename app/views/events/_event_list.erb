@@ -29,7 +29,7 @@
   <p><strong>Description: </strong><%= event.content %></p>
   </div> <!-- column -->
     <aside class="col-xs-4 col-sm-4">
-  <%= image_tag Badge.find(School.find(event.school_id).badge_id).file.url class: "img-responsive" %>  
+  <%= image_tag Badge.find(School.find(event.loc_id).badge_id).file.url class: "img-responsive" %>  
   </aside>
   <p>
     <% if event.claims.where('confirmed_by_teacher = ?', true).count < 1 &&

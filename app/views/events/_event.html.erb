@@ -8,11 +8,11 @@
 
 </div>
       <aside class="col-xs-4 col-sm-4">
-  <%= image_tag Badge.find(School.find(event.school_id).badge_id).file.url class: "img-responsive" %>  
+  <%= image_tag Badge.find(School.find(event.loc_id).badge_id).file.url class: "img-responsive" %>  
   </aside>
 <div class="col-xs-6 col-md-6">
 <p><strong>Location: </strong> 
-    <%= link_to handle_abbr(School.find(event.school_id).school_name.titlecase), "/schools/#{event.user.school_id}" %> </p>
+    <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.user.school_id}" %> </p>
   <p><strong>Time:</strong> <%= present_time(event.event_start, event.event_end)  %></p>
 </div>
   <div class="col-xs-6 col-md-6">

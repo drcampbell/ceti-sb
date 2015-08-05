@@ -24,8 +24,8 @@ class API::EventsController < API::ApplicationController
       else
         @events = @search.results
       end
-    elsif params[:school_id]
-      @events = Event.where("school_id" => params[:school_id])
+    elsif params[:loc_id]
+      @events = Event.where("loc_id" => params[:loc_id])
     end
     render json: {:events => list_events(@events)}.as_json
   end
@@ -62,8 +62,8 @@ class API::EventsController < API::ApplicationController
   def jsonEvent(event)
     school_name = nil
     user_name = nil
-    if event.school_id
-      school_name = School.find(event.school_id).school_name
+    if event.loc_id
+      school_name = School.find(event.loc_id).school_name
     end
     if event.user_id
       user_name = User.find(event.user_id).name
@@ -161,7 +161,7 @@ class API::EventsController < API::ApplicationController
     end
 
     def event_params   
-      permitted = params.require(:event).permit(:content, :title, :school_id, :event_start, :event_end, :tags) #:tag_list,       
+      permitted = params.require(:event).permit(:content, :title, :loc_id, :event_start, :event_end, :tags) #:tag_list,       
       [:title, :event_start, :event_end].each do |x|
         if not permitted.has_key?(x) or permitted[x] == ""
           raise ActionController::ParameterMissing, x

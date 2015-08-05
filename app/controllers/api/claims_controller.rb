@@ -119,8 +119,8 @@ class API::ClaimsController < API::ApplicationController
   def jsonEvent(event)
     school_name = nil
     user_name = nil
-    if event.school_id
-      school_name = School.find(event.school_id).school_name
+    if event.loc_id
+      school_name = School.find(event.loc_id).school_name
     end
     if event.user_id
       user_name = User.find(event.user_id).name

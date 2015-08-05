@@ -71,7 +71,7 @@ class API::SchoolsController < API::ApplicationController
   def make_mine
     @school = School.find params[:id]
     if user_signed_in?
-      current_user.school_id = @school.id
+      current_user.update(school_id: @school.id)
       render json: {state: 0, profile: current_user}
     else
       render json: {state: 1}

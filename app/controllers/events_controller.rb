@@ -159,7 +159,10 @@ class EventsController < ApplicationController
 
   def claim_event
     @event = Event.find(params[:event_id])
+    UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+
     @event.claims.create!(:user_id => params[:user_id])
+
     redirect_to(root_url)
   end
 

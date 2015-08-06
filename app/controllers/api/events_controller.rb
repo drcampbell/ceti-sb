@@ -149,6 +149,8 @@ class API::EventsController < API::ApplicationController
       @event = Event.find(params[:event_id])
       puts current_user.id
       @event.claims.create!(:user_id => current_user.id)#params[:user_id])
+      UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+
       render :json => {:state => 0, :event => @event }
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }

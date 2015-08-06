@@ -67,7 +67,7 @@
   <% if current_user == event.user %>
     <%= button_to 'Cancel The Event', event, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
   <% else %>
-    <%= button_to 'Message The Organizer', :message, class:"btn-primary", method: :get %>    
+    <%= button_to 'Message The Organizer', {action: "write_message", id: event.user_id}, method: :get, class:"btn-primary" %>    
   <% end %>
   </a>
 

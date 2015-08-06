@@ -31,8 +31,11 @@ class ClaimsController < ApplicationController
     respond_to do |format|
       format.html do
         if @claim.save
+
           render 'static_pages/home'
           flash[:notice] = 'Claim was successfully created.'
+          UserMailer.event_claim(@claim.user_id, Event.find(@claim.event_id).user_id, @claim.event_id).deliver_now
+          
         else
           render 'static_pages/home'
         end
@@ -65,6 +68,7 @@ class ClaimsController < ApplicationController
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:id])
     if @claim.update_attribute(:confirmed_by_teacher, true)
+      UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
       redirect_to(root_url)
       flash[:notice] = 'Claim was successfully confirmed.'
     end

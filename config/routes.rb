@@ -53,7 +53,8 @@ Rails.application.routes.draw do
   get    'contact' => 'static_pages#contact'
   get    'signin'  => 'static_pages#signin'
   get    'invalid_event'  => 'static_pages#invalid_event'
-  get     'message' => 'users#message'
+  get     'write_message/:id' => 'users#write_message'
+  post    'write_message/:id'  => 'users#send_message'
   get 'tags/:tag',  to: 'events#index', as: :tag
   get 'users/:tag',  to: 'users#index'
   post 'make_mine', to: 'schools#make_mine'

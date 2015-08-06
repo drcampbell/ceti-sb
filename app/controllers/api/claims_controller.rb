@@ -80,6 +80,7 @@ class API::ClaimsController < API::ApplicationController
     @claim = Claim.find(params[:claim_id])
     if current_user.id == @event.user_id and @claim.update_attribute(:confirmed_by_teacher, true)
       @event.update(speaker_id: @claim.user_id)
+      UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
       render json: {status: 0, event: jsonEvent(@event)}
     else
       render json: {status: 1}

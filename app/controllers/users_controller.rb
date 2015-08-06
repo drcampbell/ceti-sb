@@ -58,7 +58,15 @@ class UsersController < ApplicationController
     end
   end
 
-  def message
+  def write_message
+    puts "FUCK"
+    puts params
+    @recipient = User.find(params[:id])
+  end
+
+  def send_message
+    UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
+    redirect_to(root_url)
   end
   
   private

@@ -13,6 +13,8 @@ class Event < ActiveRecord::Base
    string :event_month
    integer :loc_id
    integer :user_id
+   text :user_name
+   text :loc_name
  end
 
   def tag_list_commas

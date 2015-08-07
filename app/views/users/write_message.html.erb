@@ -1,0 +1,7 @@
+<% provide(:title, 'Send a Message') %>
+<% @message = "" %>
+<%= form_for(@message, html: { multipart: true }) do |f| %>
+	<%= f.text_area :user_message %>
+
+	<%= button_to "Send", {action: "send_message"}, method: :post, class:"btn-primary" %>
+	<% end %>

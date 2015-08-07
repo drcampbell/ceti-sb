@@ -59,8 +59,6 @@ class UsersController < ApplicationController
   end
 
   def write_message
-    puts "FUCK"
-    puts params
     @recipient = User.find(params[:id])
   end
 

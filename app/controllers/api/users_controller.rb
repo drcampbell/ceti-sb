@@ -90,7 +90,8 @@ class API::UsersController < API::ApplicationController
     end
   end
 
-  def message
+  def send_message
+    UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
   end
   
   private

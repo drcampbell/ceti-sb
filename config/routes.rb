@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     get 'claims/pending_claims' => 'claims#pending_claims'
     post 'claims/teacher_confirm' => 'claims#teacher_confirm'#, :via => [:post], :as => 'teacher_confirm_claim'
     get 'schools/make_mine/:id' => 'schools#make_mine'#, :via => [:post]
-    post 'write_message/:id'  => 'users#send_message'
+    post 'send_message/:id'  => 'users#send_message'
     resources :sessions
     resources :users
     resources :schools

@@ -92,6 +92,7 @@ class API::UsersController < API::ApplicationController
 
   def send_message
     UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
+    render json: {state:0}
   end
   
   private

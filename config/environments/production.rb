@@ -70,9 +70,9 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com" #Rails.application.secrets.smtp_address,
+    address: "smtp.gmail.com", #Rails.application.secrets.smtp_address,
     port: 587,
-    domain: "gmail.com" #Rails.application.secrets.domain_name,
+    domain: "gmail.com", #Rails.application.secrets.domain_name,
     authentication: "plain",
     enable_starttls_auto: true,
     user_name: ENV["SENDGRID_USERNAME"]#Rails.application.secrets.email_provider_username,

@@ -70,18 +70,18 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com", #Rails.application.secrets.smtp_address,
-    port: 587,
+    address: ENV["SMTP"], #Rails.application.secrets.smtp_address,
+    port: ENV["PORT"],
     domain: "gmail.com", #Rails.application.secrets.domain_name,
     authentication: "plain",
-    #enable_starttls_auto: true,
+    enable_starttls_auto: true,
     user_name: ENV["SENDGRID_USERNAME"],#Rails.application.secrets.email_provider_username,
     password: ENV["SENDGRID_PASSWORD"]#Rails.application.secrets.email_provider_password
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.url_name }
   config.action_mailer.delivery_method = :smtp
-  #config.action_mailer.perform_deliveries = true
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
 
 

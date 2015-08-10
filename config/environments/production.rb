@@ -75,7 +75,7 @@ Rails.application.configure do
     domain: "gmail.com", #Rails.application.secrets.domain_name,
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV["SENDGRID_USERNAME"]#Rails.application.secrets.email_provider_username,
+    user_name: ENV["SENDGRID_USERNAME"],#Rails.application.secrets.email_provider_username,
     password: ENV["SENDGRID_PASSWORD"]#Rails.application.secrets.email_provider_password
   }
   # ActionMailer Config

@@ -39,4 +39,8 @@ class UserMailer < ApplicationMailer
   def welcome()
     mail to: current_user.email, subject: "Welcome to School Business!"
   end
+
+  def test()
+    mail to: "d.cam09@gmail.com", subject: "test"
+  end
 end

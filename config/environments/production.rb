@@ -74,7 +74,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP"], #Rails.application.secrets.smtp_address,
     port: ENV["PORT"],
-    #domain: "example.com", #Rails.application.secrets.domain_name,
+    domain: "example.com", #Rails.application.secrets.domain_name,
     authentication: :login,
     enable_starttls_auto: true,
     user_name: ENV["SENDGRID_USERNAME"],#Rails.application.secrets.email_provider_username,

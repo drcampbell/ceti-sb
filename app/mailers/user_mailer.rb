@@ -43,4 +43,37 @@ class UserMailer < ApplicationMailer
   def test()
     mail to: "schoolbusinessapp@gmail.com", subject: "test"
   end
+
+  def send_aws(email)
+    ses = Aws::SES::Client.new(
+      region: region_name,
+      credentials: credentials
+      )
+    response = ses.send_email({
+      source: "schoolbusinessapp@gmail.com",
+      destination: {
+        to_addresses: ["d.cam09@gmail.com"],
+        cc_addresses: [],
+        bcc_addresses: [],
+      },
+      message: {
+        subject: {
+          data: "TestMessage",
+          charset: "Charset",
+        },
+        body: {
+          text: {
+            data: "TestMessage", 
+            charset: "Charset",
+          },
+          html: {
+            data: "TestMessage", 
+            charset: "Charset",
+          },
+        },
+      },
+      reply_to_addresses: ["schoolbusinessapp@gmail.com"],
+    })
+    puts response
+  end
 end

@@ -69,7 +69,7 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  config.action_mailer.delivery_method = :aws_sdk
+  config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP"], #Rails.application.secrets.smtp_address,

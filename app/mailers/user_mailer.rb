@@ -46,7 +46,7 @@ class UserMailer < ApplicationMailer
 
   def send_aws(email)
     ses = Aws::SES::Client.new(
-      region: region_name,
+      region: ENV["AWS_REGION"],
       credentials: credentials
       )
     response = ses.send_email({

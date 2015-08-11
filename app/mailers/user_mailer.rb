@@ -47,7 +47,7 @@ class UserMailer < ApplicationMailer
   def send_aws(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
-      credentials: credentials
+      credentials: Aws::Credentials.new(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"])
       )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",

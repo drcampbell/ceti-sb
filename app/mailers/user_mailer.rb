@@ -77,10 +77,10 @@ class UserMailer < ApplicationMailer
     puts response
   end
 
-    def send_aws(email)
+    def send_aws2(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
-      credentials: mail_credentials
+      credentials: Aws::Credentials.new(ENV["SENDGRID_USERNAME"], ENV["SENDGRID_PASSWORD"])
       )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",

@@ -73,7 +73,7 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.smtp_address,
-    port: 587,
+    port: 25,
     domain: "example.com", #Rails.application.secrets.domain_name,
     authentication: :login,
     enable_starttls_auto: true,

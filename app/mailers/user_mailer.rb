@@ -49,7 +49,6 @@ class UserMailer < ApplicationMailer
       region: ENV["AWS_REGION"],
       access_key_id: ENV["AWS_ACCESS_KEY"], 
       secret_access_key: ENV["AWS_SECRET_KEY"])
-      )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",
       destination: {
@@ -83,7 +82,6 @@ class UserMailer < ApplicationMailer
       region: ENV["AWS_REGION"],
       access_key_id:  ENV["SENDGRID_USERNAME"], 
       secret_access_key: ENV["SENDGRID_PASSWORD"])
-      )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",
       destination: {

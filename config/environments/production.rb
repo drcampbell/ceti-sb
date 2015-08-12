@@ -69,16 +69,16 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  config.action_mailer.delivery_method = :ses
+  config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    address: ENV["SMTP"], #Rails.application.secrets.smtp_address,
-    port: ENV["PORT"],
+    address: Rails.application.secrets.smtp_address,
+    port: 587,
     domain: "example.com", #Rails.application.secrets.domain_name,
     authentication: :login,
     enable_starttls_auto: true,
-    user_name: ENV["SENDGRID_USERNAME"],#Rails.application.secrets.email_provider_username,
-    password: ENV["SENDGRID_PASSWORD"]#Rails.application.secrets.email_provider_password
+    user_name: Rails.application.secrets.email_provider_username,
+    password: Rails.application.secrets.email_provider_password
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => ENV["URL"] }

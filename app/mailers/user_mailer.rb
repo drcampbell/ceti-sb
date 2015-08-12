@@ -41,7 +41,7 @@ class UserMailer < ApplicationMailer
   end
 
   def test()
-    mail to: "schoolbusinessapp@gmail.com", subject: "test"
+    mail to: "bounce@simulator.amazonses.com", subject: "test"
   end
 
   def send_aws(email)

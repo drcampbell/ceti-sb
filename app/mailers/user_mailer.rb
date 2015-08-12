@@ -47,7 +47,8 @@ class UserMailer < ApplicationMailer
   def send_aws(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
-      credentials: Aws::Credentials.new(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"])
+      access_key_id: ENV["AWS_ACCESS_KEY"], 
+      secret_access_key: ENV["AWS_SECRET_KEY"])
       )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",
@@ -80,7 +81,8 @@ class UserMailer < ApplicationMailer
     def send_aws2(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
-      credentials: Aws::Credentials.new(ENV["SENDGRID_USERNAME"], ENV["SENDGRID_PASSWORD"])
+      access_key_id:  ENV["SENDGRID_USERNAME"], 
+      secret_access_key: ENV["SENDGRID_PASSWORD"])
       )
     response = ses.send_email({
       source: "schoolbusinessapp@gmail.com",

@@ -49,10 +49,21 @@ class UserMailer < ApplicationMailer
       region: ENV["AWS_REGION"],
       access_key_id: ENV["AWS_ACCESS_KEY"], 
       secret_access_key: ENV["AWS_SECRET_KEY"])
-    response = ses.send_email({
+    begin
+      response = ses.send_email(test_mail)
+    rescue Aws::SES::Errors::ServiceError => error
+      puts "Error"
+      puts error.message
+
+    end
+    puts response
+  end
+
+  def test_mail()
+    mail = {
       source: "schoolbusinessapp@gmail.com",
       destination: {
-        to_addresses: ["d.cam09@gmail.com"],
+        to_addresses: ["bounce@simulator.amazonses.com"],
         cc_addresses: [],
         bcc_addresses: [],
       },
@@ -71,42 +82,17 @@ class UserMailer < ApplicationMailer
             charset: "Charset",
           },
         },
-      },
+        },
       reply_to_addresses: ["schoolbusinessapp@gmail.com"],
-    })
-    puts response
+    }
   end
 
-    def send_aws2(email)
+  def send_aws2(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
       access_key_id:  ENV["SENDGRID_USERNAME"], 
       secret_access_key: ENV["SENDGRID_PASSWORD"])
-    response = ses.send_email({
-      source: "schoolbusinessapp@gmail.com",
-      destination: {
-        to_addresses: ["d.cam09@gmail.com"],
-        cc_addresses: [],
-        bcc_addresses: [],
-      },
-      message: {
-        subject: {
-          data: "TestMessage",
-          charset: "Charset",
-        },
-        body: {
-          text: {
-            data: "TestMessage", 
-            charset: "Charset",
-          },
-          html: {
-            data: "TestMessage", 
-            charset: "Charset",
-          },
-        },
-      },
-      reply_to_addresses: ["schoolbusinessapp@gmail.com"],
-    })
+    response = ses.send_email(test_mail)
     puts response
   end
 end

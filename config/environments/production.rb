@@ -69,13 +69,13 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :aws_sdk
 
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.smtp_address,
     port: 25,
-    domain: "gmail.com", #Rails.application.secrets.domain_name,
-    authentication: "plain",
+    domain: Rails.application.secrets.domain, #Rails.application.secrets.domain_name,
+    authentication: :login,
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.email_provider_username,
     password: Rails.application.secrets.email_provider_password

@@ -73,7 +73,7 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.smtp_address,
-    port: 5,
+    port: 587,
     #domain: Rails.application.secrets.domain, #Rails.application.secrets.domain_name,
     user_name: Rails.application.secrets.email_provider_username,
     password: Rails.application.secrets.email_provider_password,

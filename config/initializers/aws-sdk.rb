@@ -6,7 +6,7 @@ mcreds = Aws::Credentials.new(ENV["SENDGRID_USERNAME"], ENV["SENDGRID_PASSWORD"]
 Aws.config[:credentials] = creds
 
 ActionMailer::Base.add_delivery_method :aws_sdk, Aws::SES::Client,
-	credentials: mcreds,
+	credentials: creds,
 	region: "us-west-2"
 	
 ActionMailer::Base.add_delivery_method :ses, Aws::SES::Client,

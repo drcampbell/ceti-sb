@@ -74,14 +74,14 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.smtp_address,
     port: 587,
-    domain: Rails.application.secrets.domain, #Rails.application.secrets.domain_name,
-    authentication: :login,
-    enable_starttls_auto: true,
+    #domain: Rails.application.secrets.domain, #Rails.application.secrets.domain_name,
     user_name: Rails.application.secrets.email_provider_username,
-    password: Rails.application.secrets.email_provider_password
+    password: Rails.application.secrets.email_provider_password,
+    authentication: :login,
+    enable_starttls_auto: true
   }
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => ENV["URL"] }
+  #config.action_mailer.default_url_options = { :host => ENV["URL"] }
   
   #config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true

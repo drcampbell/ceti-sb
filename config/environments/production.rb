@@ -73,7 +73,7 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
     address: "email-smtp.us-west-2.amazonaws.com",#Rails.application.secrets.smtp_address,
-    port: 587,
+    port: 25,
     #domain: Rails.application.secrets.domain, #Rails.application.secrets.domain_name,
     user_name: Rails.application.secrets.email_provider_username,
     password: Rails.application.secrets.email_provider_password,

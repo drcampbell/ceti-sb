@@ -47,8 +47,8 @@ class UserMailer < ApplicationMailer
   def send_aws(email)
     ses = Aws::SES::Client.new(
       region: ENV["AWS_REGION"],
-      access_key_id: ENV["AWS_ACCESS_KEY"], 
-      secret_access_key: ENV["AWS_SECRET_KEY"])
+      access_key_id: ENV["SENDGRID_USERNAME"], 
+      secret_access_key: ENV["SENDGRID_PASSWORD"])
     begin
       response = ses.send_email(test_mail)
     rescue Aws::SES::Errors::ServiceError => error
@@ -86,6 +86,30 @@ class UserMailer < ApplicationMailer
       reply_to_addresses: ["schoolbusinessapp@gmail.com"],
     }
   end
+
+def test2()
+    mail = {
+      source: "schoolbusinessapp@gmail.com",
+      destination: {
+        to_addresses: ["bounce@simulator.amazonses.com"],
+        cc_addresses: [],
+        bcc_addresses: [],
+      },
+      message: {
+        subject: {
+          data: "TestMessage",
+        },
+        body: {
+          text: {
+            data: "TestMessage", 
+          },
+          html: {
+            data: "TestMessage", 
+          },
+        },
+      },
+   }
+end
 
   def send_aws2(email)
     ses = Aws::SES::Client.new(

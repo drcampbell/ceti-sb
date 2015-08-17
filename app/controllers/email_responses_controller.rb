@@ -12,7 +12,7 @@ class EmailResponsesController < ApplicationController
 
   def bounce
     message = parseMessage
-    return render json: {} unless isAuthentic(message)
+    return render json: {} unless isAuthentic(request.raw_post)
 
     if type["notificationType"] != 'Bounce'
       Rails.logger.info "Not a bounce - exiting"

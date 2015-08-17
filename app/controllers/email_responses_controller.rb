@@ -14,7 +14,7 @@ class EmailResponsesController < ApplicationController
     message = parseMessage
     return render json: {} unless isAuthentic(request.raw_post)
 
-    if type["notificationType"] != 'Bounce'
+    if message["notificationType"] != 'Bounce'
       Rails.logger.info "Not a bounce - exiting"
       return render json: {}
     end
@@ -36,7 +36,7 @@ class EmailResponsesController < ApplicationController
     message = parseMessage
     return render json: {} unless isAuthentic(message)
 
-    if type["notificationType"] != 'Complaint'
+    if message["notificationType"] != 'Complaint'
       Rails.logger.info "Not a complaint - exiting"
       return render json: {}
     end

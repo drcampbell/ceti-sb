@@ -53,7 +53,7 @@ class EmailResponsesController < ApplicationController
   protected
 
   def aws_message
-    @aws_message ||= AWS::SNS::Message.new request.raw_post
+    @aws_message ||= Aws::SNS::Message.new request.raw_post
   end
 
   def log_incoming_message

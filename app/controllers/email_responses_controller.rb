@@ -11,11 +11,10 @@ class EmailResponsesController < ApplicationController
   before_action :log_incoming_message
 
   def bounce
-    verifier = Aws::SNS::MessageVerifier.new
-    message = request.raw_post
-    return render json: {} unless verifier.authentic?(message)
-    puts "Email from Amazon muy Authentico"
-    if type != 'Bounce'
+    message = parseMessage
+    return render json: {} unless isAuthentic(message)
+
+    if type["notificationType"] != 'Bounce'
       Rails.logger.info "Not a bounce - exiting"
       return render json: {}
     end
@@ -34,9 +33,10 @@ class EmailResponsesController < ApplicationController
   end
 
   def complaint
-    return render json: {} unless aws_message.authentic?
+    message = parseMessage
+    return render json: {} unless isAuthentic(message)
 
-    if type != 'Complaint'
+    if type["notificationType"] != 'Complaint'
       Rails.logger.info "Not a complaint - exiting"
       return render json: {}
     end
@@ -54,20 +54,16 @@ class EmailResponsesController < ApplicationController
 
   protected
 
-  # def aws_message
-  #   @aws_message ||= Aws::SNS::Message.new request.raw_post
-  # end
+  def isAuthentic(message)
+    verifier = Aws::SNS::MessageVerifier.new
+    verifier.authentic?(message)
+  end
 
   def log_incoming_message
     Rails.logger.info request.raw_post
   end
 
-  # Weirdly, AWS double encodes the JSON.
-  # def message
-  #   @message ||= JSON.parse JSON.parse(request.raw_post)['Message']
-  # end
-
-  def type
-    message['notificationType']
+  def parseMessage
+    @message ||= JSON.parse JSON.parse(request.raw_post)['Message']
   end
 end

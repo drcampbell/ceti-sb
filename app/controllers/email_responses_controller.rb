@@ -34,7 +34,7 @@ class EmailResponsesController < ApplicationController
 
   def complaint
     message = parseMessage
-    return render json: {} unless isAuthentic(message)
+    return render json: {} unless isAuthentic(request.raw_post)
 
     if message["notificationType"] != 'Complaint'
       Rails.logger.info "Not a complaint - exiting"

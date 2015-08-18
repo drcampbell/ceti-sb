@@ -40,8 +40,20 @@ class UserMailer < ApplicationMailer
     mail to: current_user.email, subject: "Welcome to School Business!"
   end
 
+  def bounce_test()
+    mail to: "bounce@simulator.amazonses.com", subject: "bounce test"
+  end
+
+  def complaint_test()
+    mail to: "complaint@simulator.amazonses.com", subject: "complaint test"
+  end
+
+  def ooto_test()
+    mail to: "ooto@simulator.amazonses.com", subject: "ooto test"
+  end
+
   def test()
-    mail to: "bounce@simulator.amazonses.com", subject: "test"
+    mail to: "success@simulator.amazonses.com", subject: "test"
   end
 
   def send_aws(email)
@@ -88,7 +100,7 @@ class UserMailer < ApplicationMailer
   end
 
 def test2()
-    mail = {
+    mail2 = {
       source: "schoolbusinessapp@gmail.com",
       destination: {
         to_addresses: ["bounce@simulator.amazonses.com"],

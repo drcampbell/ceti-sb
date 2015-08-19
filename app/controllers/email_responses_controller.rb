@@ -20,13 +20,18 @@ class EmailResponsesController < ApplicationController
     end
 
     bounce = message['bounce']
+    if bounce["bounceType"] == "Transient"
+      response_type = 'ooto'
+    else
+      response_type = 'bounce'
+    end
     bouncerecps = bounce['bouncedRecipients']
     bouncerecps.each do |recp|
       email = recp['emailAddress']
       extra_info  = "status: #{recp['status']}, action: #{recp['action']}, diagnosticCode: #{recp['diagnosticCode']}"
       Rails.logger.info "Creating a bounce record for #{email}"
 
-      EmailResponse.create ({ email: email, response_type: 'bounce', extra_info: extra_info})
+      EmailResponse.create ({ email: email, response_type: response_type, extra_info: extra_info})
     end
 
     render json: {}
@@ -34,7 +39,7 @@ class EmailResponsesController < ApplicationController
 
   def complaint
     message = parseMessage
-    return render json: {} unless isAuthentic(request.raw_post)
+    return render json: {} unless isAuthentic(request.raw_postq)
 
     if message["notificationType"] != 'Complaint'
       Rails.logger.info "Not a complaint - exiting"

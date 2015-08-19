@@ -108,9 +108,13 @@ class SchoolsController < ApplicationController
   # DELETE /schools/1
   # DELETE /schools/1.json
   def destroy
-    @school = School.find params[:id]
+    @school = School.find(params[:id])
 
-    @school.destroy
+    begin 
+      @school.destroy!
+    rescue
+      puts "school not destroyed"
+    end
       respond_to do |format|
         format.html { redirect_to schools_path, notice: 'School was successfully destroyed.' }
         format.json { head :no_content }

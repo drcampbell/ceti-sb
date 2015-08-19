@@ -3,6 +3,7 @@ class BouncedEmailInterceptor
 		if (EmailResponse.exists?(email: message.to, response_type: 'bounce') or 
 			EmailResponse.exists?(email: message.to, response_type: 'complaint'))
 			message.perform_deliveries = false
+			puts "Bounce should have happened"
 		end
 	end
 end

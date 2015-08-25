@@ -86,9 +86,9 @@ class API::ClaimsController < API::ApplicationController
         UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
       end
       Notification.create(user_id: @claim.user_id,
-                          act_user_id: @event.user_id
-                          event_id: @event.id
-                          n_type: :confirm_speaker
+                          act_user_id: @event.user_id,
+                          event_id: @event.id,
+                          n_type: :confirm_speaker,
                           read: false)
       render json: {status: 0, event: jsonEvent(@event)}
     else

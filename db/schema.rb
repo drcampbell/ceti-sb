@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814155205) do
+ActiveRecord::Schema.define(version: 20150824155917) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -67,6 +67,14 @@ ActiveRecord::Schema.define(version: 20150814155205) do
     t.string   "state"
     t.string   "zip"
     t.integer  "user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "act_user_id"
+    t.integer "event_id"
+    t.integer "n_type"
+    t.boolean "read"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -152,6 +160,9 @@ ActiveRecord::Schema.define(version: 20150814155205) do
     t.string   "speaking_category"
     t.integer  "school_id"
     t.string   "authentication_token"
+    t.boolean  "set_updates"
+    t.boolean  "set_confirm"
+    t.boolean  "set_claims"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"

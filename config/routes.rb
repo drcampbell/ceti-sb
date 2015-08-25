@@ -14,12 +14,14 @@ Rails.application.routes.draw do
   namespace :api do
 #    namespace :v1 do
     devise_scope :user do
-      post 'users/sign_in' => 'sessions#create'
-      delete    'users/sign_out'  =>  'sessions#destroy'
-      post '/users/sign_up' => 'registrations#create'
-      put    'account'         => 'registrations#update'
-      get     'users/profile'         => 'registrations#profile'
-      put 'users'     => 'users#update'
+      post    'users/sign_in'  => 'sessions#create'
+      delete  'users/sign_out' => 'sessions#destroy'
+      post    'users/sign_up'  => 'registrations#create'
+      put     'account'        => 'registrations#update'
+      get     'users/profile'  => 'registrations#profile'
+      put     'users'          => 'users#update'
+      get     'users/settings' => 'registrations#settings'
+      put     'users/settings' => 'registrations#update_settings'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

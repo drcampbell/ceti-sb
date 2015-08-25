@@ -41,6 +41,7 @@ class API::ClaimsController < API::ApplicationController
   end
 
   def create
+    # Note: claim event from the event controller is used instead
     @claim = Claim.new(params[:id])
     respond_to do |format|
       format.html do
@@ -76,11 +77,19 @@ class API::ClaimsController < API::ApplicationController
   end
 
   def teacher_confirm
+    # Teacher confirms a speaker
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:claim_id])
     if current_user.id == @event.user_id and @claim.update_attribute(:confirmed_by_teacher, true)
       @event.update(speaker_id: @claim.user_id)
-      UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      if User.find(@claim.user_id).set_confirm
+        UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      end
+      Notification.create(user_id: @claim.user_id,
+                          act_user_id: @event.user_id
+                          event_id: @event.id
+                          n_type: :confirm_speaker
+                          read: false)
       render json: {status: 0, event: jsonEvent(@event)}
     else
       render json: {status: 1}

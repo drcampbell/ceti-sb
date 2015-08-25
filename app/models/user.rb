@@ -24,6 +24,9 @@ class User < ActiveRecord::Base
 
   def set_default_role
     self.role ||= :Both
+    self.set_updates ||= true
+    self.set_confirm ||= true
+    self.set_claims  ||= true
   end
 
   def feed

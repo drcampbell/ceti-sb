@@ -18,7 +18,7 @@
   <div class="col-xs-6 col-md-6">
 
   <p>
-    <% if event.speaker_id != nil %>
+    <% if event.speaker_id > 0 %>
       <strong>Speaker: </strong>
       <%= User.find(event.speaker_id).name %>
     <% else %>

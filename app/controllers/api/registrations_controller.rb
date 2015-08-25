@@ -58,6 +58,20 @@ class API::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def settings
+    u = current_user
+    render json: {set_updates: u.set_updates, set_confirm: u.set_confirm, set_claims: u.set_claims}
+  end
+
+  def update_settings
+    user = current_user
+    if user.update(settings_params)
+      render json: {state: 0}
+    else
+      render json: {state: 1}
+    end
+  end
+
   def profile
     if current_user.school_id == 1
       return redirect_to :choose
@@ -76,6 +90,10 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def settings_params
+    params.require(:user).permit(:set_updates, :set_confirm, :set_claims)
+  end
 
   def sign_up_params
     params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation)

@@ -122,9 +122,19 @@ class EventsController < ApplicationController
   def update
     params = event_params
     @event = Event.find params[:id]
-
+    success = @event.update(params)
+    if success 
+      Claim.where(@event.id).each do |x|
+        Notification.create(user_id: x.user_id,
+                          act_user_id: @event.user_id,
+                          event_id: @event.id,
+                          n_type: :event_update,
+                          read: false)
+      end
+    end
     respond_to do |format|
-      if @event && @event.update(params)
+      if @event && success
+
         format.html do       
           flash[:success] = 'Event updated'
           redirect_to @event
@@ -158,12 +168,22 @@ class EventsController < ApplicationController
   end
 
   def claim_event
-    @event = Event.find(params[:event_id])
-    UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+    begin
+      @event = Event.find(params[:event_id])
 
-    @event.claims.create!(:user_id => params[:user_id])
-
-    redirect_to(root_url)
+      @event.claims.create!(:user_id => params[:user_id])
+      UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+      Notification.create(user_id: @event.user_id,
+                          act_user_id: params[:user_id],
+                          event_id: @event.id,
+                          n_type: :claim,
+                          read: false)
+      flash[:success] = "You have claimed event: #{@event.title}"
+      redirect_to(root_url)
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = "Event not found"
+      redirect_to(root_url)
+    end
   end
 
   private

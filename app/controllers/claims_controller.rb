@@ -28,14 +28,19 @@ class ClaimsController < ApplicationController
 
   def create
     @claim = Claim.new(params[:id])
+    @event = Event.find(@claim.event_id)
     respond_to do |format|
       format.html do
         if @claim.save
 
           render 'static_pages/home'
           flash[:notice] = 'Claim was successfully created.'
-          UserMailer.event_claim(@claim.user_id, Event.find(@claim.event_id).user_id, @claim.event_id).deliver_now
-          
+          UserMailer.event_claim(@claim.user_id, @event.user_id, @claim.event_id).deliver_now
+          Notification.create(user_id: @event.user_id,
+                              act_user_id: @claim.user_id
+                              event_id: @event.id
+                              n_type: :claim
+                              read: false)
         else
           render 'static_pages/home'
         end
@@ -64,11 +69,17 @@ class ClaimsController < ApplicationController
     respond_with(@claim)
   end
 
+  # Teacher confirms a speaker
   def teacher_confirm
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:id])
     if @claim.update_attribute(:confirmed_by_teacher, true)
       UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      Notification.create(user_id: @claim.user_id,
+                          act_user_id: @event.user_id
+                          event_id: @event.id
+                          n_type: :confirm_speaker
+                          read: false)
       redirect_to(root_url)
       flash[:notice] = 'Claim was successfully confirmed.'
     end

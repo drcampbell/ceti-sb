@@ -124,7 +124,19 @@ class API::EventsController < API::ApplicationController
     #params = event_params
     @event = Event.find(params[:id])
     params = event_params
-    if @event && @event.update(params)
+    success = @event.update(params)
+
+    if @event && success
+      Claim.where(@event.id).each do |x|
+        Notification.create(user_id: x.user_id,
+                          act_user_id: @event.user_id,
+                          event_id: @event.id,
+                          n_type: :event_update,
+                          read: false)
+        if User.find(x.user_id).set_updates
+          # TODO UserMailer.send_update().deliver
+        end
+      end
       render :json => {:state => 0, :event => jsonEvent(@event) }
     elsif @event != nil
       render :json => {:state => 1, :message => @user.errors.full_messages}
@@ -145,12 +157,18 @@ class API::EventsController < API::ApplicationController
   end
 
   def claim_event
+    # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:event_id])
-      puts current_user.id
       @event.claims.create!(:user_id => current_user.id)#params[:user_id])
-      UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
-
+      if User.find(@event.user_id).set_claims
+        UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+      end
+      Notification.create(user_id: @event.user_id,
+                          act_user_id: params[:user_id],
+                          event_id: @event.id,
+                          n_type: :claim,
+                          read: false)
       render :json => {:state => 0, :event => @event }
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }

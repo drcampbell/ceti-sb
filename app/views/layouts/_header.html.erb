@@ -27,11 +27,37 @@
           <% @loglinks.each do |title, lpath| %>
             <li><%= link_to title, lpath %></li>
           <% end %>
+
           <li id="fat-menu" class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <%= notif_count = Notification.where(user_id: current_user.id, read: false).count %>
+              <b class="caret"></b>
+            </a>
+
+            <!-- TODO This could be improved -->
+            <ul class="dropdown-menu pull-right">
+              
+                <% @notifications = Notification.where(user_id: current_user.id).last(10).reverse %>
+                <% if @notifications.count > 0 %>
+                <% @notifications.each do |x| %>
+                  <li><%= link_to x.content, x.link %></li>
+                  <% x.update(read: true) %>
+                  <li class="divider"></li>
+                <% end %>
+                <!-- TODO Create Notification display page -->
+                <li><%= link_to "See All Notifications", "#" %></li>
+                <% else %>
+                  <li><p>No Notifications</p></li>
+                <% end %>
+            </ul> 
+          </li>
+
+          <li id="fat-menu" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <%= gravatar_for(user,  20) %>
             <%= user.name %><b class="caret"></b>
           </a>
+
           <ul class="dropdown-menu">
             <li><%= link_to 'Profile', current_user %></li>
             <li><%= link_to 'Account', edit_user_registration_path %></li>
@@ -44,6 +70,7 @@
               <%= link_to 'Log out', destroy_user_session_path, :method => :delete %>
             </li>
           </ul>
+
         <% else %>
           <li><%= link_to 'Log in', new_user_session_path %></li>
         <% end %>

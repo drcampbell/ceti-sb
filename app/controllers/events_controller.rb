@@ -168,6 +168,7 @@ class EventsController < ApplicationController
   end
 
   def claim_event
+    # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:event_id])
 

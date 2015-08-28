@@ -33,9 +33,9 @@ class EmailResponsesController < ApplicationController
 
       EmailResponse.create ({ email: email, response_type: response_type, extra_info: extra_info})
       Notification.create(user_id: @event.user_id,
-                              act_user_id: @claim.user_id
-                              event_id: @event.id
-                              n_type: :claim
+                              act_user_id: @claim.user_id,
+                              event_id: @event.id,
+                              n_type: :claim,
                               read: false)
     end
 

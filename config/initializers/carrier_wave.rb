@@ -10,7 +10,7 @@ if Rails.env.production?
         #:host                   => ,
         #:endpoint:key => "value" 
     }
-    config.fog_directory: ENV['S3_BUCKET']
+    config.fog_directory = ENV['S3_BUCKET']
   end
 end
 

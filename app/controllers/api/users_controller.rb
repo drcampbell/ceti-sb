@@ -103,6 +103,7 @@ class API::UsersController < API::ApplicationController
       device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
       Device.create(device)
     end
+    render json: {state: 0}
   end
   
   private

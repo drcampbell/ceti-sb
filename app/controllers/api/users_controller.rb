@@ -1,7 +1,7 @@
 class API::UsersController < API::ApplicationController
 
   #before_filter :authenticate_user!
-  before_action :correct_user,   only: [:update, :register_device, :destroy]
+  before_action :correct_user,   only: [:update, :destroy]
   #before_action :admin_user,     only: :destroy
   respond_to :json
 

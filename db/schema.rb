@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824155917) do
+ActiveRecord::Schema.define(version: 20150831174551) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -30,6 +30,12 @@ ActiveRecord::Schema.define(version: 20150824155917) do
 
   add_index "claims", ["event_id"], name: "index_claims_on_event_id"
   add_index "claims", ["user_id"], name: "index_claims_on_user_id"
+
+  create_table "devices", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "device_name"
+    t.string  "token"
+  end
 
   create_table "email_responses", force: :cascade do |t|
     t.string   "email"

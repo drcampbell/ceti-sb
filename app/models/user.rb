@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :events, dependent: :destroy
   has_many :claims, dependent: :destroy
   has_many :badges
+  has_many :devices
   belongs_to :school
   has_one :location, :through => :school
   has_one :location
@@ -31,6 +32,10 @@ class User < ActiveRecord::Base
 
   def feed
     Event.where('user_id = ?', id)
+  end
+
+  def devices
+    Device.where('user_id = ?', id)
   end
 
   def tag_list_commas

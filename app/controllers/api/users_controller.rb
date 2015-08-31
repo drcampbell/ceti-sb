@@ -1,7 +1,7 @@
 class API::UsersController < API::ApplicationController
 
   #before_filter :authenticate_user!
-  #before_action :correct_user,   only: [:update, :destroy]
+  before_action :correct_user,   only: [:update, :register_device, :destroy]
   #before_action :admin_user,     only: :destroy
   respond_to :json
 
@@ -93,6 +93,16 @@ class API::UsersController < API::ApplicationController
   def send_message
     UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
     render json: {state:0}
+  end
+
+  def register_device
+    device = Device.where(user_id: current_user.id, device_name: params[:device_name])
+    if device.exists?
+      device.update(token: params[:token])
+    else
+      device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
+      Device.create(device)
+    end
   end
   
   private

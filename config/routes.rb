@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       put     'users'          => 'users#update'
       get     'users/settings' => 'registrations#settings'
       put     'users/settings' => 'registrations#update_settings'
+      post    'register_device' => 'users#register_device'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

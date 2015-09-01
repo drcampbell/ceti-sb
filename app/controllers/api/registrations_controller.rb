@@ -33,7 +33,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       # format.json do
         @user = User.create(sign_up_params)
         if @user.save
-          UserMailer.welcome().deliver_now
+          UserMailer.welcome(@user.id).deliver_now
           render :json => {:state => 0, status: :ok, :data => @user.attributes }
         else
           render :json => {:state => 1, status: :error, :messages => @user.errors.full_messages}

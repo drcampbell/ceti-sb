@@ -36,8 +36,8 @@ class UserMailer < ApplicationMailer
     mail to: @speaker.email, subject: "School Business: #{@owner.name} has confirmed you as the speaker for an event."
   end
 
-  def welcome()
-    mail to: current_user.email, subject: "Welcome to School Business!"
+  def welcome(user_id)
+    mail to: User.find(user_id).email, subject: "Welcome to School Business!"
   end
 
   def bounce_test()

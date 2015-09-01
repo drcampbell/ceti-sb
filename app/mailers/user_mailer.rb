@@ -37,7 +37,8 @@ class UserMailer < ApplicationMailer
   end
 
   def welcome(user_id)
-    mail to: User.find(user_id).email, subject: "Welcome to School Business!"
+    @id = user_id
+    mail to: User.find(@id).email, subject: "Welcome to School Business!"
   end
 
   def bounce_test()

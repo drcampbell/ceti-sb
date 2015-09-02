@@ -97,7 +97,7 @@ class API::UsersController < API::ApplicationController
 
   def register_device
     device = Device.find_by(user_id: current_user.id, device_name: params[:device_name])
-    if device.exists?
+    if device != nil
       device.update(token: params[:token])
     else
       device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }

@@ -92,6 +92,8 @@ class API::UsersController < API::ApplicationController
 
   def send_message
     UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
+    sns = Aws::SNS::Client.new
+    sns.publish(target_arn: Device.find_by(user_id: params[:id]).endpoint_arn, message: "hi".to_json, message_structure:"json")
     render json: {state:0}
   end
 
@@ -101,9 +103,20 @@ class API::UsersController < API::ApplicationController
       device.update(token: params[:token])
     else
       device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
-      Device.create(device)
+      device = Device.create(device)
     end
     render json: {state: 0}
+
+    begin
+      sns = Aws::SNS::Client.new
+      endpoint = sns.create_platform_endpoint(
+        platform_application_arn:ENV["SNS_APP_ARN"],
+        token: device[:token],
+        attributes: { "user_id" => device[:user_id]}
+      )
+      device.update(endpoint_arn: endpoint[:endpoint_arn])
+    rescue
+    end
   end
   
   private

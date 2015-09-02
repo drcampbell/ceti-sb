@@ -73,9 +73,9 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def profile
-    if current_user.school_id == 1
-      return redirect_to :choose
-    end
+    # if current_user.school_id == 1 
+    #   return redirect_to :choose
+    # end
     #build_resource({})
     profile = current_user.attributes
     profile[:school_name] = School.find(profile["school_id"]).school_name

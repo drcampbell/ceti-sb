@@ -112,7 +112,7 @@ class API::UsersController < API::ApplicationController
       endpoint = sns.create_platform_endpoint(
         platform_application_arn: ENV["SNS_APP_ARN"],
         token: device.token)
-      ) #        attributes: { "user_id" => "#{device.user_id}"}
+      #)        attributes: { "user_id" => "#{device.user_id}"}
       device.update(endpoint_arn: endpoint[:endpoint_arn])
     rescue
     end

@@ -1,6 +1,7 @@
 class Notification < ActiveRecord::Base
 	enum n_type: [:claim, :confirm_speaker, :event_update]
 	belongs_to :user
+	after_initialize :send_gcm
 
 	def content
 		content = ""
@@ -13,6 +14,18 @@ class Notification < ActiveRecord::Base
 			content = "#{User.find(act_user_id).name} has updated event: #{Event.find(event_id).title}"
 		end
 		return content
+	end
+
+	def send_gcm()
+		sns = Aws::SNS::Client.new(region: 'us-west-2')
+		devices = Device.where(user_id: self.user_id)
+		for device in devices
+			sns.publish({
+				target_arn: device.endpoint_arn,
+				message_structure: "json",
+				message: {GCM: {data: {message: self.content}}.to_json}.to_json
+				})
+		end
 	end
 
 	def link

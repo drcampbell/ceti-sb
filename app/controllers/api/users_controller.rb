@@ -100,7 +100,7 @@ class API::UsersController < API::ApplicationController
   def notifications
     notifications = Notification.where(user_id: current_user.id)
     results = []
-    for notifications.each do |x|
+    notifications.each do |x|
       r = x.attributes
       r[:user_name] = User.find(x.user_id).name
       r[:act_user_name] = User.find(x.act_user_id).name

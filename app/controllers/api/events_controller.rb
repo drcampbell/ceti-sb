@@ -127,7 +127,7 @@ class API::EventsController < API::ApplicationController
     success = @event.update(params)
 
     if @event && success
-      Claim.where(@event.id).each do |x|
+      Claim.where(event_id: @event.id).each do |x|
         Notification.create(user_id: x.user_id,
                           act_user_id: @event.user_id,
                           event_id: @event.id,

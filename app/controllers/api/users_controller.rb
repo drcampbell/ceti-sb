@@ -97,6 +97,11 @@ class API::UsersController < API::ApplicationController
     render json: {state:0}
   end
 
+  def notifications
+    notifications = Notification.where(user_id: current_user.id)
+    render json: {notifications: notifications}
+  end
+
   def register_device
     device = Device.find_by(user_id: current_user.id, device_name: params[:device_name])
     if device != nil

@@ -102,9 +102,9 @@ class API::UsersController < API::ApplicationController
     results = []
     for notifications.each do |x|
       r = x.attributes
-      r[:user_name] = User.find(x.user_id)
-      r[:act_user_name] = User.find(x.act_user_id)
-      r[:event_title] = Event.find(x.event_id)
+      r[:user_name] = User.find(x.user_id).name
+      r[:act_user_name] = User.find(x.act_user_id).name
+      r[:event_title] = Event.find(x.event_id).title
       results.append(r)
     end
     render json: {notifications: results}

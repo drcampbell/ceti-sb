@@ -71,7 +71,7 @@ class API::EventsController < API::ApplicationController
     result = event.attributes
     result[:user_name] = user_name
     result[:loc_name] = location_name
-    if event.speaker_id
+    if event.speaker_id and event.speaker_id != 0
       result[:speaker] = User.find(event.speaker_id).name
     else
       result[:speaker] = "TBA"
@@ -169,6 +169,7 @@ class API::EventsController < API::ApplicationController
                           event_id: @event.id,
                           n_type: :claim,
                           read: false)
+
       render :json => {:state => 0, :event => @event }
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }

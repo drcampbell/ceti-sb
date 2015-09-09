@@ -48,7 +48,7 @@ group :development, :test, :production do
   #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'
   #gem 'fog',                     '1.23.0'
-  gem 'carrierwave-aws', '0.5.0'
+  gem 'carrierwave'
   gem 'aws-s3'
 end
 

@@ -99,7 +99,15 @@ class API::UsersController < API::ApplicationController
 
   def notifications
     notifications = Notification.where(user_id: current_user.id)
-    render json: {notifications: notifications}
+    results = []
+    for notifications.each do |x|
+      r = x.attributes
+      r[:user_name] = User.find(x.user_id)
+      r[:act_user_name] = User.find(x.act_user_id)
+      r[:event_title] = Event.find(x.event_id)
+      results.append(r)
+    end
+    render json: {notifications: results}
   end
 
   def register_device

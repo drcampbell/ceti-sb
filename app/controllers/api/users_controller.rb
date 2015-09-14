@@ -91,13 +91,17 @@ class API::UsersController < API::ApplicationController
   end
 
   def send_message
-    UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
-    Notification.create(user_id: params[:id],
-                          act_user_id: current_user.id,
-                          event_id: 0,
-                          n_type: :message,
-                          read: false)
-    render json: {state:0}
+    begin 
+      UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
+      Notification.create(user_id: params[:id],
+                            act_user_id: current_user.id,
+                            event_id: 0,
+                            n_type: :message,
+                            read: false)
+      render json: {state:0}
+    rescue
+      render json: {state:1}
+    end
   end
 
   def notifications

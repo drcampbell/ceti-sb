@@ -1,5 +1,5 @@
 class Notification < ActiveRecord::Base
-	enum n_type: [:claim, :confirm_speaker, :event_update]
+	enum n_type: [:claim, :confirm_speaker, :event_update, :message]
 	belongs_to :user
 	after_create :send_gcm
 
@@ -12,6 +12,8 @@ class Notification < ActiveRecord::Base
 			content =  "#{User.find(act_user_id).name} has confirmed you as the speaker of event: #{Event.find(event_id).title}"
 		when "event_update"
 			content = "#{User.find(act_user_id).name} has updated event: #{Event.find(event_id).title}"
+		when "message"
+			content = "#{User.find(act_user_id).name} has sent you a message."
 		end
 		return content
 	end
@@ -38,6 +40,8 @@ class Notification < ActiveRecord::Base
 			link = "events/#{event_id}"
 		when "event_update"
 			link = "events/#{event_id}"
+		when "message"
+			link = "users/#{act_user_id}"
 		end
 		return link
 	end

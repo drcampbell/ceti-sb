@@ -92,8 +92,11 @@ class API::UsersController < API::ApplicationController
 
   def send_message
     UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
-    sns = Aws::SNS::Client.new
-    sns.publish(target_arn: Device.find_by(user_id: params[:id]).endpoint_arn, message: "hi".to_json, message_structure:"json")
+    Notification.create(user_id: params[:id],
+                          act_user_id: current_user.id,
+                          event_id: 0,
+                          n_type: :message,
+                          read: false)
     render json: {state:0}
   end
 

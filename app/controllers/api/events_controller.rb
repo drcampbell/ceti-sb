@@ -159,13 +159,14 @@ class API::EventsController < API::ApplicationController
   def claim_event
     # TODO Handle a speaker already being selected
     begin
-      @event = Event.find(params[:event_id])
-      @event.claims.create!(:user_id => current_user.id)#params[:user_id])
+      @event = Event.find(params[:id])
+      claimer = current_user.id
+      @event.claims.create!(:user_id => claimer)#params[:user_id])
       if User.find(@event.user_id).set_claims
-        UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+        UserMailer.event_claim(claimer, @event.user_id, @event.id).deliver_now
       end
       Notification.create(user_id: @event.user_id,
-                          act_user_id: params[:user_id],
+                          act_user_id: claimer,
                           event_id: @event.id,
                           n_type: :claim,
                           read: false)

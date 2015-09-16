@@ -60,7 +60,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def filterDate(events)
-    events.where("event_start > ?" Time.now)
+    events.where("event_start > ?", Time.now)
   end
 
   def jsonEvent(event)

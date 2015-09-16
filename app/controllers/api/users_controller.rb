@@ -135,7 +135,7 @@ class API::UsersController < API::ApplicationController
       #)        attributes: { "user_id" => "#{device.user_id}"}
       device.update(endpoint_arn: endpoint[:endpoint_arn])
     rescue
-      puts "hi"
+      puts json: {state: 1}
     end
     render json: {state: 0}
   end

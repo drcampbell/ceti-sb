@@ -78,6 +78,7 @@ class EventsController < ApplicationController
   def create
     if user_signed_in?
       @event = current_user.events.build(event_params)
+
       respond_to do |format|
         format.html do
           if @event.save
@@ -85,8 +86,8 @@ class EventsController < ApplicationController
             redirect_to root_path
           else
             @feed_items = []
-            flash[:notice] = 'Event creation failed!'
-            render 'static_pages/home'
+            flash.now[:notice] = "Event creation failed!\nPlease complete required fields."
+            render :new  #'static_pages/home'
           end
         end
         format.json do

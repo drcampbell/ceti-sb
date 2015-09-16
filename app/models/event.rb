@@ -5,7 +5,8 @@ class Event < ActiveRecord::Base
   has_calendar({:attribute => :event_start})
   has_many :claims, dependent: :destroy
   acts_as_taggable
-  after_initialize :init
+  after_create :init
+  validates_presence_of :title, :event_start, :event_end, :content
 
   searchable do
     text :title, :boost => 5
@@ -19,7 +20,9 @@ class Event < ActiveRecord::Base
   end
 
   def init
-    self.speaker_id ||= 0
+    self.update_attribute(:speaker_id, 0)
+    self.update_attribute(:user_name, User.find(self.user_id).name)
+    self.update_attribute(:loc_name, School.find(self.loc_id).school_name)
   end
 
   def tag_list_commas

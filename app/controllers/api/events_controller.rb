@@ -36,7 +36,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_events
-    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil)
+    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0)
     render json: {:events => list_events(events)}.as_json
   end
 
@@ -47,7 +47,7 @@ class API::EventsController < API::ApplicationController
 
   def confirmed
     id = current_user.id
-    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: nil)
+    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0)
     render json: {:events => list_events(events)}.as_json
   end
 

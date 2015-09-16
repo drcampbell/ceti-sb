@@ -32,23 +32,23 @@ class API::EventsController < API::ApplicationController
 
   def pending_claims
     events = Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id)
-    render json: {:events => list_events(events)}.as_json
+    render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def pending_events
     events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0)
-    render json: {:events => list_events(events)}.as_json
+    render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def my_events
     events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id)#speaker_id: current_user.id)
-    render json: {:events => list_events(events)}.as_json
+    render json: {:events => list_events(filterDate(events))}.as_json
   end    
 
   def confirmed
     id = current_user.id
     events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0)
-    render json: {:events => list_events(events)}.as_json
+    render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def list_events(events)
@@ -57,6 +57,10 @@ class API::EventsController < API::ApplicationController
       results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
     end
     return results
+  end
+
+  def filterDate(events)
+    eevents.where("event_start > ?" Time.now)
   end
 
   def jsonEvent(event)

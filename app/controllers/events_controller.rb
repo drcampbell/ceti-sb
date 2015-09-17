@@ -125,7 +125,7 @@ class EventsController < ApplicationController
     params = event_params  
     success = @event.update(params)
     if success and Rails.env.production?
-      Claim.where(@event.id).each do |x|
+      Claim.where(event_id: @event.id).each do |x|
         Notification.create(user_id: x.user_id,
                           act_user_id: @event.user_id,
                           event_id: @event.id,

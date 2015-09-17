@@ -6,7 +6,7 @@ class Event < ActiveRecord::Base
   has_many :claims, dependent: :destroy
   acts_as_taggable
   after_create :init
-  validates_presence_of :title, :event_start, :event_end, :content
+  validates_presence_of :title, :event_start, :event_end
 
   searchable do
     text :title, :boost => 5

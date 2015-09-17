@@ -23,6 +23,7 @@ class Event < ActiveRecord::Base
     self.update_attribute(:speaker_id, 0)
     self.update_attribute(:user_name, User.find(self.user_id).name)
     self.update_attribute(:loc_name, School.find(self.loc_id).school_name)
+    self.update_attribute(:active, true)
   end
 
   def tag_list_commas

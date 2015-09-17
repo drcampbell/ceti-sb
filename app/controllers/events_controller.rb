@@ -150,9 +150,17 @@ class EventsController < ApplicationController
     end
   end
 
+  def cancel
+    @event = Event.find(params[:id])
+    if current_user.id == @event.user_id
+      @event.update_attribute(:active, false)
+      redirect_to root_url
+    end
+  end
+  
   def destroy
-    if user_signed_in?
-      @event = Event.find params[:id]
+    @event = Event.find params[:id]
+    if current_user.id == @event.user_id
       respond_to do |format|
         format.html do
           @event.destroy

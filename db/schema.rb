@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902183350) do
+ActiveRecord::Schema.define(version: 20150917184434) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20150902183350) do
     t.integer  "speaker_id"
     t.string   "user_name"
     t.string   "loc_name"
+    t.boolean  "active"
   end
 
   add_index "events", ["loc_id"], name: "index_events_on_loc_id"

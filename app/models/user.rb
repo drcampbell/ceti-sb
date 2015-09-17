@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   end
 
   def feed
-    Event.where('user_id = ?', id)
+    Event.where('user_id = ?', id).where(active: true)
   end
 
   def devices

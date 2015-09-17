@@ -121,10 +121,10 @@ class EventsController < ApplicationController
   end
 
   def update
-    params = event_params
-    @event = Event.find params[:id]
+    @event = Event.find(params[:id])
+    params = event_params  
     success = @event.update(params)
-    if success 
+    if success and Rails.env.production?
       Claim.where(@event.id).each do |x|
         Notification.create(user_id: x.user_id,
                           act_user_id: @event.user_id,

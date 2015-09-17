@@ -4,8 +4,8 @@
 	<li ><%= link_to "Claims", root_path(:tab => "tab_claims") %></li>
 	<li ><%= link_to "Confirmed", root_path(:tab => "tab_confirmed") %></li>
 </ul>
-<% if @feed_items.present? %>
+<% if @events = get_all() %>
     <ol class="events">
-      <%= render @feed_items %>
+      <%= render @events %>
     </ol>
 <% end %>

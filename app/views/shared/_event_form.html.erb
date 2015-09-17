@@ -16,6 +16,7 @@
       <%= f.label :tag_list, 'Tags (separated by commas)' %><br />
       <%= f.text_field :tag_list, value: @event.tag_list %>
     </div>
+    <% Time.zone = "Eastern Time (US & Canada)" %>
     <% if @event.event_start then start_value = @event.event_start else value = Time.now end %>
     <% if @event.event_end then end_value = @event.event_end else value = Time.now end %>
     <div class="form-group">

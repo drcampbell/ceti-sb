@@ -27,27 +27,28 @@ class API::EventsController < API::ApplicationController
     elsif params[:loc_id]
       @events = Event.where("loc_id" => params[:loc_id])
     end
+    @events = @events.where(active: true)
     render json: {:events => list_events(@events)}.as_json
   end
 
   def pending_claims
-    events = Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id)
+    events = Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true)
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def pending_events
-    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0)
+    events = Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0).where(active: true)
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def my_events
-    events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id)#speaker_id: current_user.id)
+    events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true)#speaker_id: current_user.id)
     render json: {:events => list_events(filterDate(events))}.as_json
   end    
 
   def confirmed
     id = current_user.id
-    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0)
+    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0).where(active: true)
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 

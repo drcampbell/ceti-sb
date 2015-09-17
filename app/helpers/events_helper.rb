@@ -22,14 +22,14 @@ module EventsHelper
 	      @events = @search.results
 	    end
     end
-    return @events
+    return filterDate(@events.where(active: true))
 	end
 
 	def get_events2(school)
 		@search = Sunspot.search(Event) do
 			with :loc_id, school.id
 		end
-		@events = @search.results
+		@events = filterDate(@search.results.where(active: true))
 	end
 
 	def valid_event(event)
@@ -45,21 +45,24 @@ module EventsHelper
 	end
 
 	def get_all()
-		return Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id)
+		return filterDate(Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true))
 	end
 
 	def get_approvals()
-		return Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil)
+		return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil).where(active: true))
 	end
 
 	def get_claims()
-		return Event.joins(:claims).where('claims.user_id' => current_user.id)
+		return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where(active: true))
 	end
 	
 	def get_confirmed()
 		id = current_user.id
-    return Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => nil)    
+    return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => nil).where(active: true))   
 	end
 
+	def filterDate(events)
+    events.where("event_start > ?", Time.now)
+  end
 
 end

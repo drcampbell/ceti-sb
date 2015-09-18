@@ -13,6 +13,7 @@ class Event < ActiveRecord::Base
     text :content, :event_month
     time :event_start
     string :event_month
+    boolean :active
     integer :loc_id
     integer :user_id
     text :user_name

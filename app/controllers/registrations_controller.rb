@@ -38,9 +38,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def profile
-    if current_user.school_id == 1
-      return redirect_to :choose
-    end
+    # if current_user.school_id == 1
+    #   return redirect_to :choose
+    # end
     build_resource({})
     respond_with self.resource
     #return render "users/#{current_user.id}"

@@ -220,6 +220,7 @@ class EventsController < ApplicationController
     def validate_event(param)
       if param[:event_start] >= param[:event_end]
         raise InvalidTime
+      end
     end
 
   # Confirms the correct user.

@@ -9,7 +9,8 @@ module EventsHelper
 		elsif params.class == ActionController::Parameters
     	@search = Sunspot.search(Event) do
 	      fulltext params[:search]
-	       with(:event_start).greater_than(1.week.ago)
+	       with(:event_start).greater_than(Time.now)
+	       with(:active, true)
 	     facet(:event_month)
 	      with(:event_month, params[:month]) if params[:month].present?
 	      paginate(page: params[:page])
@@ -22,8 +23,8 @@ module EventsHelper
 	      @events = @search.results
 	    end
     end
-    events = Event.where(id: @events.map(&:id))
-    return filterDate(events.where(active: true))
+    return @events
+    #return filterDate(events.where(active: true))
 	end
 
 	def get_events2(school)

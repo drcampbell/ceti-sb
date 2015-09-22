@@ -22,7 +22,8 @@ module EventsHelper
 	      @events = @search.results
 	    end
     end
-    return filterDate(@events.where(active: true))
+    events = Event.where(id: @events.map(&:id))
+    return filterDate(events.where(active: true))
 	end
 
 	def get_events2(school)

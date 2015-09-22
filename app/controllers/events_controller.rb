@@ -5,6 +5,11 @@ class EventsController < ApplicationController
   before_action :correct_user,        only: [:edit, :update]
   before_action :admin_user,          only: :destroy
 
+  class InvalidTime < StandardError
+  end
+
+  rescue_from InvalidTime, :with => :invalid_time
+
   def index
     if not user_signed_in?
       redirect_to :signin
@@ -76,31 +81,29 @@ class EventsController < ApplicationController
   end
 
   def create
-    if user_signed_in?
-      @event = current_user.events.build(event_params)
+    begin
+      if user_signed_in?
+        validate_event(event_params)
+        @event = current_user.events.build(event_params)
 
-      respond_to do |format|
-        format.html do
-          if @event.save
-            flash[:success] = 'Event created!'
-            redirect_to root_path
-          else
-            @feed_items = []
-            flash.now[:notice] = "Event creation failed!\nPlease complete required fields."
-            render :new  #'static_pages/home'
+        respond_to do |format|
+          format.html do
+            if @event.save
+              flash[:success] = 'Event created!'
+              redirect_to root_path
+            else
+              @feed_items = []
+              flash.now[:notice] = "Event creation failed!\nPlease complete required fields."
+              render :new  #'static_pages/home'
+            end
           end
         end
-        format.json do
-          if @event.save
-            render :json => {:state => {:code => 0}, :data => @event.to_json }
-          else
-            @feed_items = []
-            render :json => {:state => {:code => 1, :messages => @event.errors.full_messages} }
-          end
-        end
+      else
+        redirect_to signin
       end
-    else
-      redirect_to signin
+    rescue StandardError::InvalidTime
+      flash[:notice] = "You must enter a start time that preceeds the end time."
+      render :new
     end
   end
 
@@ -121,18 +124,25 @@ class EventsController < ApplicationController
   end
 
   def update
-    @event = Event.find(params[:id])
-    params = event_params  
-    success = @event.update(params)
-    if success and Rails.env.production?
-      Claim.where(event_id: @event.id).each do |x|
-        Notification.create(user_id: x.user_id,
-                          act_user_id: @event.user_id,
-                          event_id: @event.id,
-                          n_type: :event_update,
-                          read: false)
+    begin
+      @event = Event.find(params[:id])
+      params = event_params
+      validate_event(params)
+      success = @event.update(params)
+      if success and Rails.env.production?
+        Claim.where(event_id: @event.id).each do |x|
+          Notification.create(user_id: x.user_id,
+                            act_user_id: @event.user_id,
+                            event_id: @event.id,
+                            n_type: :event_update,
+                            read: false)
+        end
       end
+    rescue StandardError::InvalidTime
+      flash[:notice] = "You must enter a start time that preceeds the end time."
+      render :edit
     end
+
     respond_to do |format|
       if @event && success
 
@@ -205,6 +215,11 @@ class EventsController < ApplicationController
 
     def event_params
       params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :loc_id)
+    end
+
+    def validate_event(param)
+      if param[:event_start] >= param[:event_end]
+        raise InvalidTime
     end
 
   # Confirms the correct user.

@@ -182,7 +182,9 @@ class EventsController < ApplicationController
       @event = Event.find(params[:event_id])
 
       @event.claims.create!(:user_id => params[:user_id])
-      UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+      if User.find(@event.user_id).set_claims
+        UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+      end
       Notification.create(user_id: @event.user_id,
                           act_user_id: params[:user_id],
                           event_id: @event.id,

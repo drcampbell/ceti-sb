@@ -75,7 +75,10 @@ class ClaimsController < ApplicationController
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:id])
     if @claim.update_attribute(:confirmed_by_teacher, true)
-      UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      @event.update_attribute(:speaker_id, @claim.user_id)
+      if User.find(@claim.user_id).set_confirm
+        UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      end
       Notification.create(user_id: @claim.user_id,
                           act_user_id: @event.user_id,
                           event_id: @event.id,

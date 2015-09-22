@@ -51,7 +51,7 @@ module EventsHelper
 	end
 
 	def get_approvals()
-		return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> nil).where(active: true))
+		return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0).where(active: true))
 	end
 
 	def get_claims()
@@ -60,7 +60,7 @@ module EventsHelper
 	
 	def get_confirmed()
 		id = current_user.id
-    return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => nil).where(active: true))   
+    return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => 0).where(active: true))   
 	end
 
 	def filterDate(events)

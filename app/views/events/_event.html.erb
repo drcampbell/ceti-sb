@@ -54,7 +54,7 @@
         <p> <%= button_to "Confirm #{claim.user.name} as speaker", teacher_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
       <% end %>
       <% if current_user.id == claim.user_id && claim.confirmed_by_teacher && !claim.confirmed_by_speaker %>
-          <p> <%= button_to 'Confirm this speaking event', speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
+          <p> <%= button_to 'Confirm this speaking event', speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %> </p>
       <% end %>
       <% if current_user == event.user && claim.confirmed_by_teacher && claim.confirmed_by_speaker %>
           <p> <%= button_to "Give badge to #{claim.user.name}", speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>

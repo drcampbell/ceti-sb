@@ -1,8 +1,9 @@
 <%= form_for @event do |f| %>
 
     <div class="field">
+      <% if @event.title then value = @event.title else value = "What is the name of the event?" end %>
       <%= f.label :title, 'Title' %><br />
-      <%= f.text_field :title, value: @event.title %>
+      <%= f.text_field :title, placeholder: "What is the name of the event?"%>
     </div>
     <div class="field"> 
       <%= puts current_user.school_id %>

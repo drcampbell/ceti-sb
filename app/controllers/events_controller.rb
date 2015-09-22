@@ -101,7 +101,7 @@ class EventsController < ApplicationController
       else
         redirect_to signin
       end
-    rescue StandardError::InvalidTime
+    rescue InvalidTime
       flash[:notice] = "You must enter a start time that preceeds the end time."
       render :new
     end
@@ -138,9 +138,9 @@ class EventsController < ApplicationController
                             read: false)
         end
       end
-    rescue StandardError::InvalidTime
+    rescue InvalidTime
       flash[:notice] = "You must enter a start time that preceeds the end time."
-      render :edit
+      success = false
     end
 
     respond_to do |format|

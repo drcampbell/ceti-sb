@@ -83,8 +83,9 @@ class EventsController < ApplicationController
   def create
     begin
       if user_signed_in?
-        validate_event(event_params)
-        @event = current_user.events.build(event_params)
+        params = event_params
+        validate_event(params)
+        @event = current_user.events.build(params)
 
         respond_to do |format|
           format.html do
@@ -103,6 +104,8 @@ class EventsController < ApplicationController
       end
     rescue InvalidTime
       flash[:notice] = "You must enter a start time that preceeds the end time."
+      render :new
+    rescue ArgumentError
       render :new
     end
   end

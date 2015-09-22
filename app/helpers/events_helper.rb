@@ -55,7 +55,7 @@ module EventsHelper
 	end
 
 	def get_claims()
-		return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where(active: true))
+		return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true))
 	end
 	
 	def get_confirmed()

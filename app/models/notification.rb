@@ -35,13 +35,13 @@ class Notification < ActiveRecord::Base
 		link = ""
 		case n_type
 		when "claim"
-			link = "events/#{event_id}"
+			link = "/events/#{event_id}"
 		when "speaker_confirm"
-			link = "events/#{event_id}"
+			link = "/events/#{event_id}"
 		when "event_update"
-			link = "events/#{event_id}"
+			link = "/events/#{event_id}"
 		when "message"
-			link = "users/#{act_user_id}"
+			link = "/users/#{act_user_id}"
 		end
 		return link
 	end

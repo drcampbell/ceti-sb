@@ -7,6 +7,10 @@ class EventsController < ApplicationController
 
   class InvalidTime < StandardError
   end
+  class MissingTime < StandardError
+  end
+  class MissingTitle < StandardError
+  end
 
   rescue_from InvalidTime, :with => :invalid_time
 
@@ -84,9 +88,8 @@ class EventsController < ApplicationController
     begin
       if user_signed_in?
         params = event_params
-        validate_event(params)
         @event = current_user.events.build(params)
-
+        validate_event(@event)
         respond_to do |format|
           format.html do
             if @event.save
@@ -103,9 +106,16 @@ class EventsController < ApplicationController
         redirect_to signin
       end
     rescue InvalidTime
-      flash[:notice] = "You must enter a start time that preceeds the end time."
+      flash[:warning] = "You must enter a start time that preceeds the end time."
       render :new
     rescue ArgumentError
+      flash[:warning] = "You must enter a start time that preceeds the end time."
+      render :new
+    rescue MissingTitle
+      flash[:warning] = "You are missing a valid title"
+      render :new
+    rescue MissingTime
+      flash[:warning] = "You are missing a valid start or end time"
       render :new
     end
   end
@@ -130,8 +140,9 @@ class EventsController < ApplicationController
     begin
       @event = Event.find(params[:id])
       params = event_params
-      validate_event(params)
-      success = @event.update(params)
+      @event.attributes = params
+      validate_event(@event)
+      success = @event.save
       if success and Rails.env.production?
         Claim.where(event_id: @event.id).each do |x|
           Notification.create(user_id: x.user_id,
@@ -142,7 +153,16 @@ class EventsController < ApplicationController
         end
       end
     rescue InvalidTime
-      flash[:notice] = "You must enter a start time that preceeds the end time."
+      flash[:warning] = "You must enter a start time that preceeds the end time."
+      success = false
+    rescue ArgumentError
+      flash[:warning] = "You must enter a start time that preceeds the end time."
+      success = false
+    rescue MissingTitle
+      flash[:warning] = "You are missing a valid title"
+      success = false
+    rescue MissingTime
+      flash[:warning] = "You are missing a valid start or end time"
       success = false
     end
 
@@ -220,8 +240,12 @@ class EventsController < ApplicationController
       params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :loc_id)
     end
 
-    def validate_event(param)
-      if param[:event_start] >= param[:event_end]
+    def validate_event(event)
+      if not event.event_start? or not event.event_end?
+        raise MissingTime
+      elsif event.title == ""
+        raise MissingTitle
+      elsif event.event_start >= event.event_end
         raise InvalidTime
       end
     end

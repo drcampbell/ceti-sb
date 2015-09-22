@@ -8,7 +8,7 @@ class Notification < ActiveRecord::Base
 		case n_type
 		when "claim"
 			content = "#{User.find(act_user_id).name} has claimed your event: #{Event.find(event_id).title}"
-		when "speaker_confirm"
+		when "confirm_speaker"
 			content =  "#{User.find(act_user_id).name} has confirmed you as the speaker of event: #{Event.find(event_id).title}"
 		when "event_update"
 			content = "#{User.find(act_user_id).name} has updated event: #{Event.find(event_id).title}"
@@ -36,7 +36,7 @@ class Notification < ActiveRecord::Base
 		case n_type
 		when "claim"
 			link = "/events/#{event_id}"
-		when "speaker_confirm"
+		when "confirm_speaker"
 			link = "/events/#{event_id}"
 		when "event_update"
 			link = "/events/#{event_id}"

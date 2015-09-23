@@ -53,7 +53,7 @@ class API::SchoolsController < API::ApplicationController
                       state: @school.loc_state, zip: @school.loc_zip,
                       phone: @school.phone}
     events = Event.where(loc_id: @school.id).where("event_start > ?", Time.now).order("event_start").reverse
-    render json: {school: school_message, events: list_events(filter_dates(events)).as_json}
+    render json: {school: school_message, events: list_events(filterDate(events)).as_json}
   end
 
   def choose

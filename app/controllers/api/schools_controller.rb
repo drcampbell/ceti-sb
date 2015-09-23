@@ -53,7 +53,7 @@ class API::SchoolsController < API::ApplicationController
                       state: @school.loc_state, zip: @school.loc_zip,
                       phone: @school.phone}
     events = Event.where(loc_id: @school.id).where("event_start > ?", Time.now).order("event_start").reverse
-    render json: {school: school_message, events: events}
+    render json: {school: school_message, events: list_events(filter_dates(events))}
   end
 
   def choose
@@ -134,6 +134,18 @@ class API::SchoolsController < API::ApplicationController
       end
   end
 
+  def list_events(events)
+    results = Array.new(events.count){Hash.new}
+    for i in 0..events.count-1
+      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
+    end
+    return results
+  end
+
+  def filterDate(events)
+    events.where("event_start > ?", Time.now)
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_school

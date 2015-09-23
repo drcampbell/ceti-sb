@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
   belongs_to :school
   has_calendar({:attribute => :event_start})
   has_many :claims, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   acts_as_taggable
   after_create :init
   validates_presence_of :title, :event_start, :event_end

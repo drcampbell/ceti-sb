@@ -1,6 +1,7 @@
 class Notification < ActiveRecord::Base
 	enum n_type: [:claim, :confirm_speaker, :event_update, :message]
 	belongs_to :user
+	belongs_to :event
 	after_create :send_gcm
 
 	def content

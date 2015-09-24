@@ -47,7 +47,8 @@ class API::UsersController < API::ApplicationController
     #                 business:@user.business, biography:@user.biography,
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
-    render json: format_user(@user)
+    events = Event.where(loc_id: @user.id).where("event_start > ?", Time.now).order("event_start").reverse
+    render json: { user: format_user(@user), events: list_events(events).as_json }
 
   end
 
@@ -140,6 +141,14 @@ class API::UsersController < API::ApplicationController
     render json: {state: 0}
   end
   
+  def list_events(events)
+    results = Array.new(events.count){Hash.new}
+    for i in 0..events.count-1
+      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
+    end
+    return results
+  end
+
   private
 
   # Confirms an admin user.

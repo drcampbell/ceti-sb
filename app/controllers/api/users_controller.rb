@@ -47,7 +47,7 @@ class API::UsersController < API::ApplicationController
     #                 business:@user.business, biography:@user.biography,
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
-    events = Event.where(loc_id: @user.id).where("event_start > ?", Time.now).order("event_start").reverse
+    events = Event.where(user_id: @user.id).where("event_start > ?", Time.now).order("event_start").reverse
     render json: { user: format_user(@user), events: list_events(events).as_json }
 
   end

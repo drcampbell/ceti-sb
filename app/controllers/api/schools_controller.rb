@@ -52,8 +52,9 @@ class API::SchoolsController < API::ApplicationController
                       address: @school.loc_addr, city: @school.loc_city,
                       state: @school.loc_state, zip: @school.loc_zip,
                       phone: @school.phone}
+    badge = Badge.find(@school.badge_id)
     events = Event.where(loc_id: @school.id).where("event_start > ?", Time.now).order("event_start").reverse
-    render json: {school: school_message, events: list_events(events).as_json}
+    render json: {school: school_message, badge_url: badge.url, events: list_events(events).as_json}
   end
 
   def choose
@@ -140,10 +141,6 @@ class API::SchoolsController < API::ApplicationController
       results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
     end
     return results
-  end
-
-  def filterDate(events)
-    events.where("event_start > ?", Time.now)
   end
 
   private

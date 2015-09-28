@@ -112,9 +112,15 @@ module SchoolsHelper
   end
 
   def get_badge(school)
-    badge = Badge.find(school.badge_id).file
-    uploader = BadgeUploader.new
-    uploader.retrieve_from_store!(badge).url
+    badge = Badge.find(school.badge_id)
+    # uploader = BadgeUploader.new
+    # uploader.retrieve_from_store!(badge).url
+    data = open(badge.url)
+    send_data data.read, filename: badge.file_name,
+                        type: 'jpg',
+                        disposition: 'attachment', 
+                        stream: 'true',
+                        buffer_size: '4096'
   end
 
   def upload_badge(school, file)

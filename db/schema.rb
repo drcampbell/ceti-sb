@@ -11,12 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150917184434) do
+ActiveRecord::Schema.define(version: 20150928005949) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "url"
+    t.string   "file_name"
+    t.string   "type"
   end
 
   create_table "claims", force: :cascade do |t|

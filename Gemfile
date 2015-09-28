@@ -47,7 +47,8 @@ group :development, :test, :production do
   gem 'simple_calendar', "~> 1.1.0"
   #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'
-  #gem 'fog',                     '1.23.0'
+  
+
   gem 'carrierwave'
   gem 'aws-s3'
 end
@@ -81,7 +82,7 @@ group :production do
   gem 'aws-sdk', '~> 2'
   gem 'aws-sdk-rails', '~> 1.0'
   gem 'fog-aws'
-  gem 'fog'
+  gem 'fog'#, '~> 1.3.1'
   gem 'pg', '~> 0.18.1'
   #gem 'rails_12factor'
   gem 'puma'

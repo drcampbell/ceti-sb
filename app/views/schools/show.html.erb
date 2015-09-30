@@ -19,7 +19,7 @@
 <% end %>
 
 <div class="btn-group" style="text-align:center">
-	<% if user_signed_in? && @school_id > 1 &&
+	<% if user_signed_in? && @school.id > 1 &&
 		(current_user == 'Teacher' || current_user.role == 'Both') %>
 <!-- 		 if current_user.school_id == 1 %> -->
 			<%= button_to 'Make My School', claim_school_path(:user_id => current_user.id, :school_id => @school.id), 

@@ -47,7 +47,7 @@ class API::UsersController < API::ApplicationController
     #                 business:@user.business, biography:@user.biography,
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
-    events = Event.where(user_id: @user.id).order("event_start").reverse.limit(20)
+    events = Event.where(user_id: @user.id).order(event_start: :desc).take(20)
     render json: { user: format_user(@user), events: list_events(events).as_json }
 
   end

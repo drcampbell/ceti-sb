@@ -18,9 +18,9 @@
       <%= f.text_field :tag_list, value: @event.tag_list %>
     </div>
     <% Time.zone = "Eastern Time (US & Canada)" %>
-    <% if @event.event_start then start_value = @event.event_startin_time_zone("Eastern Time (US & Canada)") else start_value = Time.now.utc.in_time_zone("Eastern Time (US & Canada)")
+    <% if @event.event_start then start_value = @event.event_start.in_time_zone("Eastern Time (US & Canada)") else start_value = Time.now.utc.in_time_zone("Eastern Time (US & Canada)")
  end %>
-    <% if @event.event_end then end_value = @event.event_endin_time_zone("Eastern Time (US & Canada)") else end_value = Time.now.utc.in_time_zone("Eastern Time (US & Canada)")
+    <% if @event.event_end then end_value = @event.event_end.in_time_zone("Eastern Time (US & Canada)") else end_value = Time.now.utc.in_time_zone("Eastern Time (US & Canada)")
  end %>
     <div class="form-group">
       <label>Start</label>

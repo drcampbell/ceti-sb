@@ -13,7 +13,7 @@
 <div class="col-xs-6 col-md-6">
 <p><strong>Location: </strong> 
     <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.loc_id}" %> </p>
-  <p><strong>Time:</strong> <%= present_time(event.event_start, event.event_end)  %></p>
+  <p><strong>Time:</strong> <%= event.present_time()  %></p>
 </div>
   <div class="col-xs-6 col-md-6">
 

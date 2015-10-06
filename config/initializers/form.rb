@@ -14,7 +14,7 @@ module ActionView
         puts options
         existing_time = @object.send(method)
         formatted_time = existing_time.to_time.strftime("%F %I:%M %p") if existing_time.present?
-        if options[:offset] != nil
+        if options[:offset] != nil and formatted_time != nil
           formatted_time -= options[:offset]
         end
         @template.content_tag(:div, :class => "input-group") do

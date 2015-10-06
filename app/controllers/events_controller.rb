@@ -237,7 +237,7 @@ class EventsController < ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :loc_id)
+      params.require(:event).permit(:content, :title, :tag_list, :event_start, :event_end, :loc_id, :time_zone)
     end
 
     def validate_event(event)

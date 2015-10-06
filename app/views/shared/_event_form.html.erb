@@ -20,16 +20,19 @@
 
     <div class="form-group">
 
-    <% if @event.event_start then start_value = @event.event_start else start_value = Time.now
- end %>
-    <% if @event.event_end then end_value = @event.event_end else end_value = Time.now
- end %>
+    
 
     <%= f.time_zone_select(:time_zone, ActiveSupport::TimeZone.us_zones, default: "Eastern Time (US & Canada)") %>
-    <% @time_zone = @event.time_zone %>
+    <% Time.zone = @event.time_zone %>
+
+    <% if @event.event_start then start_value = @event.event_start else start_value = Time.zone.now
+ end %>
+    <% if @event.event_end then end_value = @event.event_end else end_value = Time.zone.now
+ end %>
+
       <label>Start</label>
       <% Time.use_zone(@event.time_zone) do %>
-      <%= f.datetime_select :event_start, default: 0.days.from_now.in_time_zone(@time_zone), value:start_value.in_time_zone(@time_zone) %>
+      <%= f.datetime_select :event_start, default: 0.days.from_now.in_time_zone(Time.zone.name), value:start_value.in_time_zone(Time.zone.name) %>
       <% end %>
     
     </div>
@@ -37,7 +40,7 @@
     <div class="form-group">
       <label>End</label>
       <% Time.use_zone(@event.time_zone) do %>
-      <%= f.datetime_select :event_end, default: 0.days.from_now.in_time_zone(@time_zone),value: end_value.in_time_zone(@time_zone) %>
+      <%= f.datetime_select :event_end, default: 0.days.from_now.in_time_zone(Time.zone.name),value: end_value.in_time_zone(Time.zone.name) %>
       <% end %>
     </div>
     <%= f.submit 'Post', :data => {:disable_with => "Saving..."}, class: 'btn btn-primary' %>

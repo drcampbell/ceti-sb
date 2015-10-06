@@ -32,7 +32,10 @@
 
       <label>Start</label>
       <% Time.use_zone(@event.time_zone) do %>
-      <%= f.datetime_select :event_start, default: 0.days.from_now.in_time_zone(Time.zone.name), value:start_value.in_time_zone(Time.zone.name) %>
+      <%= f.datetime_select :event_start, 
+            default: 0.days.from_now.in_time_zone(Time.zone.name), 
+            value:start_value.in_time_zone(Time.zone.name),
+            offset: Time.zone.utc_offset %>
       <% end %>
     
     </div>
@@ -40,7 +43,7 @@
     <div class="form-group">
       <label>End</label>
       <% Time.use_zone(@event.time_zone) do %>
-      <%= f.datetime_select :event_end, default: 0.days.from_now.in_time_zone(Time.zone.name),value: end_value.in_time_zone(Time.zone.name) %>
+      <%= f.datetime_select :event_end, default: 0.days.from_now.in_time_zone(Time.zone.name),value: end_value.in_time_zone(Time.zone.name), offset: Time.zone.utc_offset %>
       <% end %>
     </div>
     <%= f.submit 'Post', :data => {:disable_with => "Saving..."}, class: 'btn btn-primary' %>

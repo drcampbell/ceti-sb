@@ -57,8 +57,8 @@ class Event < ActiveRecord::Base
   end
 
   def present_time()
-    s = self.event_start.in_time_zone("Eastern Time (US & Canada)")
-    e = self.event_end.in_time_zone("Eastern Time (US & Canada)")
+    s = self.event_start.in_time_zone(self.time_zone)
+    e = self.event_end.in_time_zone(self.time_zone)
       return [s.strftime("%a"),s.strftime("%B"),(s.strftime("%d")).sub(/^0/, "")+",",s.strftime("%Y"),s.strftime("%l")+":"+s.strftime("%M"),
       "-",
       e.strftime("%l")+":"+e.strftime("%M"),e.strftime("%p")].join(" ")

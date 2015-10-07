@@ -90,6 +90,7 @@ class EventsController < ApplicationController
         params = event_params
         @event = current_user.events.build(params)
         validate_event(@event)
+        adjust_time(@event)
         respond_to do |format|
           format.html do
             if @event.save
@@ -141,6 +142,7 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
       params = event_params
       @event.attributes = params
+      adjust_time(@event)
       validate_event(@event)
       success = @event.save
       if success and Rails.env.production?
@@ -249,6 +251,15 @@ class EventsController < ApplicationController
         raise InvalidTime
       end
     end
+
+    def adjust_time(event)
+      time_offset = Time.now.in_time_zone(event.time_zone).utc_offset
+      event.event_start -= time_offset
+      event.event_start = event.event_start.in_time_zone("UTC")
+      event.event_end -= time_offset
+      event.event_end = event.event_end.in_time_zone("UTC")
+    end
+
 
   # Confirms the correct user.
   def correct_user

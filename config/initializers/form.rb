@@ -13,10 +13,11 @@ module ActionView
       def datetime_select(method, options = {}, html_options = {})
         puts options
         existing_time = @object.send(method)
+        if options[:offset] != nil and existing_time.utc_offset != options[:offset]
+          existing_time -= options[:offset]
+        end
         formatted_time = existing_time.to_time.strftime("%F %I:%M %p") if existing_time.present?
-        # if options[:offset] != nil and formatted_time != nil
-        #   formatted_time -= options[:offset]
-        # end
+       
         @template.content_tag(:div, :class => "input-group") do
           text_field(method, :value => formatted_time, :class => "form-control datetimepicker", :"data-date-format" => "YYYY-MM-DD hh:mm A") +
               @template.content_tag(:span, @template.content_tag(:span, "", :class => "glyphicon glyphicon-calendar") ,:class => "input-group-addon")

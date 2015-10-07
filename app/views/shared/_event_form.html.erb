@@ -24,18 +24,18 @@
 
     <%= f.time_zone_select(:time_zone, ActiveSupport::TimeZone.us_zones, default: "Eastern Time (US & Canada)") %>
 
-    <%= @event.time_zone %>
+    <% time_offset = Time.now.in_time_zone(@event.time_zone).utc_offset %>
     <% if not @event.event_start
-         @event.event_start = 1.hour.from_now.in_time_zone(@event.time_zone).change(min: 0)
+         @event.event_start = 1.hour.from_now.change(min: 0) + time_offset
        else
-         @event.event_start += Time.now.in_time_zone(@event.time_zone).utc_offset
+         @event.event_start += time_offset
          #@event.event_start = @event.event_start.in_time_zone(@event.time_zone)
        end 
         %>
     <% if not @event.event_end
-         @event.event_end = 2.hour.from_now.in_time_zone(@event.time_zone).change(min: 0)
+         @event.event_end = 2.hour.from_now.change(min: 0) + time_offset
        else
-         @event.event_end += Time.now.in_time_zone(@event.time_zone).utc_offset
+         @event.event_end += time_offset
          #@event.event_end = @event.event_end.in_time_zone(@event.time_zone)
        end 
        %>

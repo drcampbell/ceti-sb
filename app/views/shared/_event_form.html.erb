@@ -28,12 +28,14 @@
          @event.event_start = 1.hour.from_now.in_time_zone(@event.time_zone).change(min: 0)
        else
          @event.event_start = @event.event_start.in_time_zone(@event.time_zone)#+= Time.now.in_time_zone(@event.time_zone).utc_offset
-       end %>
+       end 
+       @event.event_start += Time.now.in_time_zone(@event.time_zone).utc_offset %>
     <% if not @event.event_end
          @event.event_end = 2.hour.from_now.in_time_zone(@event.time_zone).change(min: 0)
        else
          @event.event_end = @event.event_end.in_time_zone(@event.time_zone)#Time.now.in_time_zone(@event.time_zone).utc_offset
-       end %>
+       end 
+       @event.event_end += Time.now.in_time_zone(@event.time_zone).utc_offset%>
 
       <label>Start</label>
       <%= f.datetime_select :event_start,  

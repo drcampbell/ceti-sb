@@ -74,6 +74,8 @@ class API::EventsController < API::ApplicationController
       user_name = User.find(event.user_id).name
     end
     result = event.attributes
+    result[:event_start] = event.start()
+    result[:event_end] = event.end()
     result[:user_name] = user_name
     result[:loc_name] = location_name
     if event.speaker_id and event.speaker_id != 0

@@ -56,6 +56,14 @@ class Event < ActiveRecord::Base
     events.where("event_start > ?", Time.now)
   end
 
+  def start()
+    return self.event_start.strftime("%Y-%m-%d %H:%M %Z")
+  end
+
+  def end()
+    self.event_end.strftime("%Y-%m-%d %H:%M %Z")
+  end
+
   def present_time()
     s = self.event_start.in_time_zone(self.time_zone)
     e = self.event_end.in_time_zone(self.time_zone)

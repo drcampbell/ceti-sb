@@ -55,7 +55,7 @@ class API::EventsController < API::ApplicationController
   def list_events(events)
     results = Array.new(events.count){Hash.new}
     for i in 0..events.count-1
-      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start.in_time_zone(events[i].time_zone).strftime("%Y-%m-%d %H:%M:%S.000%Z")}
+      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
     end
     return results
   end

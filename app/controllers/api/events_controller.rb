@@ -102,7 +102,6 @@ class API::EventsController < API::ApplicationController
   def create
     if user_signed_in?
       begin 
-        tz = event_params[:event_start].
         @event = current_user.events.build(event_params)
 
         @event.save

@@ -102,7 +102,9 @@ class API::EventsController < API::ApplicationController
   def create
     if user_signed_in?
       begin 
+        tz = event_params[:event_start].
         @event = current_user.events.build(event_params)
+
         @event.save
         render :json => {:state => 0, :event => @event.to_json }
       rescue ActionController::ParameterMissing => e
@@ -190,7 +192,7 @@ class API::EventsController < API::ApplicationController
     end
 
     def event_params   
-      permitted = params.require(:event).permit(:content, :title, :loc_id, :event_start, :event_end, :tags) #:tag_list,       
+      permitted = params.require(:event).permit(:content, :title, :loc_id, :event_start, :event_end, :tags, :time_zone) #:tag_list,       
       [:title, :event_start, :event_end].each do |x|
         if not permitted.has_key?(x) or permitted[x] == ""
           raise ActionController::ParameterMissing, x

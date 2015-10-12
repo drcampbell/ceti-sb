@@ -115,7 +115,7 @@ class API::UsersController < API::ApplicationController
       r[:event_title] = Event.find(x.event_id).title
       results.append(r)
     end
-    render json: {notifications: results}
+    render json: {notifications: results.reverse}
   end
 
   def register_device

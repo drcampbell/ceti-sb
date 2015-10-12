@@ -129,25 +129,35 @@ class API::EventsController < API::ApplicationController
   end
 
   def update
-    #params = event_params
     @event = Event.find(params[:id])
     params = event_params
-    success = @event.update(params)
-
-    if @event && success
-      Claim.where(event_id: @event.id).each do |x|
-        Notification.create(user_id: x.user_id,
-                          act_user_id: @event.user_id,
-                          event_id: @event.id,
-                          n_type: :event_update,
-                          read: false)
-        if User.find(x.user_id).set_updates
-          # TODO UserMailer.send_update().deliver
-        end
+    diff = false
+    params.keys.each do |x|
+      if @event[x] != params[x]
+        diff = true
+        break
       end
-      render :json => {:state => 0, :event => jsonEvent(@event) }
-    elsif @event != nil
-      render :json => {:state => 1, :message => @user.errors.full_messages}
+    end
+    if diff
+      success = @event.update(params)
+
+      if @event && success
+        Claim.where(event_id: @event.id).each do |x|
+          Notification.create(user_id: x.user_id,
+                            act_user_id: @event.user_id,
+                            event_id: @event.id,
+                            n_type: :event_update,
+                            read: false)
+          if User.find(x.user_id).set_updates
+            # TODO UserMailer.send_update().deliver
+          end
+        end
+        render :json => {:state => 0, :event => jsonEvent(@event) }
+      elsif @event != nil
+        render :json => {:state => 1, :message => @user.errors.full_messages}
+      end
+    else
+      render :json => {:state => 0, :event => jsonEvent(@event)}
     end
   end
 

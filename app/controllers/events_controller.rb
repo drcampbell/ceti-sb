@@ -144,6 +144,16 @@ class EventsController < ApplicationController
       @event.attributes = params
       adjust_time(@event)
       validate_event(@event)
+      diff = false
+      params.keys.each do |x|
+        if @event[x] != params[x]
+          diff = true
+          break
+        end
+      end
+      if not diff
+        redirect_to @event
+        
       success = @event.save
       if success and Rails.env.production?
         Claim.where(event_id: @event.id).each do |x|

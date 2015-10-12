@@ -153,7 +153,7 @@ class EventsController < ApplicationController
       end
       if not diff
         redirect_to @event
-        
+      end
       success = @event.save
       if success and Rails.env.production?
         Claim.where(event_id: @event.id).each do |x|

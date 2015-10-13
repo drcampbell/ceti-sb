@@ -144,7 +144,7 @@ class API::UsersController < API::ApplicationController
   def list_events(events)
     results = Array.new(events.count){Hash.new}
     for i in 0..events.count-1
-      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].event_start}
+      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
     end
     return results
   end

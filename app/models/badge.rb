@@ -3,6 +3,6 @@ class Badge < ActiveRecord::Base
   belongs_to :school
 
   def get_badge_url()
-  	ENV["S3_URL"] + "badges/"+ this.url
+  	ENV["URL"] + ENV["S3_BUCKET"] + "/badges/"+ self.file_name
   end
 end

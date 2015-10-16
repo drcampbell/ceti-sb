@@ -48,7 +48,12 @@ class API::UsersController < API::ApplicationController
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
     events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
-    render json: { user: format_user(@user), events: list_events(events).as_json badges: @user.get_badges}
+    b = @user.user_badges
+    badges = []
+    b.each do |x|
+      badges.append(x.get_badge_url)
+    end
+    render json: { user: format_user(@user), events: list_events(events).as_json badges: badges}
 
   end
 

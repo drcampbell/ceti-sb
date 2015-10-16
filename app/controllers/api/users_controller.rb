@@ -53,7 +53,7 @@ class API::UsersController < API::ApplicationController
     b.each do |x|
       badges.append(x.get_badge_url)
     end
-    render json: { user: format_user(@user), events: list_events(events).as_json badges: badges}
+    render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges}
 
   end
 

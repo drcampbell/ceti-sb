@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006134427) do
+ActiveRecord::Schema.define(version: 20151016154230) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -149,6 +149,11 @@ ActiveRecord::Schema.define(version: 20151006134427) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true
+
+  create_table "user_badges", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "badge_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

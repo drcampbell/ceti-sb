@@ -51,7 +51,7 @@ class API::UsersController < API::ApplicationController
     b = @user.user_badges
     badges = []
     b.each do |x|
-      badges.append(x.file_name)
+      badges.append(Badge.find(x.badge_id).file_name)
     end
     render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges}
 

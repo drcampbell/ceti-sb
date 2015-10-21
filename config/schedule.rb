@@ -8,9 +8,9 @@
 # set :output, "/path/to/my/cron_log.log"
 #
 
-every 1.minute do
+every :minute do
   #command "/usr/bin/some_great_command"
-  runner "CompleteEventJob.perform()"
+  runner "CompleteEventJob.set(queue: :default).perform_later()"
   #rake "some:great:rake:task"
 end
 

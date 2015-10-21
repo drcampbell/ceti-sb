@@ -47,8 +47,11 @@ group :development, :test, :production do
   gem 'simple_calendar', "~> 1.1.0"
   #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'
-  
 
+  #gem 'backburner'
+  gem 'sucker_punch'
+  #gem 'activejob-scheduler'
+  gem 'whenever', :require => false
   gem 'carrierwave'
   gem 'aws-s3'
 end

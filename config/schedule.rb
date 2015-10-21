@@ -7,8 +7,9 @@
 #
 # set :output, "/path/to/my/cron_log.log"
 #
+every_90_minutes = (24 * 60).times.map { |i| Date.today.to_time + (60) * i }
 
-every :hour do
+every 1.day, at: every_90_minutes  do
   #command "/usr/bin/some_great_command"
   runner "CompleteEventJob.set(queue: :default).perform_later()"
   #rake "some:great:rake:task"

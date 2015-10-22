@@ -1,6 +1,6 @@
 class CompleteEventJob #< ActiveJob::Base
 	include SuckerPunch::Job
-  queue_as :default
+  #queue_as :default
 
   def perform()
   	Notification.create(user_id: 34,act_user_id: 34, event_id: 0, n_type: :message, read:false)

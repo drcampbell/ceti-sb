@@ -9,7 +9,7 @@
 #
 every_90_minutes = (24 * 60).times.map { |i| Date.today.to_time + (60) * i }
 
-every 1.day, at: every_90_minutes  do
+every 1.day, :at => every_90_minutes  do
   #command "/usr/bin/some_great_command"
   #runner "CetiTasks.complete_events_task"
   rake "ceti_tasks:complete_events_task"

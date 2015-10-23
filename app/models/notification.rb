@@ -29,7 +29,7 @@ class Notification < ActiveRecord::Base
 			sns.publish({
 				target_arn: device.endpoint_arn,
 				message_structure: "json",
-				message: {GCM: {data: {message: self.content}}.to_json}.to_json
+				message: {GCM: {data: {message: self.content, n_type: n_type, event_id: event_id}}.to_json}.to_json
 				})
 		end
 	end

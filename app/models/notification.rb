@@ -25,11 +25,15 @@ class Notification < ActiveRecord::Base
 		sns = Aws::SNS::Client.new(region: 'us-west-2')
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
-
+			data = {message: self.content, n_type: n_type, event_id: event_id}
+			if n_type == "award_badge"
+				data['speaker_name'] = User.find(self.act_user_id).name
+				data['event_name'] = Event.find(self.event_id).name
+			end
 			sns.publish({
 				target_arn: device.endpoint_arn,
 				message_structure: "json",
-				message: {GCM: {data: {message: self.content, n_type: n_type, event_id: event_id}}.to_json}.to_json
+				message: {GCM: {data: data}.to_json}.to_json
 				})
 		end
 	end

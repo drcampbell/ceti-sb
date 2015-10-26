@@ -28,7 +28,7 @@ class Notification < ActiveRecord::Base
 			data = {message: self.content, n_type: n_type, event_id: event_id}
 			if n_type == "award_badge"
 				data['speaker_name'] = User.find(self.act_user_id).name
-				data['event_name'] = Event.find(self.event_id).name
+				data['event_name'] = Event.find(self.event_id).title
 			end
 			sns.publish({
 				target_arn: device.endpoint_arn,

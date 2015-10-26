@@ -58,6 +58,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def award_badge
+    event = Event.find(param[:event_id])
+    badge_id = School.find(event.loc_id).badge_id
+    if param[:award] and current_user.id == event.user_id
+      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id))
+    end
+    event.update(complete: true)
+  end
+
   def write_message
     @recipient = User.find(params[:id])
   end

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       put     'users/settings' => 'registrations#update_settings'
       post    'register_device' => 'users#register_device'
       get     'notifications'  => 'users#notifications'
+      post    'users/award_badge' => 'users#award_badge'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

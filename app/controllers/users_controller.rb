@@ -62,7 +62,7 @@ class UsersController < ApplicationController
     event = Event.find(param[:event_id])
     badge_id = School.find(event.loc_id).badge_id
     if param[:award] and current_user.id == event.user_id
-      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id))
+      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id)
     end
     event.update(complete: true)
   end

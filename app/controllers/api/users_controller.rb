@@ -110,6 +110,16 @@ class API::UsersController < API::ApplicationController
     end
   end
 
+  def award_badge
+    event = Event.find(param[:event_id])
+    badge_id = School.find(event.loc_id).badge_id
+    if param[:award] and current_user.id == event.user_id
+      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id)
+    end
+    event.update(complete: true)
+    render json: {state:0}
+  end
+
   def notifications
     notifications = Notification.where(user_id: current_user.id)
     results = []

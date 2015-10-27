@@ -25,16 +25,21 @@ class Notification < ActiveRecord::Base
 		sns = Aws::SNS::Client.new(region: 'us-west-2')
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
+			next if device.endpoint_arn == nil
 			data = {message: self.content, n_type: n_type, event_id: event_id}
 			if n_type == "award_badge"
 				data['speaker_name'] = User.find(self.act_user_id).name
 				data['event_name'] = Event.find(self.event_id).title
 			end
-			sns.publish({
-				target_arn: device.endpoint_arn,
-				message_structure: "json",
-				message: {GCM: {data: data}.to_json}.to_json
-				})
+			begin
+				sns.publish({
+					target_arn: device.endpoint_arn,
+					message_structure: "json",
+					message: {GCM: {data: data}.to_json}.to_json
+					})
+			rescue Aws::SNS::Errors::EndpointDisabled
+				device.update_attribute(endpoint_arn: nil)
+			end
 		end
 	end
 

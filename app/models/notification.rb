@@ -38,10 +38,16 @@ class Notification < ActiveRecord::Base
 					message: {GCM: {data: data}.to_json}.to_json
 					})
 			rescue Aws::SNS::Errors::EndpointDisabled
-				device.update_attribute(endpoint_arn: nil)
+				device.update_attribute(:endpoint_arn, nil)
 			end
 		end
 	end
+
+# Notification.create(user_id: 63,
+#                             act_user_id: 34,
+#                             event_id: 411,
+#                             n_type: :event_update,
+#                             read: false)
 
 	def link
 		link = ""

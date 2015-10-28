@@ -141,14 +141,11 @@ class API::UsersController < API::ApplicationController
       device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
       device = Device.create(device)
     end
-    #render json: {state: 0}
     begin
       sns = Aws::SNS::Client.new(region: 'us-west-2')
       endpoint = sns.create_platform_endpoint(
         platform_application_arn: ENV["SNS_APP_ARN"],
-        token: device.token
-      )
-      #)        attributes: { "user_id" => "#{device.user_id}"}
+        token: device.token)
       device.update(endpoint_arn: endpoint[:endpoint_arn])
     rescue
       puts json: {state: 1}

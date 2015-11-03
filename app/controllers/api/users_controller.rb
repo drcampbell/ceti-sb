@@ -127,7 +127,9 @@ class API::UsersController < API::ApplicationController
       r = x.attributes
       r[:user_name] = User.find(x.user_id).name
       r[:act_user_name] = User.find(x.act_user_id).name
-      r[:event_title] = Event.find(x.event_id).title
+      if r[:n_type] != 3
+        r[:event_title] = Event.find(x.event_id).title
+      end
       results.append(r)
     end
     render json: {notifications: results.reverse}

@@ -43,6 +43,9 @@ class Notification < ActiveRecord::Base
 		end
 	end
 
+	#Notification.create(user_id: 63,act_user_id: 34,event_id: 411,n_type: :event_update,read: false)
+
+
 	def link
 		link = ""
 		case n_type

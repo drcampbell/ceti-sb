@@ -7,13 +7,11 @@ class CompleteEventJob < ActiveJob::Base
 
     events = Event.where('event_end < ?', Time.now).where('speaker_id != ?',0).where(:complete => false)
     events.each do |x|
-    	if x.user_id == 34
-    	 Notification.create(user_id: x.user_id,
-                            act_user_id: x.speaker_id,
-                            event_id: x.id,
-                            n_type: :award_badge,
-                            read: false)
+   		Notification.create(user_id: x.user_id,
+                           act_user_id: x.speaker_id,
+                           event_id: x.id,
+                           n_type: :award_badge,
+                           read: false)
     	end
-    end
   end
 end

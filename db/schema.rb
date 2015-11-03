@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019174122) do
+ActiveRecord::Schema.define(version: 20151103171556) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20151019174122) do
     t.string   "url"
     t.string   "file_name"
     t.string   "f_type"
+    t.string   "name"
   end
 
   create_table "claims", force: :cascade do |t|

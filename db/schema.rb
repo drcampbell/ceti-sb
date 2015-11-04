@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103171556) do
+ActiveRecord::Schema.define(version: 20151103211835) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(version: 20151103171556) do
   create_table "user_badges", force: :cascade do |t|
     t.integer "user_id"
     t.integer "badge_id"
+    t.integer "event_id"
   end
 
   create_table "users", force: :cascade do |t|

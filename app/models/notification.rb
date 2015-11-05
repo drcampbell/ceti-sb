@@ -33,11 +33,13 @@ class Notification < ActiveRecord::Base
 				data['speaker_name'] = User.find(self.act_user_id).name
 				data['event_name'] = Event.find(self.event_id).title
 			elsif n_type =="new_badge"
+				event = Event.find(self.event_id)
 				data['event_owner'] = User.find(self.act_user_id).name
 				data['event_owner_id'] = self.act_user_id
-				data['event_name'] = Event.find(self.event_id).title
+				data['event_name'] = event.title
 				badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
 				data['badge_url'] = Badge.find(badge.badge_id).file_name
+				data['school_name'] = event.loc_name
 			end
 			begin
 				sns.publish({

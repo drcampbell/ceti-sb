@@ -66,7 +66,7 @@ Rails.application.routes.draw do
   get 'users/:tag',  to: 'users#index'
   post 'make_mine', to: 'schools#make_mine'
   #get     'users/edit'      => 'registrations#edit'
-
+  get 'android' => 'static_pages#android'
   # TODO Make these https secure
   post 'email_responses/bounce' => 'email_responses#bounce'
   post 'email_responses/complaint' => 'email_responses#complaint'

@@ -64,6 +64,8 @@ Rails.application.routes.draw do
   post    'write_message/:id'  => 'users#send_message'
   get 'tags/:tag',  to: 'events#index', as: :tag
   get 'users/:tag',  to: 'users#index'
+  get 'users/:user_id/badges' => 'users#show_badges'
+  get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
   post 'make_mine', to: 'schools#make_mine'
   #get     'users/edit'      => 'registrations#edit'
   get 'android' => 'static_pages#android'

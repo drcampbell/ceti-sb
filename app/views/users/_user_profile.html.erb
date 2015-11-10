@@ -1,0 +1,34 @@
+<h3 align="center">
+  <%= @user.name %>
+</h3>
+<h4>
+  <p><%= gravatar_for @user, 100 %></p>
+</h4>
+<div>
+  <p>
+	<% @user_fields = { 'Role'  => @user.role,
+	                    'Biography' => @user.biography } %>
+	<% if (@user.role == "Teacher" || @user.role == "Both") 
+	  @teacher_fields = {'School' => handle_abbr(School.find(@user.school_id).school_name.titlecase),
+	                      'Grades' => @user.grades } end %>
+	<% @business_fields = {'Job Title' => @user.job_title,
+	                       'Business' => @user.business } %>
+	                       
+	<% if @user.role == "Speaker" then @user_fields = @user_fields.merge @business_fields end %>
+	<% if @user.role == "Teacher" then @user_fields = @user_fields.merge @teacher_fields end %>
+	<% if @user.role == "Both" then @user_fields = (@user_fields.merge @business_fields).merge @teacher_fields end %>
+
+	<% @user_fields.each do |key, value| %>
+	  <h4>
+	    <strong><%= key %>: </strong> <%= value %>
+	  </h4>
+	<% end %>
+
+	<% if (current_user == @user) %>
+	<div>
+	  <%= button_to "Edit", :profile, :method => :get, class: 'btn-primary'  %>
+	  <%= button_to "Change My School", :choose, :method => :get, class: "btn-primary btn-md" %>
+  </div>
+	<% end %>
+	</p>
+</div>

@@ -6,12 +6,11 @@
     </section>
   </aside>
   <div class="col-md-8">
-    <% if @user.events.any? %>
-        <h3>Events (<%= @user.events.count %>)</h3>
-        <ol class="events">
-          <%= render @events %>
+    <% if @user.user_badges.any? %>
+        <h3>Badges (<%= @user.user_badges.count %>)</h3>
+        <ol class="user_badges">
+          <%= render @user_badges %>
         </ol>
-        <%= will_paginate @events %>
     <% end %>
   </div>
 </div>

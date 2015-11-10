@@ -67,6 +67,17 @@ class UsersController < ApplicationController
     event.update(complete: true)
   end
 
+  def show_badges
+    @user = User.find(params[:user_id])
+    @user_badges = UserBadge.where(user_id: params[:user_id])
+  end
+
+  def get_badge
+    @user = User.find(params[:user_id])
+    @user_badge = UserBadge.find(params[:user_badge_id])
+    @event = Event.find(@user_badge.event_id)
+  end
+
   def write_message
     @recipient = User.find(params[:id])
   end

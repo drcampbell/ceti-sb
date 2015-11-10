@@ -65,6 +65,10 @@ class Event < ActiveRecord::Base
     self.event_end.in_time_zone(self.time_zone).strftime("%Y-%m-%d %H:%M %Z")
   end
 
+  def date()
+    self.event_end.in_time_zone(self.time_zone).strftime("%B %d, %Y")
+  end
+
   def test()
     CompleteEventJob.set(queue: :default).perform_later()
   end

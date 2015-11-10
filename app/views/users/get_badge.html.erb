@@ -1,0 +1,21 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <%= render 'users/user_profile' %>
+    </section>
+  </aside>
+  <div class="col-md-8">
+    <div>
+			<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@user_badge.badge_id).file_name  %>
+			</div>
+			<div><p>
+				<%= @user.name %> earned the badge 
+			<%= Badge.find(@user_badge.badge_id).name %> for speaking at event: 
+			<%= @event.title %>
+			</p>
+			<h4>Location:</h4><%= handle_abbr(@event.loc_name) %>
+			<p><h4>Date Earned:</h4><%= @event.date %> </p>
+		</div>
+  </div>
+</div>

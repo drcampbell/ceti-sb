@@ -40,6 +40,7 @@ class Notification < ActiveRecord::Base
 				badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
 				data['badge_url'] = Badge.find(badge.badge_id).file_name
 				data['school_name'] = event.loc_name
+				data['badge_id'] = badge.id
 			end
 			begin
 				sns.publish({

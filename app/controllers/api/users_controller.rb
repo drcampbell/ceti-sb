@@ -126,6 +126,34 @@ class API::UsersController < API::ApplicationController
     render json: {state:0}
   end
 
+  def show_badges
+    user = User.find(:user_id)
+    badges = User.user_badges
+    results = Array.new(badges.count){Hash.new}
+    for i in 0..badges.count-1
+      event = Event.find(badges[i].event_id)
+      results[i] = {"event_title" => event.title, 
+                    "badge_id"=> badges[i].badge_id, 
+                    "badge_url" => badges[i].file_name}
+    end
+    return results
+
+  end
+
+  def get_badge
+    badge = UserBadge.find(params[:badge_id])
+    event = Event.find(badge.event_id)
+    render json: {
+      user_id: params[:user_id],
+      user_name: User.find(params[:user_id]).name,
+      event_owner: User.find(event.user_id).name,
+      event_owner_id: event.user_id,
+      event_name: event.title,
+      badge_url: Badge.find(badge.badge_id).file_name,
+      school_name: event.loc_name,
+      badge_id: badge.id}
+  end
+
   def notifications
     notifications = Notification.where(user_id: current_user.id)
     results = []

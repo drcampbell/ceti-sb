@@ -149,7 +149,7 @@ class API::UsersController < API::ApplicationController
   end
 
   def get_badge
-    badge = UserBadge.find(params[:badge_id])
+    badge = UserBadge.find(params[:user_badge_id])
     event = Event.find(badge.event_id)
     render json: {
       user_id: params[:user_id],

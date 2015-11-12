@@ -48,12 +48,20 @@ class API::UsersController < API::ApplicationController
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
     events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
-    b = @user.user_badges
-    badges = []
-    b.each do |x|
-      badges.append(Badge.find(x.badge_id).file_name)
+    # b = @user.user_badges
+    # badges = []
+    # b.each do |x|
+    #   badges.append(Badge.find(x.badge_id).file_name)
+    # end
+    badges = @user.user_badges
+    badges_array = Array.new(badges.count){Hash.new}
+    for i in 0..badges.count-1
+      event = Event.find(badges[i].event_id)
+      badges_array[i] = {"event_title" => event.title, 
+                    "badge_id"=> badges[i].badge_id, 
+                    "badge_url" => badges[i].file_name}
     end
-    render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges}
+    render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges_array}
 
   end
 

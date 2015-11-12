@@ -34,6 +34,8 @@ class Notification < ActiveRecord::Base
 				data['event_name'] = Event.find(self.event_id).title
 			elsif n_type =="new_badge"
 				event = Event.find(self.event_id)
+				data['user_name'] = User.find(self.user_id).name
+				data['user_id'] = self.user_id
 				data['event_owner'] = User.find(self.act_user_id).name
 				data['event_owner_id'] = self.act_user_id
 				data['event_name'] = event.title

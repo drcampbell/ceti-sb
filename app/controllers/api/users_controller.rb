@@ -59,7 +59,7 @@ class API::UsersController < API::ApplicationController
       event = Event.find(badges[i].event_id)
       badges_array[i] = {"event_title" => event.title, 
                     "badge_id"=> badges[i].badge_id, 
-                    "badge_url" => badges[i].file_name}
+                    "badge_url" => Badge.find(badges[i].badge_id).file_name}
     end
     render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges_array}
 

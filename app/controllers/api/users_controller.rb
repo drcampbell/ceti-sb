@@ -122,15 +122,14 @@ class API::UsersController < API::ApplicationController
     event = Event.find(params[:event_id])
     badge_id = School.find(event.loc_id).badge_id
     if params[:award] and current_user.id == event.user_id
-      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id)
+      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id, event_id: event.id)
       Notification.create(user_id: event.speaker_id,
                             act_user_id: current_user.id,
                             event_id: event.id,
                             n_type: :new_badge,
                             read: false)
-    elsif current_user.id == event.user_id 
-      event.update(complete: true)
     end
+    event.update(complete: true)
     render json: {state:0}
   end
 

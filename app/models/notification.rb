@@ -28,12 +28,13 @@ class Notification < ActiveRecord::Base
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
 			next if device.endpoint_arn == nil
+			event = Event.find(self.event_id)
 			data = {message: self.content, n_type: n_type, event_id: event_id}
 			if n_type == "award_badge"
 				data['speaker_name'] = User.find(self.act_user_id).name
 				data['event_name'] = Event.find(self.event_id).title
+				data['badge_url'] = Badge.find(School.find(event.id).badge_id).file_name
 			elsif n_type =="new_badge"
-				event = Event.find(self.event_id)
 				data['user_name'] = User.find(self.user_id).name
 				data['user_id'] = self.user_id
 				data['event_owner'] = User.find(self.act_user_id).name

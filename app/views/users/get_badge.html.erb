@@ -1,4 +1,5 @@
 <% provide(:title, @user.name) %>
+<head>
 	<% @android_url = "school-business://main/users/#{@user.id}/badges/#{@user_badge.badge_id}" %>
 	<meta property="al:android:url" content=<%= @android_url %>/>
 	<meta property="al:android:package" content="com.ceti_sb.android" />
@@ -6,6 +7,7 @@
 	<meta property="al:android:class" content="com.ceti_sb.android/.MainActivity" />
 	<meta property="og:title" content="title" />
 	<meta property="og:type" content="website" />
+</head>
 
 <div class="row">
   <aside class="col-md-4">

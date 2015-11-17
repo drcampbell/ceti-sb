@@ -17,7 +17,7 @@
   </aside>
   <div class="col-md-8">
     <div>
-			<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@user_badge.badge_id).file_name  %>
+			<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@user_badge.badge_id).file_name, align: "middle" %>
 			</div>
 			<div><p>
 				<%= @user.name %> earned the badge 

@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
       return true
     rescue
       return false
+    end
   end
 
   def notifications()

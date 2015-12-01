@@ -155,7 +155,7 @@ class API::EventsController < API::ApplicationController
     @event = Event.find(params[:id])
     if current_user.id == @event.user_id
       @event.cancel(current_user.id)
-      render :json => {:state 1}
+      render :json => {:state => 1}
     end
   end
 

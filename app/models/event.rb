@@ -85,7 +85,7 @@ class Event < ActiveRecord::Base
                         read: false)
   end
 
-  def update()
+  def handle_update()
     Claim.where(event_id: self.id).each do |x|
       Notification.create(user_id: x.user_id,
                         act_user_id: self.user_id,

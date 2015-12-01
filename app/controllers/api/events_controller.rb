@@ -141,7 +141,7 @@ class API::EventsController < API::ApplicationController
       success = @event.update(params)
 
       if @event && success
-        @event.update()
+        @event.handle_update()
         render :json => {:state => 0, :event => @event.jsonEvent(current_user.id) }
       elsif @event != nil
         render :json => {:state => 1, :message => @user.errors.full_messages}

@@ -156,13 +156,14 @@ class EventsController < ApplicationController
       end
       success = @event.save
       if success and Rails.env.production?
-        Claim.where(event_id: @event.id).each do |x|
-          Notification.create(user_id: x.user_id,
-                            act_user_id: @event.user_id,
-                            event_id: @event.id,
-                            n_type: :event_update,
-                            read: false)
-        end
+        @event.update()
+        # Claim.where(event_id: @event.id).each do |x|
+        #   Notification.create(user_id: x.user_id,
+        #                     act_user_id: @event.user_id,
+        #                     event_id: @event.id,
+        #                     n_type: :event_update,
+        #                     read: false)
+        # end
       end
     rescue InvalidTime
       flash[:warning] = "You must enter a start time that preceeds the end time."
@@ -198,7 +199,7 @@ class EventsController < ApplicationController
   def cancel
     @event = Event.find(params[:id])
     if current_user.id == @event.user_id
-      @event.update_attribute(:active, false)
+      @event.cancel(current_user.id)
       redirect_to root_url
     end
   end
@@ -225,16 +226,16 @@ class EventsController < ApplicationController
     # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:event_id])
-
-      @event.claims.create!(:user_id => params[:user_id])
-      if User.find(@event.user_id).set_claims
-        UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
-      end
-      Notification.create(user_id: @event.user_id,
-                          act_user_id: params[:user_id],
-                          event_id: @event.id,
-                          n_type: :claim,
-                          read: false)
+      @event.claim(params[:user_id])
+      # @event.claims.create!(:user_id => params[:user_id])
+      # if User.find(@event.user_id).set_claims
+      #   UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
+      # end
+      # Notification.create(user_id: @event.user_id,
+      #                     act_user_id: params[:user_id],
+      #                     event_id: @event.id,
+      #                     n_type: :claim,
+      #                     read: false)
       flash[:success] = "You have claimed event: #{@event.title}"
       redirect_to(root_url)
     rescue ActiveRecord::RecordNotFound

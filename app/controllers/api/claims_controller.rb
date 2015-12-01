@@ -19,16 +19,17 @@ class API::ClaimsController < API::ApplicationController
   def pending_claims
     #params = params.require(:event_id)
     if params[:event_id]
-      event_id = params[:event_id]
+      event = Event.find(params[:event_id])
     else
       #render_401 
     end
-    claims = Claim.where(event_id: event_id)
-    results = Array.new(claims.count){Hash.new}
-    for i in 0..claims.count-1
-      user = User.find(claims[i].user_id)
-      results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claims[i].id}
-    end
+    event.pending_claims()
+    # claims = Claim.where(event_id: event_id)
+    # results = Array.new(claims.count){Hash.new}
+    # for i in 0..claims.count-1
+    #   user = User.find(claims[i].user_id)
+    #   results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claims[i].id}
+    # end
     render json: {:claims => results}.as_json
   end
 
@@ -80,17 +81,17 @@ class API::ClaimsController < API::ApplicationController
     # Teacher confirms a speaker
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:claim_id])
-    if current_user.id == @event.user_id and @claim.update_attribute(:confirmed_by_teacher, true)
-      @event.update(speaker_id: @claim.user_id)
-      if User.find(@claim.user_id).set_confirm
-        UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
-      end
-      Notification.create(user_id: @claim.user_id,
-                          act_user_id: @event.user_id,
-                          event_id: @event.id,
-                          n_type: :confirm_speaker,
-                          read: false)
-      render json: {status: 0, event: jsonEvent(@event)}
+    if current_user.id == @event.user_id and @claim.teacher_confirm(@event)
+      # @event.update(speaker_id: @claim.user_id)
+      # if User.find(@claim.user_id).set_confirm
+      #   UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
+      # end
+      # Notification.create(user_id: @claim.user_id,
+      #                     act_user_id: @event.user_id,
+      #                     event_id: @event.id,
+      #                     n_type: :confirm_speaker,
+      #                     read: false)
+      render json: {status: 0, event: @event.jsonEvent(current_user.id)}
     else
       render json: {status: 1}
     end
@@ -126,29 +127,29 @@ class API::ClaimsController < API::ApplicationController
       redirect_to(root_url) unless current_user.role == 'Admin'
     end
 
-  def jsonEvent(event)
-    school_name = nil
-    user_name = nil
-    if event.loc_id
-      school_name = School.find(event.loc_id).school_name
-    end
-    if event.user_id
-      user_name = User.find(event.user_id).name
-    end
-    result = event.attributes
-    result[:user_name] = user_name
-    result[:school_name] = school_name
-    if event.speaker_id
-      result[:speaker] = User.find(event.speaker_id).name
-    else
-      result[:speaker] = "TBA"
-    end
-    if Claim.exists?(event_id: event.id, user_id: current_user.id)
-      result[:claim] = true
-    else
-      result[:claim] = false
-    end
-    return result
-  end
+  # def jsonEvent(event)
+  #   school_name = nil
+  #   user_name = nil
+  #   if event.loc_id
+  #     school_name = School.find(event.loc_id).school_name
+  #   end
+  #   if event.user_id
+  #     user_name = User.find(event.user_id).name
+  #   end
+  #   result = event.attributes
+  #   result[:user_name] = user_name
+  #   result[:school_name] = school_name
+  #   if event.speaker_id
+  #     result[:speaker] = User.find(event.speaker_id).name
+  #   else
+  #     result[:speaker] = "TBA"
+  #   end
+  #   if Claim.exists?(event_id: event.id, user_id: current_user.id)
+  #     result[:claim] = true
+  #   else
+  #     result[:claim] = false
+  #   end
+  #   return result
+  # end
 
 end

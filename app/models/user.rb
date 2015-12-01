@@ -46,6 +46,54 @@ class User < ActiveRecord::Base
 
   end
 
+  def send_message(to_id, message)
+    begin
+      UserMailer.send_message(self.id, to_id, message).deliver_now
+      Notification.create(user_id: to_id,
+                            act_user_id: self.id,
+                            event_id: 0,
+                            n_type: :message,
+                            read: false)
+      return true
+    rescue
+      return false
+  end
+
+  def notifications()
+    notifications = Notification.where(user_id: self.id)
+    results = []
+    notifications.each do |x|
+      r = x.attributes
+      r[:user_name] = User.find(x.user_id).name
+      r[:act_user_name] = User.find(x.act_user_id).name
+      if x.event_id != 0
+        r[:event_title] = Event.find(x.event).event_title
+      end
+      results.append(r)
+    end
+    return results.reverse
+  end
+
+  def award_badge(event_id, award)
+    event = Event.find(event_id)
+    if self.id == event.user_id
+      if award
+        badge_id = School.find(event.loc_id).badge_id
+        UserBadge.create(user_id: event.speaker_id, 
+                         badge_id: badge_id, 
+                         event_id: event.id)
+        Notification.create(user_id: event.speaker_id,
+                            act_user_id: self.id,
+                            event_id: event.id,
+                            n_type: :new_badge,
+                            read: false)
+        event.update(complete: true)
+      else
+        event.update(complete: true)
+      end
+    end
+  end
+
   private
   
     def needs_password_change_email?

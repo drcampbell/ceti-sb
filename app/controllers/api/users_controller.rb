@@ -48,11 +48,6 @@ class API::UsersController < API::ApplicationController
     #                 category:@user.speaking_category, school_id:@user.school_id,
     #                 school_name:school_name}
     events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
-    # b = @user.user_badges
-    # badges = []
-    # b.each do |x|
-    #   badges.append(Badge.find(x.badge_id).file_name)
-    # end
     badges = @user.user_badges
     badges_array = Array.new(badges.count){Hash.new}
     for i in 0..badges.count-1
@@ -71,7 +66,6 @@ class API::UsersController < API::ApplicationController
     else
       school_name = nil
     end
-
     user_message = {id: user.id, name:user.name, role:user.role, 
                     grades:user.grades, job_title:user.job_title,
                     business:user.business, biography:user.biography,
@@ -105,31 +99,15 @@ class API::UsersController < API::ApplicationController
   end
 
   def send_message
-    begin 
-      UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
-      Notification.create(user_id: params[:id],
-                            act_user_id: current_user.id,
-                            event_id: 0,
-                            n_type: :message,
-                            read: false)
+    if current_user.send_message(params[:id], params[:user_message])
       render json: {state:0}
-    rescue
+    else
       render json: {state:1}
     end
   end
 
   def award_badge
-    event = Event.find(params[:event_id])
-    badge_id = School.find(event.loc_id).badge_id
-    if params[:award] and current_user.id == event.user_id
-      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id, event_id: event.id)
-      Notification.create(user_id: event.speaker_id,
-                            act_user_id: current_user.id,
-                            event_id: event.id,
-                            n_type: :new_badge,
-                            read: false)
-    end
-    event.update(complete: true)
+    current_user.award_badge(params[:event_id], params[:award])
     render json: {state:0}
   end
 
@@ -162,18 +140,8 @@ class API::UsersController < API::ApplicationController
   end
 
   def notifications
-    notifications = Notification.where(user_id: current_user.id)
-    results = []
-    notifications.each do |x|
-      r = x.attributes
-      r[:user_name] = User.find(x.user_id).name
-      r[:act_user_name] = User.find(x.act_user_id).name
-      if x.event_id != 0
-        r[:event_title] = Event.find(x.event_id).title
-      end
-      results.append(r)
-    end
-    render json: {notifications: results.reverse}
+    notifications = current_user.notifications()
+    render json: {notifications: notifications}
   end
 
   def register_device

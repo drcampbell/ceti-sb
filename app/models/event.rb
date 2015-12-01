@@ -73,6 +73,97 @@ class Event < ActiveRecord::Base
     CompleteEventJob.set(queue: :default).perform_later()
   end
   
+  def claim(user_id)
+    self.claims.create!(:user_id => user_id)
+    if User.find(self.user_id).set_claims
+      UserMailer.event_claim(user_id, self.user_id, self.id).deliver_now
+    end
+    Notification.create(user_id: self.user_id,
+                        act_user_id: user_id,
+                        event_id: self.id,
+                        n_type: :claim,
+                        read: false)
+  end
+
+  def update()
+    Claim.where(event_id: self.id).each do |x|
+      Notification.create(user_id: x.user_id,
+                        act_user_id: self.user_id,
+                        event_id: self.id,
+                        n_type: :event_update,
+                        read: false)
+      if User.find(x.user_id).set_updates
+        # TODO UserMailer.send_update().deliver
+      end
+    end
+  end
+
+  def cancel(current_id)
+    if current_id == self.user_id
+      self.update_attribute(:active, false)
+      users = []
+      if speaker_id == 0
+        claims = Claim.where(event_id: self.id)
+        claims.each do |c|
+          users.append(c.user_id)
+        end
+      else 
+        users.append(speaker_id)
+      end
+      users.each do |x|
+        Notification.create(user_id: x,
+                            act_user_id: current_id,
+                            event_id: self.id,
+                            n_type: :cancel,
+                            read: false)
+        UserMailer.event_cancel(x, current_id, self.id).deliver_now
+      end
+    end
+  end
+
+  def jsonEvent(curr_user)
+    school_name = nil
+    user_name = nil
+    if self.loc_id
+      school_name = School.find(self.loc_id).school_name
+    end
+    if self.user_id
+      user_name = User.find(self.user_id).name
+    end
+    result = self.attributes
+    result[:event_start] = self.start()
+    result[:event_end] = self.end()
+    result[:user_name] = user_name
+    result[:loc_name] = school_name
+    if self.speaker_id and self.speaker_id != 0
+      result[:speaker] = User.find(self.speaker_id).name
+    else
+      result[:speaker] = "TBA"
+    end
+    if Claim.exists?(event_id: self.id, user_id: curr_user)
+      result[:claim] = true
+    else
+      result[:claim] = false
+    end
+    return result
+  end
+
+  def pending_claims()
+    claims = Claim.where(event_id: self.id)
+    results = Array.new(claims.count)
+    for i in 0..claims.count-1
+      user = User.find(claims[i].user_id)
+      results[i] =  {"user_id" => user.id, 
+                      "event_id"=> self.id,
+                     "user_name" => user.name,
+                     "business" => user.business, 
+                     "job_title" => user.job_title, 
+                     "school_id"  =>  user.school_id, 
+                     "claim_id"=> claims[i].id}
+     end
+     return results
+  end
+
   def present_time()
     s = self.event_start.in_time_zone(self.time_zone)
     e = self.event_end.in_time_zone(self.time_zone)

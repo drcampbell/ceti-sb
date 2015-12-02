@@ -49,7 +49,15 @@ class ClaimsController < ApplicationController
     end
   end
 
+  def reject
+    @claim.reject()
+    redirect_to root_url
+  end
 
+  def cancel
+    @claim.cancel()
+    redirect_to root_url
+  end
 
   def update
     flash[:notice] = 'Claim was successfully updated.'

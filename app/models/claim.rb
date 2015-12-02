@@ -16,6 +16,53 @@ class Claim < ActiveRecord::Base
                         read: false)
   end
 
+  def reject()
+    claim.update(:rejected => true)
+    claim.update(:active => false)
+    event = Event.find(self.event_id)
+    UserMailer.event_reject(self.user_id,
+                            event.user_id,
+                            self.event_id).deliver_now
+    Notification.create(user_id:self.user_id,
+                        act_user_id: event.user_id,
+                        event_id: event.id,
+                        n_type: :reject_claim,
+                        read: false)
+  end
+
+  def cancel()
+    claim.update(active: false)
+    self.update(cancelled: true)
+    event = Event.find(self.event_id)
+    if event.speaker_id == self.user_id
+      UserMailer.cancel_speaker(self.user_id,
+                              event.user_id,
+                              self.event_id).deliver_now
+      Notification.create(user_id:self.user_id,
+                      act_user_id: event.user_id,
+                      event_id: event.id,
+                      n_type: :cancel_speaker,
+                      read: false)
+      claims = Claim.where(event_id: self.event_id)
+      for claims.each do |x|
+        if not x.cancelled
+          x.update(active: true)
+          x.update(rejected: false)
+        end
+      end
+    else
+      
+      UserMailer.cancel_claim(self.user_id,
+                              event.user_id,
+                              self.event_id).deliver_now
+      Notification.create(user_id:self.user_id,
+                      act_user_id: event.user_id,
+                      event_id: event.id,
+                      n_type: :cancel_claim,
+                      read: false)     
+    end
+  end
+
   def teacher_confirm(event)
   	if self.update_attribute(:confirmed_by_teacher, true)
 	  	event.update(speaker_id: self.user_id)

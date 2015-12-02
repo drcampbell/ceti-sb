@@ -38,7 +38,10 @@ class Event < ActiveRecord::Base
   end
 
   def get_pending_claims(user_id)
-    filterDate(Event.joins(:claims).where('claims.user_id' => user_id).where.not(speaker_id: user_id).where(active: true))
+    filterDate(Event.joins(:claims).where('claims.user_id' => user_id)
+      .where.not(speaker_id: user_id)
+      .where(active: true)
+      .where('claims.active' => true))
   end
 
   def get_pending_events(user_id)
@@ -149,7 +152,7 @@ class Event < ActiveRecord::Base
   end
 
   def pending_claims()
-    claims = Claim.where(event_id: self.id)
+    claims = Claim.where(event_id: self.id).where(active: true)
     results = Array.new(claims.count)
     for i in 0..claims.count-1
       user = User.find(claims[i].user_id)

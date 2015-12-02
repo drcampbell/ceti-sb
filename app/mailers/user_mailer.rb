@@ -43,6 +43,24 @@ class UserMailer < ApplicationMailer
     mail to: @speaker.email, subject: "School Business: #{@owner.name} has confirmed you as the speaker for an event."
   end
 
+  def cancel_speaker(speaker_id, owner_id, event_id)
+    @speaker = User.find(claimer_id)
+    @owner = User.find(owner_id)
+    @event = Event.find(event_id)
+  end
+
+  def cancel_claim(claimer_id, owner_id, event_id)
+    @claimer = User.find(claimer_id)
+    @owner = User.find(owner_id)
+    @event = Event.find(event_id)
+  end
+
+  def reject_claim(claimer_id, owner_id, event_id)
+    @claimer = User.find(claimer_id)
+    @owner = User.find(owner_id)
+    @event = Event.find(event_id)
+  end
+
   def welcome(user_id)
     @id = user_id
     mail to: User.find(@id).email, subject: "Welcome to School Business!"

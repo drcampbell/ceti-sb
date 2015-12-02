@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103211835) do
+ActiveRecord::Schema.define(version: 20151202210343) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 20151103211835) do
     t.datetime "updated_at",                           null: false
     t.boolean  "confirmed_by_teacher", default: false
     t.boolean  "confirmed_by_speaker", default: false
+    t.boolean  "active",               default: true
+    t.boolean  "rejected",             default: false
   end
 
   add_index "claims", ["event_id"], name: "index_claims_on_event_id"
@@ -90,6 +92,8 @@ ActiveRecord::Schema.define(version: 20151103211835) do
     t.integer "n_type"
     t.boolean "read"
   end
+
+  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id"
 
   create_table "schools", force: :cascade do |t|
     t.integer  "badge_id"

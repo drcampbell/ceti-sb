@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     get 'users/:user_id/badges' => 'users#show_badges'
     get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
     delete 'events/:id/cancel' => 'events#cancel'
+    delete 'claims/:id/reject' => 'claims#reject'
+    delete 'claims/:id/cancel' => 'claims#cancel'
     resources :sessions
     resources :users
     resources :schools
@@ -75,7 +77,8 @@ Rails.application.routes.draw do
   # TODO Make these https secure
   post 'email_responses/bounce' => 'email_responses#bounce'
   post 'email_responses/complaint' => 'email_responses#complaint'
-
+  delete 'claims/:id/reject' => 'claims#reject'
+  delete 'claims/:id/cancel' => 'claims#cancel'
   match 'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'
   match 'claims/:id/speaker_confirm' => 'claims#speaker_confirm', :via => [:post], :as => 'speaker_confirm_claim'
   match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'

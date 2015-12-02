@@ -1,5 +1,6 @@
 class Notification < ActiveRecord::Base
-	enum n_type: [:claim, :confirm_speaker, :event_update, :message, :award_badge, :new_badge, :cancel]
+	enum n_type: [:claim, :confirm_speaker, :event_update, :message, :award_badge, :new_badge, :cancel,
+								:reject_claim, :cancel_claim, :cancel_speaker]
 	belongs_to :user
 	belongs_to :event
 	after_create :send_gcm
@@ -21,6 +22,12 @@ class Notification < ActiveRecord::Base
 			content = "#{User.find(act_user_id).name} awards you a badge!"
 		when "cancel"
 			content = "#{User.find(act_user_id).name} has canceled the event: #{Event.find(event_id).title}"
+		when "reject_claim"
+			content = "#{User.find(act_user_id).name} has chosen a different candidate for their event"
+		when "cancel_claim"
+			content = "#{User.find(act_user_id).name} has canceled their claim for event: #{Event.find(event_id).title}"
+		when "cancel_speaker"
+			content = "#{User.find(act_user_id).name} has to cancel their speaking engagement for event: #{Event.find(event_id).title}"
 		end
 		return content
 	end
@@ -78,6 +85,12 @@ class Notification < ActiveRecord::Base
 		when "new_badge"
 			link = "/events/#{event_id}"
 		when "cancel"
+			link = "/events/#{event_id}"
+		when "reject_claim"
+			link = "/events/#{event_id}"	
+		when "cancel_claim"
+			link = "/events/#{event_id}"
+		when "cancel_speaker"
 			link = "/events/#{event_id}"
 		end
 		return link

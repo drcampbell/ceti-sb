@@ -72,6 +72,12 @@ class API::ClaimsController < API::ApplicationController
     end
   end
 
+
+  def reject
+    @claim.reject()
+    render json: {status: 0}
+  end
+
   def destroy
     @claim.destroy
     respond_with(@claim)

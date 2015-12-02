@@ -15,7 +15,7 @@
       <%= render 'users/user_profile' %>
     </section>
   </aside>
-  <div class="col-md-8 text-center">
+  <div class="col-md-8 text-center box_sizing">
     <div>
 			<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@user_badge.badge_id).file_name, class: "img-responsive center-block" %>
 			</div>

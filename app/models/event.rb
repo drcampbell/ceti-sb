@@ -58,11 +58,11 @@ class Event < ActiveRecord::Base
   end
 
   def start()
-    return self.event_start.in_time_zone(self.time_zone).strftime("%Y-%m-%d %H:%M %Z")
+    return self.event_start.in_time_zone(self.time_zone).strftime("%Y-%m-%d %l:%M %p %Z")
   end
 
   def end()
-    self.event_end.in_time_zone(self.time_zone).strftime("%Y-%m-%d %H:%M %Z")
+    self.event_end.in_time_zone(self.time_zone).strftime("%Y-%m-%d %l:%M %p %Z")
   end
 
   def date()

@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     post 'send_message/:id'  => 'users#send_message'
     get 'users/:user_id/badges' => 'users#show_badges'
     get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
+    delete 'events/:id/cancel' => 'events#cancel'
     resources :sessions
     resources :users
     resources :schools

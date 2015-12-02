@@ -15,11 +15,11 @@
       <%= render 'users/user_profile' %>
     </section>
   </aside>
-  <div class="col-md-8">
+  <div class="col-md-8 text-center">
     <div>
 			<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@user_badge.badge_id).file_name, class: "img-responsive center-block" %>
 			</div>
-			<div><p>
+			<div><p></p><p>
 				<%= @user.name %> earned the badge 
 			<%= Badge.find(@user_badge.badge_id).name %> for speaking at event: 
 			<%= @event.title %>

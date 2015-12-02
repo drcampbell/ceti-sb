@@ -138,6 +138,7 @@ class API::EventsController < API::ApplicationController
       end
     end
     if diff
+      
       success = @event.update(params)
 
       if @event && success

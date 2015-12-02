@@ -5,7 +5,7 @@ class Claim < ActiveRecord::Base
   validates_uniqueness_of :user_id, scope: :event_id
 
   def create_claim
-  	event = Event.find(@claim.event_id)
+  	event = Event.find(self.event_id)
     UserMailer.event_claim(self.user_id, 
     											 event.user_id, 
     											 self.event_id).deliver_now

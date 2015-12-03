@@ -23,14 +23,14 @@ class API::ClaimsController < API::ApplicationController
     else
       #render_401 
     end
-    event.pending_claims()
+    claims = event.pending_claims()
     # claims = Claim.where(event_id: event_id)
     # results = Array.new(claims.count){Hash.new}
     # for i in 0..claims.count-1
     #   user = User.find(claims[i].user_id)
     #   results[i] = {"user_id" => user.id, "event_id"=>event_id, "user_name" => user.name, "business" => user.business, "job_title" => user.job_title, "school_id"  =>  user.school_id, "claim_id"=> claims[i].id}
     # end
-    render json: {:claims => results}.as_json
+    render json: {:claims => claims}.as_json
   end
 
 
@@ -75,6 +75,11 @@ class API::ClaimsController < API::ApplicationController
 
   def reject
     @claim.reject()
+    render json: {status: 0}
+  end
+
+  def cancel
+    @claim.cancel()
     render json: {status: 0}
   end
 

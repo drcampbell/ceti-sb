@@ -20,7 +20,7 @@ class Claim < ActiveRecord::Base
     claim.update(:rejected => true)
     claim.update(:active => false)
     event = Event.find(self.event_id)
-    UserMailer.event_reject(self.user_id,
+    UserMailer.reject_claim(self.user_id,
                             event.user_id,
                             self.event_id).deliver_now
     Notification.create(user_id:self.user_id,
@@ -28,6 +28,16 @@ class Claim < ActiveRecord::Base
                         event_id: event.id,
                         n_type: :reject_claim,
                         read: false)
+  end
+
+  def reactivate()
+    claims = Claim.where(event_id: self.event_id)
+    for claims.each do |x|
+      if not x.cancelled
+        x.update(active: true)
+        x.update(rejected: false)
+      end
+    end
   end
 
   def cancel()
@@ -38,20 +48,13 @@ class Claim < ActiveRecord::Base
       UserMailer.cancel_speaker(self.user_id,
                               event.user_id,
                               self.event_id).deliver_now
-      Notification.create(user_id:self.user_id,
+      Notification.create(user_id: self.user_id,
                       act_user_id: event.user_id,
                       event_id: event.id,
                       n_type: :cancel_speaker,
                       read: false)
-      claims = Claim.where(event_id: self.event_id)
-      for claims.each do |x|
-        if not x.cancelled
-          x.update(active: true)
-          x.update(rejected: false)
-        end
-      end
-    else
-      
+      self.reactivate()
+    else     
       UserMailer.cancel_claim(self.user_id,
                               event.user_id,
                               self.event_id).deliver_now

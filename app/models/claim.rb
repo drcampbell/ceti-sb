@@ -32,7 +32,7 @@ class Claim < ActiveRecord::Base
 
   def reactivate()
     claims = Claim.where(event_id: self.event_id)
-    for claims.each do |x|
+    claims.each do |x|
       if not x.cancelled
         x.update(active: true)
         x.update(rejected: false)

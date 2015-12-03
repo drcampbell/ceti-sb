@@ -74,11 +74,13 @@ class API::ClaimsController < API::ApplicationController
 
 
   def reject
+    @claim = Claim.find(params[:id])
     @claim.reject()
     render json: {status: 0}
   end
 
   def cancel
+    @claim = Claim.find(params[:id])
     @claim.cancel()
     render json: {status: 0}
   end

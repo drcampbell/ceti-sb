@@ -50,11 +50,13 @@ class ClaimsController < ApplicationController
   end
 
   def reject
+    @claim = Claim.find(params[:id])
     @claim.reject()
     redirect_to root_url
   end
 
   def cancel
+    @claim = Claim.find(params[:id])
     @claim.cancel()
     redirect_to root_url
   end

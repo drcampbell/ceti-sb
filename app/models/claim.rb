@@ -17,8 +17,8 @@ class Claim < ActiveRecord::Base
   end
 
   def reject()
-    claim.update(:rejected => true)
-    claim.update(:active => false)
+    self.update(:rejected => true)
+    self.update(:active => false)
     event = Event.find(self.event_id)
     UserMailer.reject_claim(self.user_id,
                             event.user_id,
@@ -41,7 +41,7 @@ class Claim < ActiveRecord::Base
   end
 
   def cancel()
-    claim.update(active: false)
+    self.update(active: false)
     self.update(cancelled: true)
     event = Event.find(self.event_id)
     if event.speaker_id == self.user_id

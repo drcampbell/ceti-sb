@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151202210343) do
+ActiveRecord::Schema.define(version: 20151203185044) do
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20151202210343) do
     t.boolean  "confirmed_by_speaker", default: false
     t.boolean  "active",               default: true
     t.boolean  "rejected",             default: false
+    t.boolean  "cancelled",            default: true
   end
 
   add_index "claims", ["event_id"], name: "index_claims_on_event_id"

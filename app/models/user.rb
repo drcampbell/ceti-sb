@@ -49,8 +49,8 @@ class User < ActiveRecord::Base
   def get_pending_claims()
     events = Event.joins(:claims).where('claims.user_id' => self.id)
                   .where.not(speaker_id: self.id)
-                  .where(active: true, complete: false
-                  .where('claims.cancelled' => false))
+                  .where(active: true, complete: false)
+                  .where('claims.cancelled' => false)
     return events
   end
 

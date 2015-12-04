@@ -145,7 +145,7 @@ class Event < ActiveRecord::Base
     end
     claim = Claim.where(event_id: self.id, user_id: curr_user)
     if claim.exists?
-      result[:claim_id] = claim.id
+      result[:claim_id] = claim[0].id
     else
       result[:claim_id] = 0
     end

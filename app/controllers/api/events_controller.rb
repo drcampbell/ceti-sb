@@ -32,7 +32,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_claims
-    events = Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true)
+    events = current_user.get_pending_claims()
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
@@ -138,7 +138,7 @@ class API::EventsController < API::ApplicationController
       end
     end
     if diff
-      
+
       success = @event.update(params)
 
       if @event && success

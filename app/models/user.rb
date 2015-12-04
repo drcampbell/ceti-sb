@@ -46,6 +46,14 @@ class User < ActiveRecord::Base
 
   end
 
+  def get_pending_claims()
+    events = Event.joins(:claims).where('claims.user_id' => self.id)
+                  .where.not(speaker_id: self.id)
+                  .where(active: true, complete: false
+                  .where('claims.cancelled' => false))
+    return events
+  end
+
   def send_message(to_id, message)
     begin
       UserMailer.send_message(self.id, to_id, message).deliver_now

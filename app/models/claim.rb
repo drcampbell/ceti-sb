@@ -48,8 +48,8 @@ class Claim < ActiveRecord::Base
       UserMailer.cancel_speaker(self.user_id,
                               event.user_id,
                               self.event_id).deliver_now
-      Notification.create(user_id: self.user_id,
-                      act_user_id: event.user_id,
+      Notification.create(user_id: event.user_id,
+                      act_user_id: self.user_id,
                       event_id: event.id,
                       n_type: :cancel_speaker,
                       read: false)
@@ -58,8 +58,8 @@ class Claim < ActiveRecord::Base
       UserMailer.cancel_claim(self.user_id,
                               event.user_id,
                               self.event_id).deliver_now
-      Notification.create(user_id:self.user_id,
-                      act_user_id: event.user_id,
+      Notification.create(user_id:event.user_id,
+                      act_user_id: self.user_id,
                       event_id: event.id,
                       n_type: :cancel_claim,
                       read: false)     

@@ -76,7 +76,7 @@ class API::ClaimsController < API::ApplicationController
   def reject
     @claim = Claim.find(params[:id])
     @claim.reject()
-    render json: {status: 0}
+    render json: {status: 0, user_name: User.find(@claim.user_id).name, event_title: Event.find(@claim.event_id).title}
   end
 
   def cancel

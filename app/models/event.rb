@@ -143,10 +143,11 @@ class Event < ActiveRecord::Base
     else
       result[:speaker] = "TBA"
     end
-    if Claim.exists?(event_id: self.id, user_id: curr_user)
-      result[:claim] = true
+    claim = Claim.where(event_id: self.id, user_id: curr_user)
+    if claim.exists?
+      result[:claim_id] = claim.id
     else
-      result[:claim] = false
+      result[:claim_id] = 0
     end
     return result
   end

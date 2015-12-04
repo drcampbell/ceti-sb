@@ -37,22 +37,24 @@ class Notification < ActiveRecord::Base
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
 			next if device.endpoint_arn == nil
-			event = Event.find(self.event_id)
 			data = {message: self.content, n_type: n_type, event_id: event_id}
-			if n_type == "award_badge"
-				data['speaker_name'] = User.find(self.act_user_id).name
-				data['event_name'] = Event.find(self.event_id).title
-				data['badge_url'] = Badge.find(School.find(event.id).badge_id).file_name
-			elsif n_type =="new_badge"
-				data['user_name'] = User.find(self.user_id).name
-				data['user_id'] = self.user_id
-				data['event_owner'] = User.find(self.act_user_id).name
-				data['event_owner_id'] = self.act_user_id
-				data['event_name'] = event.title
-				badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
-				data['badge_url'] = Badge.find(badge.badge_id).file_name
-				data['school_name'] = event.loc_name
-				data['badge_id'] = badge.id
+			if self.event_id != 0
+				event = Event.find(self.event_id)
+				if n_type == "award_badge"
+					data['speaker_name'] = User.find(self.act_user_id).name
+					data['event_name'] = Event.find(self.event_id).title
+					data['badge_url'] = Badge.find(School.find(event.id).badge_id).file_name
+				elsif n_type =="new_badge"
+					data['user_name'] = User.find(self.user_id).name
+					data['user_id'] = self.user_id
+					data['event_owner'] = User.find(self.act_user_id).name
+					data['event_owner_id'] = self.act_user_id
+					data['event_name'] = event.title
+					badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
+					data['badge_url'] = Badge.find(badge.badge_id).file_name
+					data['school_name'] = event.loc_name
+					data['badge_id'] = badge.id
+				end
 			end
 			begin
 				sns.publish({

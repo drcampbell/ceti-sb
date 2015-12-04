@@ -44,21 +44,24 @@ class UserMailer < ApplicationMailer
   end
 
   def cancel_speaker(speaker_id, owner_id, event_id)
-    @speaker = User.find(claimer_id)
+    @speaker = User.find(speaker_id)
     @owner = User.find(owner_id)
     @event = Event.find(event_id)
+    mail to: @owner.email, subject: "School Business: #{@speaker.name} had to cancel their speaking engagement for your event."
   end
 
   def cancel_claim(claimer_id, owner_id, event_id)
     @claimer = User.find(claimer_id)
     @owner = User.find(owner_id)
     @event = Event.find(event_id)
+    mail to: @owner.email, subject: "School Business: #{@claimer.name} has canceled their claim for your event."
   end
 
   def reject_claim(claimer_id, owner_id, event_id)
     @claimer = User.find(claimer_id)
     @owner = User.find(owner_id)
     @event = Event.find(event_id)
+    mail to: @claimer.email, subject: "School Business: #{@owner.name} has chosen not to move forward with your claim."
   end
 
   def welcome(user_id)

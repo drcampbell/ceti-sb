@@ -59,12 +59,8 @@ class UsersController < ApplicationController
   end
 
   def award_badge
-    event = Event.find(param[:event_id])
-    badge_id = School.find(event.loc_id).badge_id
-    if param[:award] and current_user.id == event.user_id
-      UserBadge.create(user_id: event.speaker_id, badge_id: badge_id, event_id: event.id)
-    end
-    event.update(complete: true)
+    current_user.award_badge(params[:event_id], params[:award])
+    redirect_to root_url 
   end
 
   def show_badges
@@ -83,7 +79,8 @@ class UsersController < ApplicationController
   end
 
   def send_message
-    UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
+    current_user.send_message(params[:id], params[:user_message])
+    #UserMailer.send_message(current_user.id, params[:id], params[:user_message]).deliver_now
     redirect_to(root_url)
   end
   

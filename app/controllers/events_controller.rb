@@ -98,7 +98,7 @@ class EventsController < ApplicationController
               redirect_to root_path
             else
               @feed_items = []
-              flash.now[:notice] = "Event creation failed!\nPlease complete required fields."
+              flash.now['danger'] = "Event creation failed!\nPlease complete required fields."
               render :new  #'static_pages/home'
             end
           end
@@ -107,16 +107,16 @@ class EventsController < ApplicationController
         redirect_to signin
       end
     rescue InvalidTime
-      flash[:warning] = "You must enter a start time that preceeds the end time."
+      flash['danger'] = "You must enter a start time that preceeds the end time."
       render :new
     rescue ArgumentError
-      flash[:warning] = "You must enter a start time that preceeds the end time."
+      flash['danger'] = "You must enter a start time that preceeds the end time."
       render :new
     rescue MissingTitle
-      flash[:warning] = "You are missing a valid title"
+      flash['danger'] = "You are missing a valid title"
       render :new
     rescue MissingTime
-      flash[:warning] = "You are missing a valid start or end time"
+      flash['danger'] = "You are missing a valid start or end time"
       render :new
     end
   end
@@ -166,16 +166,16 @@ class EventsController < ApplicationController
         # end
       end
     rescue InvalidTime
-      flash[:warning] = "You must enter a start time that preceeds the end time."
+      flash['danger'] = "You must enter a start time that preceeds the end time."
       success = false
     rescue ArgumentError
-      flash[:warning] = "You must enter a start time that preceeds the end time."
+      flash['danger'] = "You must enter a start time that preceeds the end time."
       success = false
     rescue MissingTitle
-      flash[:warning] = "You are missing a valid title"
+      flash['danger'] = "You are missing a valid title"
       success = false
     rescue MissingTime
-      flash[:warning] = "You are missing a valid start or end time"
+      flash['danger'] = "You are missing a valid start or end time"
       success = false
     end
 
@@ -239,7 +239,7 @@ class EventsController < ApplicationController
       flash[:success] = "You have claimed event: #{@event.title}"
       redirect_to(root_url)
     rescue ActiveRecord::RecordNotFound
-      flash[:alert] = "Event not found"
+      flash['danger'] = "Event not found"
       redirect_to(root_url)
     end
   end

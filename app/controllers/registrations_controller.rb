@@ -7,7 +7,7 @@ class RegistrationsController < Devise::RegistrationsController
         resource_saved = resource.save
         yield resource if block_given?
         if resource_saved
-          UserMailer.welcome().deliver_now
+          UserMailer.welcome(resource.id).deliver_now
           if resource.active_for_authentication?
             set_flash_message :notice, :signed_up if is_flashing_format?
             sign_up(resource_name, resource)
@@ -22,6 +22,9 @@ class RegistrationsController < Devise::RegistrationsController
           @validatable = devise_mapping.validatable?
           if @validatable
             @minimum_password_length = resource_class.password_length.min
+          end
+          resource.errors.full_messages.each do |x|
+            flash['danger'] = x
           end
           respond_with resource
         end

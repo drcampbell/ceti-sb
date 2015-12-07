@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
                   .where.not(speaker_id: self.id)
                   .where(active: true, complete: false)
                   .where('claims.cancelled' => false)
+                  .where('claims.rejected' => false)
     return events
   end
 

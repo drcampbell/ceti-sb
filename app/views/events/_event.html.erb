@@ -24,7 +24,7 @@
     <% else %>
       <% unless event.claims.each.nil? %>
         <strong>Claims: </strong>
-        <%= raw event.claims.each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
+        <%= raw event.claims.where(active:true).each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
       <% end %>
     <% end %>
   </p>

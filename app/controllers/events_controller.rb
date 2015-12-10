@@ -182,6 +182,9 @@ class EventsController < ApplicationController
     rescue MissingTime
       flash['danger'] = "You are missing a valid start or end time"
       success = false
+    rescue EventInPast
+      flash['danger'] = "You have edited the event to be in the past"
+      success = false
     end
 
     respond_to do |format|

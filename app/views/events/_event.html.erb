@@ -55,7 +55,7 @@
       <% end %>
       <% if current_user.id == event.speaker_id then cancellation = 'Cancel Speaking Engagement' end%>
       <% if current_user.id == claim.user_id then cancellation = 'Cancel Claim' end%>
-      <% if current_user.id == event.speaker_id or current_user.id == claim.user_id%>
+      <% if (current_user.id == event.speaker_id and current_user.id == claim.user_id) or current_user.id == claim.user_id%>
           <p> <%= button_to cancellation, {action: "cancel", controller: "claims", id: claim.id}, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %> </p>
       <% end %>
       <% if current_user == event.user && claim.confirmed_by_teacher %>

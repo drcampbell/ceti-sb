@@ -55,14 +55,14 @@
   <p>
   <% event.claims.each do |claim| %>
     <!-- CONFIRM claim? -->    
-    <% if current_user == event.user && !claim.confirmed_by_teacher %>
+    <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
         <%= button_to "Confirm #{claim.user.name} as speaker", 
               teacher_confirm_claim_path(claim, :event_id => event.id), 
               data: { confirm: 'Are you sure?' }, 
               class: 'btn btn-primary btn-xs' %> 
     <% end %>
     <!-- REJECT claim? -->
-    <% if current_user == event.user && !claim.confirmed_by_teacher %>
+    <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
       <p> 
         <%= button_to "Reject #{claim.user.name} as speaker", 
               {action: "reject", controller: "claims", id: claim.id}, 
@@ -94,13 +94,13 @@
   <!-- If you are the owner of the event -->
   <a>
   <% if current_user == event.user %>
-    <% if event.event_end < Time.now and event.speaker_id > 0 %>
+    <% if event.event_end < Time.now and event.speaker_id > 0 and not event.complete %>
       <% speaker = User.find(event.speaker_id) %>
       <%= button_to "Award Badge to #{speaker.name}", 
             {action: "award_badge", controller: "users", event_id: event.id, award: true}, 
             data: { confirm: 'Are you sure?' }, 
             method: :post, 
-            class: 'btn btn-primary btn-xs' %>
+            class: 'btn-primary' %>
       <% end %>
     <%= button_to 'Edit the Event', 
           {action: "edit", controller: "events", id:event.id}, 

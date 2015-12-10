@@ -47,6 +47,7 @@ class Claim < ActiveRecord::Base
     self.update(cancelled: true)
     event = Event.find(self.event_id)
     if event.speaker_id == self.user_id
+      event.update(speaker_id: 0)
       UserMailer.cancel_speaker(self.user_id,
                               event.user_id,
                               self.event_id).deliver_now

@@ -78,7 +78,7 @@
     <% elsif current_user.id == claim.user_id %>
       <% cancellation = 'Cancel Claim' %>
     <% end %>
-    <% if current_user.id == claim.user_id %>
+    <% if current_user.id == claim.user_id && event_start < Time.now %>
       <p> 
         <%= button_to cancellation, 
               {action: "cancel", controller: "claims", id: claim.id}, 
@@ -102,15 +102,17 @@
             method: :post, 
             class: 'btn-primary' %>
       <% end %>
-    <%= button_to 'Edit the Event', 
-          {action: "edit", controller: "events", id:event.id}, 
-          method: :get, 
-          class: "btn-primary" %>
-    <%= button_to 'Cancel The Event', 
-          {action: "cancel", controller: "events", id: event.id}, 
-          data: { confirm: 'Are you sure?' }, 
-          method: :delete, 
-          class: 'btn btn-primary btn-xs' %>
+    <% if event.event_start > Time.now %>
+      <%= button_to 'Edit the Event', 
+            {action: "edit", controller: "events", id:event.id}, 
+            method: :get, 
+            class: "btn-primary" %>
+      <%= button_to 'Cancel The Event', 
+            {action: "cancel", controller: "events", id: event.id}, 
+            data: { confirm: 'Are you sure?' }, 
+            method: :delete, 
+            class: 'btn btn-primary btn-xs' %>
+    <% end %>
   <% else %>
     <%= button_to 'Message The Organizer', 
           {action: "write_message", controller: "users", id: event.user_id}, 

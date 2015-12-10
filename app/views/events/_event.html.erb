@@ -56,10 +56,18 @@
   <% event.claims.each do |claim| %>
     <!-- CONFIRM claim? -->    
     <% if current_user == event.user && !claim.confirmed_by_teacher %>
-      <p> 
         <%= button_to "Confirm #{claim.user.name} as speaker", 
               teacher_confirm_claim_path(claim, :event_id => event.id), 
               data: { confirm: 'Are you sure?' }, 
+              class: 'btn btn-primary btn-xs' %> 
+    <% end %>
+    <!-- REJECT claim? -->
+    <% if current_user == event.user && !claim.confirmed_by_teacher %>
+      <p> 
+        <%= button_to "Reject #{claim.user.name} as speaker", 
+              {action: "reject", controller: "claims", id: claim.id}, 
+              data: { confirm: 'Are you sure?' }, 
+              method: :delete,
               class: 'btn btn-primary btn-xs' %> 
       </p>
     <% end %>
@@ -84,10 +92,6 @@
   </p>
 
   <!-- If you are the owner of the event -->
-  <% if current_user == event.user && claim.confirmed_by_teacher %>
-    <p> 
-    </p>
-  <% end %>
   <a>
   <% if current_user == event.user %>
     <% if event.event_end < Time.now and event.speaker_id > 0 %>

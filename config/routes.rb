@@ -6,9 +6,10 @@ Rails.application.routes.draw do
   devise_scope :user do
     post    '/users/sign_up'  =>  'registrations#create'
     post    'users/sign_in'   =>  'sessions#create'
-    delete    'users/sign_out'  =>  'sessions#destroy'
+    delete  'users/sign_out'  =>  'sessions#destroy'
     post    'account'         => 'registrations#edit'
     get     'profile'         => 'registrations#profile'
+    post    'users/award_badge' => 'users#award_badge'
   end
 
   namespace :api do
@@ -58,31 +59,32 @@ Rails.application.routes.draw do
   resources :static_pages
 
   root to: 'static_pages#home'
-  get    'choose' => 'schools#choose'
-  get    'help'    => 'static_pages#help'
-  get    'about'   => 'static_pages#about'
-  get    'contact' => 'static_pages#contact'
-  get    'signin'  => 'static_pages#signin'
-  delete 'cancel'  => 'events#cancel'
-  get    'invalid_event'  => 'static_pages#invalid_event'
+  get     'choose' => 'schools#choose'
+  get     'help'    => 'static_pages#help'
+  get     'about'   => 'static_pages#about'
+  get     'contact' => 'static_pages#contact'
+  get     'signin'  => 'static_pages#signin'
+  delete  'cancel'  => 'events#cancel'
+  get     'invalid_event'  => 'static_pages#invalid_event'
   get     'write_message/:id' => 'users#write_message'
   post    'write_message/:id'  => 'users#send_message'
-  get 'tags/:tag',  to: 'events#index', as: :tag
-  get 'users/:tag',  to: 'users#index'
-  get 'users/:user_id/badges' => 'users#show_badges'
-  get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
-  post 'make_mine', to: 'schools#make_mine'
+  get     'tags/:tag',  to: 'events#index', as: :tag
+  get     'users/:tag',  to: 'users#index'
+  get     'users/:user_id/badges' => 'users#show_badges'
+  get     'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
+
+  post    'make_mine', to: 'schools#make_mine'
   #get     'users/edit'      => 'registrations#edit'
-  get 'android' => 'static_pages#android'
+  get     'android' => 'static_pages#android'
   # TODO Make these https secure
-  post 'email_responses/bounce' => 'email_responses#bounce'
-  post 'email_responses/complaint' => 'email_responses#complaint'
-  delete 'claims/:id/reject' => 'claims#reject'
-  delete 'claims/:id/cancel' => 'claims#cancel'
-  match 'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'
-  match 'claims/:id/speaker_confirm' => 'claims#speaker_confirm', :via => [:post], :as => 'speaker_confirm_claim'
-  match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
-  match 'schools/claim_school' => 'schools#claim_school', :via => [:post], :as => 'claim_school'
+  post    'email_responses/bounce' => 'email_responses#bounce'
+  post    'email_responses/complaint' => 'email_responses#complaint'
+  delete  'claims/:id/reject' => 'claims#reject'
+  delete  'claims/:id/cancel' => 'claims#cancel'
+  match   'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'
+  match   'claims/:id/speaker_confirm' => 'claims#speaker_confirm', :via => [:post], :as => 'speaker_confirm_claim'
+  match   'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
+  match   'schools/claim_school' => 'schools#claim_school', :via => [:post], :as => 'claim_school'
   #match '/contacts', to: 'contacts#new',
   #resources "contacts", only: [:new, :create]
 end

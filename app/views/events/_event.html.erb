@@ -58,19 +58,39 @@
       <% if (current_user.id == event.speaker_id and current_user.id == claim.user_id) or current_user.id == claim.user_id%>
           <p> <%= button_to cancellation, {action: "cancel", controller: "claims", id: claim.id}, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %> </p>
       <% end %>
-      <% if current_user == event.user && claim.confirmed_by_teacher %>
-          <p> <%= button_to "Give badge to #{claim.user.name}", speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
-      <% end %>
+
   <% end %>
   </p>
 
-
+  <!-- If you are the owner of the event -->
+  <% if current_user == event.user && claim.confirmed_by_teacher %>
+    <p> 
+    </p>
+  <% end %>
   <a>
   <% if current_user == event.user %>
-    <%= button_to 'Edit the Event', {action: "edit", controller: "events", id:event.id}, method: :get, class: "btn-primary" %>
-    <%= button_to 'Cancel The Event', {action: "cancel", controller: "events", id: event.id}, data: { confirm: 'Are you sure?' }, method: :delete, class: 'btn btn-primary btn-xs' %>
+    <% if event.event_end < Time.now and event.speaker_id > 0 %>
+      <% speaker = User.find(event.speaker_id) %>
+      <%= button_to "Award Badge to #{speaker.name}", 
+            {action: "award_badge", controller: "users", event_id: event.id, award: true}, 
+            data: { confirm: 'Are you sure?' }, 
+            method: :post, 
+            class: 'btn btn-primary btn-xs' %>
+      <% end %>
+    <%= button_to 'Edit the Event', 
+          {action: "edit", controller: "events", id:event.id}, 
+          method: :get, 
+          class: "btn-primary" %>
+    <%= button_to 'Cancel The Event', 
+          {action: "cancel", controller: "events", id: event.id}, 
+          data: { confirm: 'Are you sure?' }, 
+          method: :delete, 
+          class: 'btn btn-primary btn-xs' %>
   <% else %>
-    <%= button_to 'Message The Organizer', {action: "write_message", controller: "users", id: event.user_id}, method: :get, class:"btn-primary" %>    
+    <%= button_to 'Message The Organizer', 
+          {action: "write_message", controller: "users", id: event.user_id}, 
+          method: :get, 
+          class:"btn-primary" %>    
   <% end %>
   </a>
 

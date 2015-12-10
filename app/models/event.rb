@@ -75,18 +75,6 @@ class Event < ActiveRecord::Base
   def test()
     CompleteEventJob.set(queue: :default).perform_later()
   end
-  
-  def claim(user_id)
-    self.claims.create!(:user_id => user_id)
-    if User.find(self.user_id).set_claims
-      UserMailer.event_claim(user_id, self.user_id, self.id).deliver_now
-    end
-    Notification.create(user_id: self.user_id,
-                        act_user_id: user_id,
-                        event_id: self.id,
-                        n_type: :claim,
-                        read: false)
-  end
 
   def handle_update()
     Claim.where(event_id: self.id).each do |x|

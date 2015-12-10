@@ -8,7 +8,7 @@
 
 </div>
       <aside class="col-xs-4 col-sm-4">
-  <%= image_tag Badge.find(School.find(event.loc_id).badge_id).file.url class: "img-responsive" %>  
+  <%= image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name class: "img-responsive" %>  
   </aside>
 <div class="col-xs-6 col-md-6">
 <p><strong>Location: </strong> 

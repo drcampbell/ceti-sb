@@ -9,7 +9,7 @@
     <% if @user.events.any? %>
         <h3>Events (<%= @user.events.count %>)</h3>
         <ol class="events">
-          <%= render @events %>
+          <%= render @events.reverse %>
         </ol>
         <%= will_paginate @events %>
     <% end %>

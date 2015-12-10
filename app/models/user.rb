@@ -104,6 +104,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def get_events()
+    return Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
+                .where("event_start > ?", Time.now)
+                .where(active: true)
+  end
+
   private
   
     def needs_password_change_email?

@@ -6,9 +6,11 @@ class Claim < ActiveRecord::Base
 
   def create_claim
   	event = Event.find(self.event_id)
-    UserMailer.event_claim(self.user_id, 
-    											 event.user_id, 
-    											 self.event_id).deliver_now
+    if User.find(event.user_id).set_claims
+      UserMailer.event_claim(self.user_id, 
+      											 event.user_id, 
+      											 self.event_id).deliver_now
+    end
     Notification.create(user_id: event.user_id,
                         act_user_id: self.user_id,
                         event_id: event.id,

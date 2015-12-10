@@ -6,7 +6,7 @@
         <section class="user_info">
           <%= render 'shared/user_info' %>
         </section>
-        <% @events = current_user.events.paginate(page: params[:page]) %>
+        <% @events = current_user.get_events().paginate(page: params[:page]) %>
 
         <section class="event_calendar">
           <%= render 'events/week_calendar' %>

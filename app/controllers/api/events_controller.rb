@@ -66,33 +66,6 @@ class API::EventsController < API::ApplicationController
     events.where("event_start > ?", Time.now)
   end
 
-  # def jsonEvent(event)
-  #   school_name = nil
-  #   user_name = nil
-  #   if event.loc_id
-  #     location_name = School.find(event.loc_id).school_name
-  #   end
-  #   if event.user_id
-  #     user_name = User.find(event.user_id).name
-  #   end
-  #   result = event.attributes
-  #   result[:event_start] = event.start()
-  #   result[:event_end] = event.end()
-  #   result[:user_name] = user_name
-  #   result[:loc_name] = location_name
-  #   if event.speaker_id and event.speaker_id != 0
-  #     result[:speaker] = User.find(event.speaker_id).name
-  #   else
-  #     result[:speaker] = "TBA"
-  #   end
-  #   if Claim.exists?(event_id: event.id, user_id: current_user.id)
-  #     result[:claim] = true
-  #   else
-  #     result[:claim] = false
-  #   end
-  #   return result
-  # end
-
   def show
     if user_signed_in?
       @event = Event.find(params[:id])
@@ -179,18 +152,7 @@ class API::EventsController < API::ApplicationController
     # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:id])
-      @event.claim(current_user.id)
-      # claimer = current_user.id
-      # @event.claims.create!(:user_id => claimer)#params[:user_id])
-      # if User.find(@event.user_id).set_claims
-      #   UserMailer.event_claim(claimer, @event.user_id, @event.id).deliver_now
-      # end
-      # Notification.create(user_id: @event.user_id,
-      #                     act_user_id: claimer,
-      #                     event_id: @event.id,
-      #                     n_type: :claim,
-      #                     read: false)
-
+      @event.claims.create!(:user_id => current_user.id)
       render :json => {:state => 0, :event => @event }
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }

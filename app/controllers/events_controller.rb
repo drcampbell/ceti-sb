@@ -11,6 +11,8 @@ class EventsController < ApplicationController
   end
   class MissingTitle < StandardError
   end
+  class EventInPast < StandardError
+  end
 
   rescue_from InvalidTime, :with => :invalid_time
 
@@ -117,6 +119,9 @@ class EventsController < ApplicationController
       render :new
     rescue MissingTime
       flash['danger'] = "You are missing a valid start or end time"
+      render :new
+    rescue EventInPast
+      flash['danger'] = "You have entered a start time that has already elapsed."
       render :new
     end
   end
@@ -226,16 +231,7 @@ class EventsController < ApplicationController
     # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:event_id])
-      @event.claim(params[:user_id])
-      # @event.claims.create!(:user_id => params[:user_id])
-      # if User.find(@event.user_id).set_claims
-      #   UserMailer.event_claim(params[:user_id], @event.user_id, @event.id).deliver_now
-      # end
-      # Notification.create(user_id: @event.user_id,
-      #                     act_user_id: params[:user_id],
-      #                     event_id: @event.id,
-      #                     n_type: :claim,
-      #                     read: false)
+      @event.claims.create!(:user_id => params[:user_id])
       flash[:success] = "You have claimed event: #{@event.title}"
       redirect_to(root_url)
     rescue ActiveRecord::RecordNotFound
@@ -260,6 +256,8 @@ class EventsController < ApplicationController
         raise MissingTitle
       elsif event.event_start >= event.event_end
         raise InvalidTime
+      elsif event.event_start <= Time.now
+        raise EventInPast
       end
     end
 

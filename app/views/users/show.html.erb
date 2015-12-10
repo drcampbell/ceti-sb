@@ -6,10 +6,10 @@
     </section>
   </aside>
   <div class="col-md-8">
-    <% if @user.events.any? %>
-        <h3>Events (<%= @user.events.count %>)</h3>
+    <% if @events.any? %>
+        <h3>Events (<%= @events.count %>)</h3>
         <ol class="events">
-          <%= render @events.reverse %>
+          <%= render @events.order(event_end: :desc).reverse %>
         </ol>
         <%= will_paginate @events %>
     <% end %>

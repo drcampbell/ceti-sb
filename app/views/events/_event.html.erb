@@ -10,6 +10,7 @@
 <aside class="col-xs-4 col-sm-4">
   <%= image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name, class: "img-responsive" %>  
 </aside>
+<!-- Provide Badge Image -->
 <div class="col-xs-6 col-md-6">
 <p><strong>Location: </strong> 
     <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.loc_id}" %> </p>
@@ -41,23 +42,43 @@
   </div> <!-- column -->
 
   <p>
-    <% if event.claims.where('confirmed_by_teacher = ?', true).count < 1 &&
-            event.claims.where('user_id = ?', current_user.id).count < 1 &&
-            event.user != current_user%>
-        <%= button_to 'claim this event', claim_event_path(:event_id => event.id, :user_id => current_user.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %>
+    <% if (event.claims.where('confirmed_by_teacher = ?', true).count < 1) &&
+         (event.claims.where('user_id = ?', current_user.id).count < 1) &&
+         (event.user != current_user) %>
+        <%= button_to 'claim this event', 
+              claim_event_path(:event_id => event.id, :user_id => current_user.id), 
+              data: { confirm: 'Are you sure?' }, 
+              class: 'btn btn-primary btn-xs' %>
     <% end %>
   </p>
 
   <p>
   <% event.claims.each do |claim| %>
-      <% if current_user == event.user && !claim.confirmed_by_teacher %>
-        <p> <%= button_to "Confirm #{claim.user.name} as speaker", teacher_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
-      <% end %>
-      <% if current_user.id == claim.user_id then cancellation = 'Cancel Claim' end%>
-      <% if current_user.id == event.speaker_id then cancellation = 'Cancel Speaking Engagement' end%>
-      <% if (current_user.id == event.speaker_id and current_user.id == claim.user_id) or current_user.id == claim.user_id%>
-          <p> <%= button_to cancellation, {action: "cancel", controller: "claims", id: claim.id}, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %> </p>
-      <% end %>
+    <!-- CONFIRM claim? -->    
+    <% if current_user == event.user && !claim.confirmed_by_teacher %>
+      <p> 
+        <%= button_to "Confirm #{claim.user.name} as speaker", 
+              teacher_confirm_claim_path(claim, :event_id => event.id), 
+              data: { confirm: 'Are you sure?' }, 
+              class: 'btn btn-primary btn-xs' %> 
+      </p>
+    <% end %>
+
+    <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
+    <% if current_user.id == event.speaker_id %>
+      <% cancellation = 'Cancel Speaking Engagement' %>
+    <% elsif current_user.id == claim.user_id %>
+      <% cancellation = 'Cancel Claim' %>
+    <% end %>
+    <% if current_user.id == claim.user_id %>
+      <p> 
+        <%= button_to cancellation, 
+              {action: "cancel", controller: "claims", id: claim.id}, 
+              method: :delete, 
+              data: { confirm: 'Are you sure?' }, 
+              class: 'btn btn-primary' %> 
+      </p>
+    <% end %>
 
   <% end %>
   </p>

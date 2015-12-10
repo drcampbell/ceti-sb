@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     respond_to do |format|
       format.html do
-        @events = @user.events.paginate(page: params[:page])
+        @events = @user.events.order(event_end: :desc).reverse.paginate(page: params[:page])
       end
       format.json { render json: @user }
     end

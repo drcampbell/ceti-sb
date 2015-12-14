@@ -36,14 +36,19 @@ class Notification < ActiveRecord::Base
 		sns = Aws::SNS::Client.new(region: 'us-west-2')
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
+			# Skip the device if it isn't currently associated with an AWS endpoint_arn. 
 			next if device.endpoint_arn == nil
 			data = {message: self.content, n_type: n_type, event_id: event_id}
+			data['count'] = Notification.where(user_id: self.user_id, read: false).count
+			# For notifications regarding an event
 			if self.event_id != 0
 				event = Event.find(self.event_id)
+				# Package information as this generates a fragment within Android
 				if n_type == "award_badge"
 					data['speaker_name'] = User.find(self.act_user_id).name
 					data['event_name'] = Event.find(self.event_id).title
 					data['badge_url'] = Badge.find(School.find(event.id).badge_id).file_name
+				# Package information as this generates a fragment within Android
 				elsif n_type =="new_badge"
 					data['user_name'] = User.find(self.user_id).name
 					data['user_id'] = self.user_id
@@ -56,12 +61,13 @@ class Notification < ActiveRecord::Base
 					data['badge_id'] = badge.id
 				end
 			end
-			begin
+			begin # Publish to AWS SNS, note the dual to_json formatting.  
 				sns.publish({
 					target_arn: device.endpoint_arn,
 					message_structure: "json",
-					message: {GCM: {data: data}.to_json}.to_json
+					message: {GCM: {data: data, count: count}.to_json}.to_json
 					})
+			# If the AWS endpoint is disabled, then don't send more notications to that device.  
 			rescue Aws::SNS::Errors::EndpointDisabled
 				device.update_attribute(:endpoint_arn, nil)
 			end

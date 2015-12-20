@@ -144,6 +144,11 @@ class API::UsersController < API::ApplicationController
     render json: {notifications: notifications}
   end
 
+  def read_notification()
+    Notification.find(params[:id]).update(read: true)
+    render json: {count: current_user.unread_notifications()}
+  end
+  
   def register_device
     device = Device.find_by(user_id: current_user.id, device_name: params[:device_name])
     if device != nil

@@ -84,6 +84,10 @@ class User < ActiveRecord::Base
     return results.reverse
   end
 
+  def unread_notifications()
+    return Notification.where(user_id: self.id, read: false).count
+  end
+
   def award_badge(event_id, award)
     event = Event.find(event_id)
     if self.id == event.user_id

@@ -141,7 +141,7 @@ class API::UsersController < API::ApplicationController
 
   def notifications
     notifications = current_user.notifications()
-    render json: {notifications: notifications count: current_user.unread_notifications()}
+    render json: {notifications: notifications, count: current_user.unread_notifications()}
   end
 
   def read_notification()

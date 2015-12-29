@@ -88,6 +88,14 @@ class User < ActiveRecord::Base
     return Notification.where(user_id: self.id, read: false).count
   end
 
+  def read_notifications()
+    if Notification.find(params[:id]).update(read: true)
+      return json: {state: 0}
+    else 
+      return json: {state: 1}
+    end
+  end
+
   def award_badge(event_id, award)
     event = Event.find(event_id)
     if self.id == event.user_id

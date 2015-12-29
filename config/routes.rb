@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       post    'register_device' => 'users#register_device'
       get     'notifications'  => 'users#notifications'
       post    'notifications/:id' => 'users#read_notification'
+      delete  'notifications' => 'users#all_notifications_read'
       post    'users/award_badge' => 'users#award_badge'
     end
     post 'events/create' => 'events#create'

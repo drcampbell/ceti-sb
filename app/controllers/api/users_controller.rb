@@ -145,8 +145,11 @@ class API::UsersController < API::ApplicationController
   end
 
   def read_notification()
-    Notification.find(params[:id]).update(read: true)
-    render json: {count: current_user.unread_notifications()}
+    if Notification.find(params[:id]).update(read: true)
+      render json: {state: 0, count: current_user.unread_notifications()}
+    else
+      render json: {state: 1, count: 0}
+    end
   end
 
   def register_device

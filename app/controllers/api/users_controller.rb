@@ -140,7 +140,7 @@ class API::UsersController < API::ApplicationController
   end
 
   def notifications
-    PAGE = UsersController.PAGE
+    #PAGE = UsersController.PAGE
     notifications = current_user.notifications()
     if params[:page]
       p = params[:page]

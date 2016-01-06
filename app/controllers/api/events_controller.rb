@@ -9,7 +9,7 @@ class API::EventsController < API::ApplicationController
   #@@PAGE = 15
 
   def index
-    PAGE = EventsController.PAGE
+    #PAGE = EventsController.PAGE
     if params[:search]
       @search = Sunspot.search(Event) do
           #with(:user_id, params[:user].to_i)

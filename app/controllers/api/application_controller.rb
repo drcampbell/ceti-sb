@@ -12,6 +12,8 @@ class API::ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
   
+  @@PAGE = 15
+  
   def render_404
     raise ActionController::RoutingError.new('Not Found')
   end

@@ -140,7 +140,14 @@ class API::UsersController < API::ApplicationController
   end
 
   def notifications
+    PAGE = UsersController.PAGE
     notifications = current_user.notifications()
+    if params[:page]
+      p = params[:page]
+      notifications = notifications[p*PAGE..(p+1)*PAGE-1]
+    else
+      notifications = notifications[0..PAGE-1]
+    end
     render json: {notifications: notifications, count: current_user.unread_notifications()}
   end
 
@@ -157,7 +164,8 @@ class API::UsersController < API::ApplicationController
     notifications.each do |x|
       x.update(read: true)
     end
-    render json: {notifications: notifications, count: current_user.unread_notifications()}
+    render json: {notifications: current_user.notifications(), 
+                    count: current_user.unread_notifications()}
   end
 
   def register_device

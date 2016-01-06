@@ -6,7 +6,10 @@ class API::EventsController < API::ApplicationController
   #before_action :admin_user,          only: :destroy
   respond_to :json
 
+  #@@PAGE = 15
+
   def index
+    PAGE = EventsController.PAGE
     if params[:search]
       @search = Sunspot.search(Event) do
           #with(:user_id, params[:user].to_i)
@@ -27,6 +30,18 @@ class API::EventsController < API::ApplicationController
       end
     elsif params[:loc_id]
       @events = Event.where("loc_id" => params[:loc_id])
+    # Handle user specific parameters  
+    elsif params[:user_id]
+      @events = Event.where("user_id" => params[:user_id]).order(event_start: :desc)
+    # Handle school specific parameters
+    elsif params[:school_id]
+      @events = Event.where("school_id" => params[:school_id]).order(event_start: :desc)   
+    end
+    if params[:page]
+      p = params[:page]
+      @events = @events[p*PAGE..(p+1)*PAGE-1]
+    else
+      @events = @events[0..PAGE-1]
     end
     render json: {:events => list_events(@events)}.as_json
   end

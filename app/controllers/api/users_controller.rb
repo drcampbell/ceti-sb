@@ -140,13 +140,13 @@ class API::UsersController < API::ApplicationController
   end
 
   def notifications
-    #PAGE = UsersController.PAGE
+    pages = UsersController.PAGE
     notifications = current_user.notifications()
     if params[:page]
       p = params[:page]
-      notifications = notifications[p*PAGE..(p+1)*PAGE-1]
+      notifications = notifications[p*pages..(p+1)*pages-1]
     else
-      notifications = notifications[0..PAGE-1]
+      notifications = notifications[0..pages-1]
     end
     render json: {notifications: notifications, count: current_user.unread_notifications()}
   end

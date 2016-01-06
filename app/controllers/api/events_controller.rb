@@ -9,7 +9,7 @@ class API::EventsController < API::ApplicationController
   #@@PAGE = 15
 
   def index
-    #PAGE = EventsController.PAGE
+    pages = 15
     if params[:search]
       @search = Sunspot.search(Event) do
           #with(:user_id, params[:user].to_i)
@@ -39,9 +39,9 @@ class API::EventsController < API::ApplicationController
     end
     if params[:page]
       p = params[:page]
-      @events = @events[p*PAGE..(p+1)*PAGE-1]
+      @events = @events[p*pages..(p+1)*pages-1]
     else
-      @events = @events[0..PAGE-1]
+      @events = @events[0..pages-1]
     end
     render json: {:events => list_events(@events)}.as_json
   end

@@ -38,7 +38,7 @@ class API::EventsController < API::ApplicationController
       @events = Event.where("school_id" => params[:school_id]).order(event_start: :desc)   
     end
     if params[:page]
-      p = params[:page]
+      p = params[:page].to_i
       @events = @events[p*pages..(p+1)*pages-1]
     else
       @events = @events[0..pages-1]

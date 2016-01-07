@@ -143,7 +143,7 @@ class API::UsersController < API::ApplicationController
     pages = 15
     notifications = current_user.notifications()
     if params[:page]
-      p = params[:page]
+      p = params[:page].to_i
       notifications = notifications[p*pages..(p+1)*pages-1]
     else
       notifications = notifications[0..pages-1]

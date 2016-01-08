@@ -6,7 +6,7 @@ class API::UsersController < API::ApplicationController
   respond_to :json
 
   def index
-    puts params
+    pages = 15
     @search = Sunspot.search(User) do
       fulltext params[:search]
       paginate(page: params[:page])
@@ -19,6 +19,15 @@ class API::UsersController < API::ApplicationController
       @users = User.all.paginate(page: params[:page])
     end
 
+    # Only return one page of users (default=0 page)
+    if params[:page]
+      p = params[:page].to_i
+      @users = @users[p*pages..(p+1)*pages-1]
+    else
+      @users = @users[0..pages-1]
+    end
+
+    # Format the data for Android (Add fields with real names)
     results = Array.new(@users.count) { Hash.new }
     for i in 0..results.count-1
       if @users[i].role == "Teacher" || @users[i].role == "Both"

@@ -43,6 +43,7 @@ class API::EventsController < API::ApplicationController
     else
       @events = @events[0..pages-1]
     end
+
     render json: {:events => list_events(@events)}.as_json
   end
 
@@ -70,11 +71,14 @@ class API::EventsController < API::ApplicationController
   end
 
   def list_events(events)
-    results = Array.new(events.count){Hash.new}
-    for i in 0..events.count-1
-      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
+    if events
+      results = Array.new(events.count){Hash.new}
+      for i in 0..events.count-1
+        results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
+      end
+      events = results
     end
-    return results
+    return events
   end
 
   def filterDate(events)

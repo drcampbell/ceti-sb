@@ -11,7 +11,7 @@ class API::UsersController < API::ApplicationController
       fulltext params[:search]
       paginate(page: params[:page])
     end
-    if params[:search]
+    if params[:search]e
       @users = @search.results
     elsif params[:tag]
       @users = User.tagged_with(params[:tag]).paginate(page: params[:page])
@@ -27,19 +27,20 @@ class API::UsersController < API::ApplicationController
       @users = @users[0..pages-1]
     end
 
-    # Format the data for Android (Add fields with real names)
-    results = Array.new(@users.count) { Hash.new }
-    for i in 0..results.count-1
-      if @users[i].role == "Teacher" || @users[i].role == "Both"
-        association = handle_abbr(School.find(@users[i].school_id).school_name)
-      elsif @users[i].role == "Speaker"
-        association == @users[i].business
+    if @users # Format the data for Android (Add fields with real names)     
+      results = Array.new(@users.count) { Hash.new }
+      for i in 0..results.count-1
+        if @users[i].role == "Teacher" || @users[i].role == "Both"
+          association = handle_abbr(School.find(@users[i].school_id).school_name)
+        elsif @users[i].role == "Speaker"
+          association == @users[i].business
+        end
+        results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
       end
-      results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
+      @users = results
     end
 
-    render json: {:users => results}.as_json
-
+    render json: {:users => @users}.as_json
   end
 
   def show

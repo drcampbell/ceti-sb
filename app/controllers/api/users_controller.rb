@@ -11,7 +11,7 @@ class API::UsersController < API::ApplicationController
       fulltext params[:search]
       paginate(page: params[:page])
     end
-    if params[:search]e
+    if params[:search]
       @users = @search.results
     elsif params[:tag]
       @users = User.tagged_with(params[:tag]).paginate(page: params[:page])

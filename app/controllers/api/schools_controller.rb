@@ -7,7 +7,7 @@ class API::SchoolsController < API::ApplicationController
     pages = 15
     @search = Sunspot.search(School) do
       fulltext params[:search]
-      paginate(page: params[:page])
+      paginate page: params[:page], per_page: 15
     end
     if params[:search]
       @schools = @search.results
@@ -18,12 +18,12 @@ class API::SchoolsController < API::ApplicationController
     end
     
     # Only return one page of schools (default=0 page)
-    if params[:page]
-      p = params[:page].to_i
-      @schools = @schools[p*pages..(p+1)*pages-1]
-    else
-      @schools = @schools[0..pages-1]
-    end
+    # if params[:page]
+    #   p = params[:page].to_i
+    #   @schools = @schools[p*pages..(p+1)*pages-1]
+    # else
+    #   @schools = @schools[0..pages-1]
+    # end
 
     if @schools # Add some information to the schools to return
       results = Array.new(@schools.count) { Hash.new }
@@ -33,7 +33,7 @@ class API::SchoolsController < API::ApplicationController
       end
       @schools = results
     end
-    
+
     respond_to do |format|
         format.json { render json: {"schools"=> @schools}.as_json }
     end

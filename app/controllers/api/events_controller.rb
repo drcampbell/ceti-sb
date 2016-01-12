@@ -51,37 +51,41 @@ class API::EventsController < API::ApplicationController
 
   def pending_claims
     events = current_user.get_pending_claims()
+    list_events(filterDate(events))
     if params[:page]
       events = getPage(events, params[:page])
     end
-    render json: {:events => list_events(filterDate(events))}.as_json
+    render json: {:events => events}.as_json
   end
 
   def pending_events
     events = Event.joins(:claims).where('events.user_id' => current_user.id)
                   .where('events.speaker_id'=> 0).where(active: true)
                   .where('claims.active' => true).where('claims.rejected' => false)
+    list_events(filterDate(events))
     if params[:page]
       events = getPage(events, params[:page])
     end
-    render json: {:events => list_events(filterDate(events))}.as_json
+    render json: {:events => events}.as_json
   end
 
   def my_events
     events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true)#speaker_id: current_user.id)
+    events = list_events(filterDate(events))
     if params[:page]
       events = getPage(events, params[:page])
     end
-    render json: {:events => list_events(filterDate(events))}.as_json
+    render json: {:events => events}.as_json
   end    
 
   def confirmed
     id = current_user.id
     events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0).where(active: true)
+    list_events(filterDate(events))
     if params[:page]
       events = getPage(events, params[:page])
     end
-    render json: {:events => list_events(filterDate(events))}.as_json
+    render json: {:events => events}.as_json
   end
 
   def list_events(events)

@@ -37,18 +37,23 @@ class API::EventsController < API::ApplicationController
     elsif params[:school_id]
       @events = Event.where("school_id" => params[:school_id]).order(event_start: :desc)   
     end
-    if params[:page]
-      p = params[:page].to_i
-      @events = @events[p*pages..(p+1)*pages-1]
-    else
-      @events = @events[0..pages-1]
+    # if params[:page] and not params[:search]
+    #   p = params[:page].to_i
+    #   @events = @events[p*pages..(p+1)*pages-1]
+    # else
+    #   @events = @events[0..pages-1]
+    # end
+    if not params[:search]
+      @events = getPage(pList, params[:page])
     end
-
     render json: {:events => list_events(@events)}.as_json
   end
 
   def pending_claims
     events = current_user.get_pending_claims()
+    if params[:page]
+      events = getPage(events, params[:page])
+    end
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
@@ -56,17 +61,26 @@ class API::EventsController < API::ApplicationController
     events = Event.joins(:claims).where('events.user_id' => current_user.id)
                   .where('events.speaker_id'=> 0).where(active: true)
                   .where('claims.active' => true).where('claims.rejected' => false)
+    if params[:page]
+      events = getPage(events, params[:page])
+    end
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
   def my_events
     events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true)#speaker_id: current_user.id)
+    if params[:page]
+      events = getPage(events, params[:page])
+    end
     render json: {:events => list_events(filterDate(events))}.as_json
   end    
 
   def confirmed
     id = current_user.id
     events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0).where(active: true)
+    if params[:page]
+      events = getPage(events, params[:page])
+    end
     render json: {:events => list_events(filterDate(events))}.as_json
   end
 
@@ -191,6 +205,16 @@ class API::EventsController < API::ApplicationController
         end
       end
       permitted
+    end
+
+    def getPage(pList, page)
+      pages = 15
+      if page and page != ""
+        p = page.to_i
+        return pList[p * pages..(p+1)*pages -1]
+      else
+        return pList[0..pages-1]
+      end
     end
 
   # Confirms the correct user.

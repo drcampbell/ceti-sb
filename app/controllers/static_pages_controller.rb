@@ -19,4 +19,7 @@ class StaticPagesController < ApplicationController
 
   def signin
   end
+
+  def getting_started
+  end
 end

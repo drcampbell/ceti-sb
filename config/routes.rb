@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   get     'about'   => 'static_pages#about'
   get     'contact' => 'static_pages#contact'
   get     'signin'  => 'static_pages#signin'
+  get     'getting_started' => 'static_pages#getting_started'
   delete  'cancel'  => 'events#cancel'
   get     'invalid_event'  => 'static_pages#invalid_event'
   get     'write_message/:id' => 'users#write_message'

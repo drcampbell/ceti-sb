@@ -65,7 +65,7 @@ class Notification < ActiveRecord::Base
 				sns.publish({
 					target_arn: device.endpoint_arn,
 					message_structure: "json",
-					message: {GCM: {data: data, count: count}.to_json}.to_json
+					message: {GCM: {data: data}.to_json}.to_json
 					})
 			# If the AWS endpoint is disabled, then don't send more notications to that device.  
 			rescue Aws::SNS::Errors::EndpointDisabled

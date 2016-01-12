@@ -14,8 +14,8 @@ class API::EventsController < API::ApplicationController
       @search = Sunspot.search(Event) do
           #with(:user_id, params[:user].to_i)
           fulltext(params[:search])
-           with(:event_start).greater_than(1.week.ago)
-           with(:active, true)  
+           #with(:event_start).greater_than(1.week.ago)
+           #with(:active, true)  
          facet(:event_month)
           with(:event_month, params[:month]) if params[:month].present?
           paginate(page: params[:page])

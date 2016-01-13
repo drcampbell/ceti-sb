@@ -18,7 +18,7 @@ class API::EventsController < API::ApplicationController
            #with(:active, true)  
          facet(:event_month)
           with(:event_month, params[:month]) if params[:month].present?
-          paginate(page: params[:page])
+          paginate(page: params[:page].to_i+1, per_page: 15)
       end
 
       if params[:search]# || params[:user]

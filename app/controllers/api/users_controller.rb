@@ -9,7 +9,7 @@ class API::UsersController < API::ApplicationController
     pages = 15
     @search = Sunspot.search(User) do
       fulltext params[:search]
-      paginate(page: params[:page])
+      paginate page: params[:page], per_page: 15
     end
     if params[:search]
       @users = @search.results

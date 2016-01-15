@@ -41,7 +41,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  if ENV['MODE']=='production'
+    config.force_ssl = true
+  else
+    config.force_ssl = false
+  end
 
   # Decrease the log volume.
   config.log_level = :debug

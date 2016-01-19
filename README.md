@@ -61,12 +61,16 @@ To install the necessary gems for the server perform the traditional:
 
 Run the migrations:
 
-`$ rake db:migrate`
+```
+$ rake db:schemas:load
+$ rake db:migrate
+```
 
 At this point you need to make sure that you have a JRE installed.
 Now start Sunspot Solr (The Search Engine)
 
-`$ rake sunspot:solr:start`
+`$ RAILS_ENV=development bundle exec rake sunspot:solr:start`
+
 
 To start the server:
 

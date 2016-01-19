@@ -22,5 +22,3 @@ Select an application to use:
 
 Select the default environment
 1) ceti-test-env
-
-

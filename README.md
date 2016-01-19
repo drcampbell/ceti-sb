@@ -16,11 +16,11 @@ AWS CLI			$ sudo pip install awscli
 EB CLI			$ sudo pip install awsebcli
 
 ### To set up EB CLI ###
-Change your directory to the application directory
+Change your directory to the application directory, and then initialize the Elastic Beanstalk command line in the application directory.  
 
 `$ eb init`
 
-When displayed, choose the following:
+You will now configure EB, choose the following options:
 
 ```
 Select a default region

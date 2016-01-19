@@ -61,3 +61,8 @@ To start the server:
 $ rake sunspot:solr:start # Starts the search engine (Sunspot Solr)
 $ rails s # Starts the web server
 ```
+
+To start the console:
+```
+$ rails c
+```

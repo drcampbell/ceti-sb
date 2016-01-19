@@ -53,7 +53,7 @@ Select the default environment
 ### Setup Rails Environment ###
 To install the necessary gems for the server perform the traditional:
 ```
-$ bundle install
+$ bundle install --without production # We don't want to install PostGres 
 ```
 
 To start the server:

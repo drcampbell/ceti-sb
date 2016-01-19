@@ -17,14 +17,19 @@ EB CLI			$ sudo pip install awsebcli
 
 ### To set up EB CLI ###
 Change your directory to the application directory
+
 `$ eb init`
 
 It will display the following:
+
 `Select a default region
+
 3) us-west-2`
 
 Select an application to use:
+
 1) ceti_sb
 
 Select the default environment
+
 1) ceti-test-env

@@ -59,6 +59,11 @@ Run the migrations:
 
 `$ rake db:migrate`
 
+At this point you need to make sure that you have a JRE installed
+Now start Sunspot Solr (The Search Engine)
+
+`$ rake sunspot:solr:start`
+
 To start the server:
 ```
 $ rake sunspot:solr:start # Starts the search engine (Sunspot Solr)

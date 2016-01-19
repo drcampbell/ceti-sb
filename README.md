@@ -4,7 +4,9 @@ This guide is assuming you are in a linux environment, specifically Ubuntu. This
 ### Dependencies ###
 JRE
 
-Rails
+Ruby 2.2.1p85 This will probably be out of date 
+
+Rails 4.2.1
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
 

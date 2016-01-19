@@ -52,9 +52,12 @@ Select the default environment
 
 ### Setup Rails Environment ###
 To install the necessary gems for the server perform the traditional:
-```
-$ bundle install --without production # We don't want to install PostGres 
-```
+
+`$ bundle install --without production # We don't want to install PostGres`
+
+Run the migrations:
+
+`$ rake db:migrate`
 
 To start the server:
 ```
@@ -63,6 +66,5 @@ $ rails s # Starts the web server
 ```
 
 To start the console:
-```
-$ rails c
-```
+
+`$ rails c`

@@ -78,6 +78,11 @@ To start the console:
 `$ rails c`
 
 ### Upload Builds to AWS ###
+Make sure that you are not pushing to the production server:
+
+`$ eb status`
+
+Verify that the CNAME is not the production server.
 
 ```
 $ git commit -am "Your message"

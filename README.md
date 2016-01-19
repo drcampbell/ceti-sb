@@ -49,3 +49,15 @@ Select an application to use:
 Select the default environment
 1) ceti-test-env
 ```
+
+### Setup Rails Environment ###
+To install the necessary gems for the server perform the traditional:
+```
+$ bundle install
+```
+
+To start the server:
+```
+$ rake sunspot:solr:start # Starts the search engine (Sunspot Solr)
+$ rails s # Starts the web server
+```

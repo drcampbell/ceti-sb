@@ -2,6 +2,8 @@
 This guide is assuming you are in a linux environment, specifically Ubuntu. This should also work in Debian or other flavors, but can easily be translated to Mac OS X.
 
 ### Dependencies ###
+JRE
+
 Rails
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
@@ -52,17 +54,23 @@ Select the default environment
 
 ### Setup Rails Environment ###
 To install the necessary gems for the server perform the traditional:
-```
-$ bundle install --without production # We don't want to install PostGres 
-```
+
+`$ bundle install --without production # We don't want to install PostGres`
+
+Run the migrations:
+
+`$ rake db:migrate`
+
+At this point you need to make sure that you have a JRE installed.
+Now start Sunspot Solr (The Search Engine)
+
+`$ rake sunspot:solr:start`
 
 To start the server:
-```
-$ rake sunspot:solr:start # Starts the search engine (Sunspot Solr)
-$ rails s # Starts the web server
-```
+
+`$ rails s # Starts the web server`
+
 
 To start the console:
-```
-$ rails c
-```
+
+`$ rails c`

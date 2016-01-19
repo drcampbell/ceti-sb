@@ -82,7 +82,7 @@ Make sure that you are not pushing to the production server:
 
 `$ eb status`
 
-Verify that the CNAME is not the production server.
+Verify that the CNAME is not the production server. Then you can commit changes to and deploy to AWS. 
 
 ```
 $ git commit -am "Your message"

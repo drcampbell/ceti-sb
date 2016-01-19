@@ -20,11 +20,11 @@ Change your directory to the application directory
 
 `$ eb init`
 
-It will display the following:
+When displayed, choose the following:
 
-`Select a default region
+```Select a default region
 
-3) us-west-2`
+3) us-west-2
 
 Select an application to use:
 
@@ -32,4 +32,4 @@ Select an application to use:
 
 Select the default environment
 
-1) ceti-test-env
+1) ceti-test-env```

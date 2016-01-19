@@ -24,14 +24,11 @@ When displayed, choose the following:
 
 ```
 Select a default region
-
 3) us-west-2
 
 Select an application to use:
-
 1) ceti_sb
 
 Select the default environment
-
 1) ceti-test-env
 ```

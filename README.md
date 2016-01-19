@@ -1,4 +1,5 @@
 # README for CETI Web #
+This guide is assuming you are in a linux environment, specifically Ubuntu. This should also work in Debian or other flavors, but can easily be translated to Mac OS X.
 
 ### Dependencies ###
 Rails

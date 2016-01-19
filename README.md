@@ -4,7 +4,9 @@ This guide is assuming you are in a linux environment, specifically Ubuntu. This
 ### Dependencies ###
 JRE
 
-Rails
+Ruby 2.2.1p85 This will probably be out of date 
+
+Rails 4.2.1
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
 
@@ -74,3 +76,15 @@ To start the server:
 To start the console:
 
 `$ rails c`
+
+### Upload Builds to AWS ###
+Make sure that you are not pushing to the production server:
+
+`$ eb status`
+
+Verify that the CNAME is not the production server. Then you can commit changes to and deploy to AWS. 
+
+```
+$ git commit -am "Your message"
+$ eb deploy
+```

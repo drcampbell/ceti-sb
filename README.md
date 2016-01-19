@@ -3,7 +3,7 @@
 ### Dependencies ###
 Rails
 
-Git
+[Set up Git](https://help.github.com/articles/set-up-git/)
 
 Python			"As of writing need 2.7 or 3.4 check AWS"
 
@@ -14,6 +14,11 @@ pip				$ sudo apt-get install python-pip
 AWS CLI			$ sudo pip install awscli
 
 EB CLI			$ sudo pip install awsebcli
+
+### Install the app ###
+```
+$ git clone git@bitbucket.org:drcampbell/ceti_sb.git
+```
 
 ### AWS Identity ###
 To configure AWSCLI you will need an identity from IAM.  Have the AWS system admin generate credentials for you.  When you have received your credentials, enter:

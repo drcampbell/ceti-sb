@@ -2,6 +2,8 @@
 This guide is assuming you are in a linux environment, specifically Ubuntu. This should also work in Debian or other flavors, but can easily be translated to Mac OS X.
 
 ### Dependencies ###
+JRE
+
 Rails
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
@@ -59,7 +61,7 @@ Run the migrations:
 
 `$ rake db:migrate`
 
-At this point you need to make sure that you have a JRE installed
+At this point you need to make sure that you have a JRE installed.
 Now start Sunspot Solr (The Search Engine)
 
 `$ rake sunspot:solr:start`

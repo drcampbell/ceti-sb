@@ -76,3 +76,10 @@ To start the server:
 To start the console:
 
 `$ rails c`
+
+### Upload Builds to AWS ###
+
+```
+$ git commit -am "Your message"
+$ eb deploy
+```

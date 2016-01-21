@@ -29,6 +29,7 @@ class Notification < ActiveRecord::Base
 		when "cancel_speaker"
 			content = "#{User.find(act_user_id).name} has to cancel their speaking engagement for event: #{Event.find(event_id).title}"
 		end
+		test = "deletethis"
 		return content
 	end
 

@@ -17,5 +17,5 @@ files:
         . /opt/elasticbeanstalk/support/envvars
         cd $EB_CONFIG_APP_CURRENT
         su -c "RAILS_ENV=production bundle exec rake sunspot:solr:start" $EB_CONFIG_APP_USER
-        su -c "RAILS_ENV=production bundle exec rake db:seed" $EB_CONFIG_APP_USER
-        su -c "RAILS_ENV=production bundle exec rake sunspot:reindex" $EB_CONFIG_APP_USER
+        #su -c "RAILS_ENV=production bundle exec rake db:seed" $EB_CONFIG_APP_USER
+        #su -c "RAILS_ENV=production bundle exec rake sunspot:reindex" $EB_CONFIG_APP_USER

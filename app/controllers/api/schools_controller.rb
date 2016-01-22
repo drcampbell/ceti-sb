@@ -4,15 +4,9 @@ class API::SchoolsController < API::ApplicationController
   # GET /schools
   # GET /schools.json
   def index
-    p = 15 # Number of pages per pagination
-    if params[:search]
-      @schools = School.search_full_text(params[:search]).paginate(page: params[:page], per_page: p)
-    elsif params[:tag]
-      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page], per_page: p)
-    else
-      @schools = School.all.paginate(page: params[:page], per_page: p)
-    end
-
+    params[:per_page] = 15
+    SearchService.new.search(School, params)
+    # TODO Package schools for android in model
     if @schools # Add some information to the schools to return
       results = Array.new(@schools.count) { Hash.new }
       for i in 0..@schools.count-1

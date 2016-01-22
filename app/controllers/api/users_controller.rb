@@ -6,15 +6,9 @@ class API::UsersController < API::ApplicationController
   respond_to :json
 
   def index
-    p = 15 # Number of entries per page for pagination
-    if params[:search]
-      @users = User.search_full_text(params[:search]).paginate(page: params[:page], per_page:15)
-    elsif params[:tag]
-      @users = User.tagged_with(params[:tag]).paginate(page: params[:page], per_page: 15)
-    else
-      @users = User.all.paginate(page: params[:page], per_page: 15)
-    end
-
+    params[:per_page] = 15
+    @users = SearchService.new.search(User, params)
+    # TODO Package users for android in model
     if @users # Format the data for Android (Add fields with real names)     
       results = Array.new(@users.count) { Hash.new }
       for i in 0..results.count-1

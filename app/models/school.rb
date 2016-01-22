@@ -9,10 +9,10 @@ class School < ActiveRecord::Base
   #after_validation :reverse_geocode
 
   pg_search_scope :search_full_text, against: {
-  	:school_name, 
-  	:loc_addr,
-  	:loc_city,
-  	:loc_state,
+    school_name: 'A',
+    loc_addr: 'B',
+    loc_city: 'A',
+    loc_state: 'B',
   }
 
 end

@@ -6,7 +6,7 @@ class API::SchoolsController < API::ApplicationController
   def index
     p = 15 # Number of pages per pagination
     if params[:search]
-      @search = School.search_full_text(params[:search]).paginate(page: params[:page], per_page: p)
+      @schools = School.search_full_text(params[:search]).paginate(page: params[:page], per_page: p)
     elsif params[:tag]
       @schools = School.tagged_with(params[:tag]).paginate(page: params[:page], per_page: p)
     else

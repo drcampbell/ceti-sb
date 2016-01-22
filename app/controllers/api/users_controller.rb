@@ -8,7 +8,7 @@ class API::UsersController < API::ApplicationController
   def index
     p = 15 # Number of entries per page for pagination
     if params[:search]
-      @search = User.search_full_text(params[:search]).paginate(page: params[:page], per_page:15)
+      @users = User.search_full_text(params[:search]).paginate(page: params[:page], per_page:15)
     elsif params[:tag]
       @users = User.tagged_with(params[:tag]).paginate(page: params[:page], per_page: 15)
     else

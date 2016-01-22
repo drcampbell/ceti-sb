@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   def index
     if params[:search]
-      @search = User.search_full_text(params[:search]).paginate(page: params[:page])
+      @users = User.search_full_text(params[:search]).paginate(page: params[:page])
     elsif params[:tag]
       @users = User.tagged_with(params[:tag]).paginate(page: params[:page])
     else

@@ -19,20 +19,6 @@
 
 <% @events = get_events(params) %>
 
-<div id="facets">
-  <ul>
-    <% @search.facet(:event_month).rows.each do |facet| %>
-        <li>
-          <% if params[:month].blank? %>
-              <%= link_to facet.value, :month => facet.value %> (<%= facet.count %>)
-          <% else %>
-              <strong><%= facet.value %></strong> (<%= link_to 'remove', :month => nil %>)
-          <% end %>
-        </li>
-    <% end %>
-  </ul>
-</div>
-
 <%= will_paginate %>
 
 

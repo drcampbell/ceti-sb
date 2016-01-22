@@ -7,9 +7,9 @@ module EventsHelper
 		elsif params.class == ActionController::Parameters
 			@search = Event.search_full_text(params[:search])
 	  elsif params[:tag]
-	      @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
+	      @search = Event.tagged_with(params[:tag])
 		end
-		@events = @events.paginate page: params[:page]
+		@events = @search.paginate page: params[:page]
 		return @events
 	end
 		#		if params.class == School

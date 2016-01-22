@@ -42,8 +42,8 @@ group :development, :test, :production do
   gem 'json'
   gem 'faker'
   gem 'rails_warden'
-  gem 'sunspot_rails'
-  gem 'sunspot_solr'
+#  gem 'sunspot_rails'
+#  gem 'sunspot_solr'
   gem 'simple_calendar', "~> 1.1.0"
   #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'

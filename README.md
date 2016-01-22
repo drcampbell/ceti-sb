@@ -2,7 +2,11 @@
 This guide is assuming you are in a linux environment, specifically Ubuntu. This should also work in Debian or other flavors, but can easily be translated to Mac OS X.
 
 ### Dependencies ###
-Rails
+JRE
+
+Ruby 2.2.1p85 This will probably be out of date 
+
+Rails 4.2.1
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
 
@@ -52,17 +56,39 @@ Select the default environment
 
 ### Setup Rails Environment ###
 To install the necessary gems for the server perform the traditional:
+
+`$ bundle install --without production # We don't want to install PostGres`
+
+Run the migrations:
+
 ```
-$ bundle install --without production # We don't want to install PostGres 
+$ rake db:schemas:load
+$ rake db:migrate
 ```
+
+At this point you need to make sure that you have a JRE installed.
+Now start Sunspot Solr (The Search Engine)
+
+`$ RAILS_ENV=development bundle exec rake sunspot:solr:start`
+
 
 To start the server:
-```
-$ rake sunspot:solr:start # Starts the search engine (Sunspot Solr)
-$ rails s # Starts the web server
-```
+
+`$ rails s # Starts the web server`
+
 
 To start the console:
+
+`$ rails c`
+
+### Upload Builds to AWS ###
+Make sure that you are not pushing to the production server:
+
+`$ eb status`
+
+Verify that the CNAME is not the production server. Then you can commit changes to and deploy to AWS. 
+
 ```
-$ rails c
+$ git commit -am "Your message"
+$ eb deploy
 ```

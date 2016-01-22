@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include PgSearch
   enum role: [:Admin, :Teacher, :Speaker, :Both]
   after_initialize :set_default_role, :if => :new_record?
   after_update :send_password_change_email, if: :needs_password_change_email?
@@ -17,11 +18,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
          :lockable
-
-  searchable do
-    text :name, :boost => 5
-    text :job_title, :business, :school, :biography
-  end
+  multisearchable against: [:name, :job_title, :business, :school, :biography]
+  pg_search_scope :search_full_text, against: {name: 'A', job_title: 'B', business: 'C', biography: 'D'}
 
   def set_default_role
     self.role ||= :Both

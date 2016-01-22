@@ -12,7 +12,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
-  gem 'sqlite3'
+  #gem 'sqlite3'
   gem 'byebug'
   gem 'web-console', '~> 2.0.0'
   gem 'spring'
@@ -56,6 +56,11 @@ group :development, :test, :production do
   gem 'aws-s3'
 end
 
+group :development, :production do
+  gem 'pg'
+  gem 'pg_search'
+end
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]
@@ -86,7 +91,6 @@ group :production do
   gem 'aws-sdk-rails', '~> 1.0'
   gem 'fog-aws'
   gem 'fog'#, '~> 1.3.1'
-  gem 'pg', '~> 0.18.1'
   #gem 'rails_12factor'
   gem 'puma'
 end

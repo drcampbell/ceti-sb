@@ -1,5 +1,6 @@
 class Event < ActiveRecord::Base
   extend SimpleCalendar
+  include PgSearch
   belongs_to :user
   belongs_to :school
   has_calendar({:attribute => :event_start})
@@ -9,17 +10,17 @@ class Event < ActiveRecord::Base
   after_create :init
   validates_presence_of :title, :event_start, :event_end
 
-  searchable do
-    text :title, :boost => 5
-    text :content, :event_month
-    time :event_start
-    string :event_month
-    boolean :active
-    integer :loc_id
-    integer :user_id
-    text :user_name
-    text :loc_name
-  end
+  pg_search_scope :search_full_text, against: {
+    :title, 
+    :content, 
+    :event_start,
+    :event_month,
+    :active,
+    :loc_id,
+    :user_id,
+    :user_name,
+    :loc_name,
+  }
 
   def init
     self.update_attribute(:speaker_id, 0)

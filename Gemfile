@@ -12,7 +12,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
-  gem 'sqlite3'
+  #gem 'sqlite3'
   gem 'byebug'
   gem 'web-console', '~> 2.0.0'
   gem 'spring'
@@ -42,8 +42,8 @@ group :development, :test, :production do
   gem 'json'
   gem 'faker'
   gem 'rails_warden'
-  gem 'sunspot_rails'
-  gem 'sunspot_solr'
+#  gem 'sunspot_rails'
+#  gem 'sunspot_solr'
   gem 'simple_calendar', "~> 1.1.0"
   #gem 'carrierwave',             '0.10.0'
   gem 'mini_magick',             '3.8.0'
@@ -54,6 +54,11 @@ group :development, :test, :production do
   gem 'whenever', :require => false
   gem 'carrierwave'
   gem 'aws-s3'
+end
+
+group :development, :production do
+  gem 'pg'
+  gem 'pg_search'
 end
 
 group :development do
@@ -86,7 +91,6 @@ group :production do
   gem 'aws-sdk-rails', '~> 1.0'
   gem 'fog-aws'
   gem 'fog'#, '~> 1.3.1'
-  gem 'pg', '~> 0.18.1'
   #gem 'rails_12factor'
   gem 'puma'
 end

@@ -72,18 +72,13 @@ module SchoolsHelper
 	end
 
     def get_schools(params)
-        @search = Sunspot.search(School) do
-          fulltext params[:search]
-          #puts params[:page]
-          paginate(page: params[:page])
-        end
-        if params[:search]
-          @schools = @search.results
-        elsif params[:tag]
-          @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
-        else
-          @schools = School.all.paginate(page: params[:page])
-        end
+      if params[:search]
+        @search = School.search_full_text(params[:search]).paginate(page: params[:page])
+      elsif params[:tag]
+        @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
+      else
+        @schools = School.all.paginate(page: params[:page])
+      end
     end
 
 	def handle_abbr(value)

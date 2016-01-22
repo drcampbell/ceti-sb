@@ -1,37 +1,51 @@
 module EventsHelper
 
 	def get_events(params)
+
 		if params.class == School
-			@search = Sunspot.search(Event) do
-				with :loc_id, params.id
-			end
-			@events = @search.results
+			@search = Event.where(loc_id: params.id)
 		elsif params.class == ActionController::Parameters
-    	@search = Sunspot.search(Event) do
-	      fulltext params[:search]
-	       with(:event_start).greater_than(Time.now)
-	       with(:active, true)
-	     facet(:event_month)
-	      with(:event_month, params[:month]) if params[:month].present?
-	      paginate(page: params[:page])
-	    end
-	    if params[:search]
-	      @events = @search.results
-	    elsif params[:tag]
-	      @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-	    else
-	      @events = @search.results
-	    end
-    end
-    return @events
-    #return filterDate(events.where(active: true))
+			@search = Event.search_full_text(params[:search])
+	  elsif params[:tag]
+	      @search = Event.tagged_with(params[:tag])
+		end
+		@events = @search.paginate page: params[:page]
+		return @events
 	end
+# Old function for get_events...saving because i bastardized it
+	#	def get_events(params)
+#		if params.class == School
+#			@search = Sunspot.search(Event) do
+#				with :loc_id, params.id
+#			end
+#			@events = @search.results
+#		elsif params.class == ActionController::Parameters
+#    	@search = Sunspot.search(Event) do
+#	      fulltext params[:search]
+#	       with(:event_start).greater_than(Time.now)
+#	       with(:active, true)
+#	     facet(:event_month)
+#	      with(:event_month, params[:month]) if params[:month].present?
+#	      paginate(page: params[:page])
+#	    end
+#	    if params[:search]
+#	      @events = @search.results
+#	    elsif params[:tag]
+#	      @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
+#	    else
+#	      @events = @search.results
+#	    end
+#    end
+#    return @events
+#    #return filterDate(events.where(active: true))
+#	end
 
 	def get_events2(school)
-		@search = Sunspot.search(Event) do
-			with :loc_id, school.id
-		end
-		@events = filterDate(@search.results.where(active: true))
+		raise Exception.new("Old Method!")
+		#@search = Sunspot.search(Event) do
+#			with :loc_id, school.id
+#		end
+#		@events = filterDate(@search.results.where(active: true))
 	end
 
 	def valid_event(event)

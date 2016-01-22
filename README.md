@@ -20,6 +20,18 @@ AWS CLI			$ sudo pip install awscli
 
 EB CLI			$ sudo pip install awsebcli
 
+You'll need an instance of [PostGreSQL](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-ubuntu-14-04)
+running on your local machine to run a development server on your machine. Follow the 
+link to view instructions on how to set this up.  
+
+Note that for this Rails is expecting:
+
+Username: `pguser`
+
+Password: `password`
+
+Once you have installed PostGreSQL, you need to generate a database.  
+
 ### Install the app ###
 ```
 $ git clone git@bitbucket.org:drcampbell/ceti_sb.git
@@ -59,11 +71,11 @@ To install the necessary gems for the server perform the traditional:
 
 `$ bundle install --without production # We don't want to install PostGres`
 
-Run the migrations:
+Create a PostGreSQL database and then run the migrations:
 
 ```
-$ rake db:schemas:load
-$ rake db:migrate
+$ rake db:create		# Create the development database
+$ rake db:schemas:load	# Load the Schemas defined by the migrations
 ```
 
 At this point you need to make sure that you have a JRE installed.

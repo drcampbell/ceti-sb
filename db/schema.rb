@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203185536) do
+ActiveRecord::Schema.define(version: 20160122002533) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "badges", force: :cascade do |t|
     t.string   "file"
@@ -35,8 +38,8 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.boolean  "cancelled",            default: false
   end
 
-  add_index "claims", ["event_id"], name: "index_claims_on_event_id"
-  add_index "claims", ["user_id"], name: "index_claims_on_user_id"
+  add_index "claims", ["event_id"], name: "index_claims_on_event_id", using: :btree
+  add_index "claims", ["user_id"], name: "index_claims_on_user_id", using: :btree
 
   create_table "devices", force: :cascade do |t|
     t.integer "user_id"
@@ -70,8 +73,8 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.boolean  "complete"
   end
 
-  add_index "events", ["loc_id"], name: "index_events_on_loc_id"
-  add_index "events", ["user_id"], name: "index_events_on_user_id"
+  add_index "events", ["loc_id"], name: "index_events_on_loc_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "address"
@@ -94,7 +97,17 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.boolean "read"
   end
 
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id"
+  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
+
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text     "content"
+    t.integer  "searchable_id"
+    t.string   "searchable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "pg_search_documents", ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id", using: :btree
 
   create_table "schools", force: :cascade do |t|
     t.integer  "badge_id"
@@ -135,7 +148,7 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.text     "address"
   end
 
-  add_index "schools", ["badge_id"], name: "index_schools_on_badge_id"
+  add_index "schools", ["badge_id"], name: "index_schools_on_badge_id", using: :btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
@@ -147,15 +160,15 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "user_badges", force: :cascade do |t|
     t.integer "user_id"
@@ -190,9 +203,9 @@ ActiveRecord::Schema.define(version: 20151203185536) do
     t.boolean  "set_claims"
   end
 
-  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  add_index "users", ["school_id"], name: "index_users_on_school_id"
+  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
 
 end

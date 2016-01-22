@@ -6,25 +6,13 @@ class API::UsersController < API::ApplicationController
   respond_to :json
 
   def index
-    pages = 15
-    @search = Sunspot.search(User) do
-      fulltext params[:search]
-      paginate page: params[:page], per_page: 15
-    end
+    p = 15 # Number of entries per page for pagination
     if params[:search]
-      @users = @search.results
+      @users = User.search_full_text(params[:search]).paginate(page: params[:page], per_page:15)
     elsif params[:tag]
-      @users = User.tagged_with(params[:tag]).paginate(page: params[:page])
+      @users = User.tagged_with(params[:tag]).paginate(page: params[:page], per_page: 15)
     else
-      @users = User.all.paginate(page: params[:page])
-    end
-
-    # Only return one page of users (default=0 page)
-    if params[:page]
-      p = params[:page].to_i
-      @users = @users[p*pages..(p+1)*pages-1]
-    else
-      @users = @users[0..pages-1]
+      @users = User.all.paginate(page: params[:page], per_page: 15)
     end
 
     if @users # Format the data for Android (Add fields with real names)     

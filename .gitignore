@@ -23,8 +23,6 @@ db/*.sqlite3
 
 # sensitive data
 sc13prelim.txt
-school_data.txt
-school_data.txt~
 
 # Ignore Development ENV variables for emailer
 /config/initializers/app_env_vars.rb

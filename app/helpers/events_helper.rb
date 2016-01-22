@@ -12,7 +12,9 @@ module EventsHelper
 		@events = @search.paginate page: params[:page]
 		return @events
 	end
-		#		if params.class == School
+# Old function for get_events...saving because i bastardized it
+	#	def get_events(params)
+#		if params.class == School
 #			@search = Sunspot.search(Event) do
 #				with :loc_id, params.id
 #			end

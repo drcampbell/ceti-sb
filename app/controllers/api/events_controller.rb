@@ -11,23 +11,24 @@ class API::EventsController < API::ApplicationController
   def index
     pages = 15
     if params[:search]
-      @search = Sunspot.search(Event) do
-          #with(:user_id, params[:user].to_i)
-          fulltext(params[:search])
-           #with(:event_start).greater_than(1.week.ago)
-           #with(:active, true)  
-         facet(:event_month)
-          with(:event_month, params[:month]) if params[:month].present?
-          paginate page: params[:page].to_i+1, per_page: 15
-      end
+      @search = Event.search_full_text(params[:search])
+#      @search = Sunspot.search(Event) do
+#          #with(:user_id, params[:user].to_i)
+#          fulltext(params[:search])
+#           #with(:event_start).greater_than(1.week.ago)
+#           #with(:active, true)  
+#         facet(:event_month)
+#          with(:event_month, params[:month]) if params[:month].present?
+#          paginate page: params[:page].to_i+1, per_page: 15
+#      end
 
-      if params[:search]# || params[:user]
-        @events = @search.results
+#      if params[:search]# || params[:user]
+#        @events = @search.results
       elsif params[:tag]
         @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-      else
-        @events = @search.results
-      end
+#      else
+#        @events = @search.results
+#      end
     elsif params[:loc_id]
       @events = Event.where("loc_id" => params[:loc_id])
     # Handle user specific parameters  
@@ -37,15 +38,10 @@ class API::EventsController < API::ApplicationController
     elsif params[:school_id]
       @events = Event.where("school_id" => params[:school_id]).order(event_start: :desc)   
     end
-    # if params[:page] and not params[:search]
-    #   p = params[:page].to_i
-    #   @events = @events[p*pages..(p+1)*pages-1]
-    # else
-    #   @events = @events[0..pages-1]
-    # end
-    if not params[:search]
-      @events = getPage(pList, params[:page])
-    end
+    @events = @events.paginate page: params[:page].to_i+1, per_page: 15
+#    if not params[:search]
+#      @events = getPage(pList, params[:page])
+#    end
     render json: {:events => list_events(@events)}.as_json
   end
 

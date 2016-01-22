@@ -14,7 +14,7 @@ class Event < ActiveRecord::Base
     title: 'A',
     content: 'B',
     event_start: 'B',
-    event_month: 'C',
+    #event_month: 'C',
     active: 'D',
     loc_id: 'D',
     user_id: 'D',

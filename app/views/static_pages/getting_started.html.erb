@@ -1,0 +1,13 @@
+<% provide(:title, 'Getting Started') %>
+<% build = "school2biz-0.6.1-release.apk" %>
+<h1>Getting Started</h1>
+<p>
+Currently our application is in beta. To try it out, using your Android Mobile device, you can <a href="https://s3-us-west-1.amazonaws.com/ceti-sb/builds/"+build>download the Android APK</a> onto your Android Mobile device.  
+<%= button_to "Download", "https://s3-us-west-1.amazonaws.com/ceti-sb/builds/"+build, method: "get", remote: true %> 
+</p>
+<h2>Installation Procedure</h2>
+<p>Before you can install the School2Biz application, you will need to modify your devices security settings.  By default, Android OS only allows apps from the Google Play Store to be installed on your device.  We are getting ready to submit our app to the Google Play Store, but in the meantime you can take the following steps to install the app.</p>
+<p>1. Download the app, <%= build %>, onto your Android Mobile Device</p>
+<p>2. On your device, go to Menu > Settings > Security and then under the sub-menu Device Administration check "Unknown Sources - Allow installation of apps from sources other than the Play Store"</p>
+<p>3. Open the downloaded file <%= build %> on your device to install</p>
+<p>4. Congratulations, you now have the app! We recommend unchecking "Unknown Sources" in Security at this time so that no apps can be installed without your permission.</p>

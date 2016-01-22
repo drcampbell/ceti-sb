@@ -5,13 +5,8 @@ class UsersController < ApplicationController
   #before_action :admin_user,     only: :destroy
 
   def index
-    @search = User.search_full_text(params[:search]).paginate(page: params[:page])
-#    @search = Sunspot.search(User) do
-#      fulltext params[:search]
-#      paginate(page: params[:page])
-#    end
     if params[:search]
-      @users = @search
+      @search = User.search_full_text(params[:search]).paginate(page: params[:page])
     elsif params[:tag]
       @users = User.tagged_with(params[:tag]).paginate(page: params[:page])
     else

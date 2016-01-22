@@ -4,13 +4,13 @@ class API::SchoolsController < API::ApplicationController
   # GET /schools
   # GET /schools.json
   def index
-    pages = 15
+    p = 15 # Number of pages per pagination
     if params[:search]
-      @search = School.search_full_text(params[:search]).paginate(page: params[:page])
+      @search = School.search_full_text(params[:search]).paginate(page: params[:page], per_page: p)
     elsif params[:tag]
-      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
+      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page], per_page: p)
     else
-      @schools = School.all.paginate(page: params[:page])
+      @schools = School.all.paginate(page: params[:page], per_page: p)
     end
 
     if @schools # Add some information to the schools to return

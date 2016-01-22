@@ -11,15 +11,15 @@ class Event < ActiveRecord::Base
   validates_presence_of :title, :event_start, :event_end
 
   pg_search_scope :search_full_text, against: {
-    :title, 
-    :content, 
-    :event_start,
-    :event_month,
-    :active,
-    :loc_id,
-    :user_id,
-    :user_name,
-    :loc_name,
+    title: 'A',
+    content: 'B',
+    event_start: 'B',
+    event_month: 'C',
+    active: 'D',
+    loc_id: 'D',
+    user_id: 'D',
+    user_name: 'A',
+    loc_name: 'A',
   }
 
   def init

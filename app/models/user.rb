@@ -19,7 +19,12 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
          :lockable
   multisearchable against: [:name, :job_title, :business, :school, :biography]
-  pg_search_scope :search_full_text, against: {name: 'A', job_title: 'B', business: 'C', biography: 'D'}
+  pg_search_scope :search_full_text, against: {
+    name: 'A',
+    job_title: 'B',
+    business: 'C',
+    biography: 'D'
+  }
 
   def set_default_role
     self.role ||= :Both

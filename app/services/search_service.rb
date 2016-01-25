@@ -10,7 +10,11 @@ class SearchService
       @search = model.where("loc_id" => params[:loc_id])
     # Search model by user id
     elsif model == Event and params[:user_id]
-      @search = model.where("user_id" => params[:user_id]).order(event_start: :desc)
+      if params[:all]
+        @search = model.where("user_id = ? or speaker_id = ?", params["user_id"], params["user_id"]).order(event_start: :desc)
+      else
+        @search = model.where("user_id" => params[:user_id]).order(event_start: :desc)
+      end
     # Search model by school id
     elsif model == Event and params[:school_id]
       @search = model.where("school_id" => params[:school_id]).order(event_start: :desc)

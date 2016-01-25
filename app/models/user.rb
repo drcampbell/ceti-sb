@@ -73,18 +73,7 @@ class User < ActiveRecord::Base
   end
 
   def notifications()
-    notifications = Notification.where(user_id: self.id)
-    results = []
-    notifications.each do |x|
-      r = x.attributes
-      r[:user_name] = User.find(x.user_id).name
-      r[:act_user_name] = User.find(x.act_user_id).name
-      if x.event_id != 0
-        r[:event_title] = Event.find(x.event).title
-      end
-      results.append(r)
-    end
-    return results.reverse
+    Notification.where(user_id: self.id).order(id: :desc)
   end
 
   def unread_notifications()

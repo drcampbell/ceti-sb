@@ -11,18 +11,13 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
 
   def show
     @user = User.find(params[:id])
-    # TODO Use Search Service to perform this action
-    events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
-    # TODO Use a model to perform this 
-    badges = @user.user_badges
-    badges_array = Array.new(badges.count){Hash.new}
-    for i in 0..badges.count-1
-      event = Event.find(badges[i].event_id)
-      badges_array[i] = {"event_title" => event.title, 
-                    "badge_id"=> badges[i].id, 
-                    "badge_url" => Badge.find(badges[i].badge_id).file_name}
-    end
-    render json: { user: @user.json_format, events: list_events(events).as_json, badges: badges_array}
+    # Get the users events TODO pass in all = true for Android 
+    events = SearchService.new.search(Event, {user_id: @user.id, all: true})
+    # Get the users badges and convert them to an appropriate format 
+    badges = @user.user_badges.map{ |badge| badge.json_list_format }
+    render json: { user: @user.json_format, 
+                   events: events.map{|event| event.json_list_format}.as_json,
+                   badges: badges}
 
   end
 
@@ -65,43 +60,20 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
   end
 
   def show_badges
-    user = User.find(:user_id)
-    badges = User.user_badges
-    results = Array.new(badges.count){Hash.new}
-    for i in 0..badges.count-1
-      event = Event.find(badges[i].event_id)
-      results[i] = {"event_title" => event.title, 
-                    "badge_id"=> badges[i].badge_id, 
-                    "badge_url" => badges[i].file_name}
-    end
-    return results
-
+    @user = User.find(:user_id)
+    return @user.user_badges.map{|badge| badge.json_list_format}
   end
 
   def get_badge
     badge = UserBadge.find(params[:user_badge_id])
-    event = Event.find(badge.event_id)
-    render json: {
-      user_id: params[:user_id],
-      user_name: User.find(params[:user_id]).name,
-      event_owner: User.find(event.user_id).name,
-      event_owner_id: event.user_id,
-      event_name: event.title,
-      badge_url: Badge.find(badge.badge_id).file_name,
-      school_name: event.loc_name,
-      badge_id: badge.id}
+    render json: badge.json_format
   end
 
   def notifications
     pages = 15
-    notifications = current_user.notifications()
-    if params[:page]
-      p = params[:page].to_i
-      notifications = notifications[p*pages..(p+1)*pages-1]
-    else
-      notifications = notifications[0..pages-1]
-    end
-    render json: {notifications: notifications, count: current_user.unread_notifications()}
+    notifications = current_user.notifications().paginate(page: params[:page], per_page: pages)
+    render json: {notifications: notifications.map{|n| n.json_format}, 
+                  count: current_user.unread_notifications()}
   end
 
   def read_notification()
@@ -141,14 +113,6 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     render json: {state: 0}
   end
   
-  def list_events(events)
-    results = Array.new(events.count){Hash.new}
-    for i in 0..events.count-1
-      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
-    end
-    return results
-  end
-
   private
 
   # Confirms an admin user.

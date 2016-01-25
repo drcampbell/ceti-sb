@@ -98,19 +98,15 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     if device != nil
       device.update(token: params[:token])
     else
-      device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
-      device = Device.create(device)
+      device = Device.create({user_id: current_user.id, 
+                              device_name: params[:device_name], 
+                              token: params[:token] })
     end
-    begin
-      sns = Aws::SNS::Client.new(region: 'us-west-2')
-      endpoint = sns.create_platform_endpoint(
-        platform_application_arn: ENV["SNS_APP_ARN"],
-        token: device.token)
-      device.update(endpoint_arn: endpoint[:endpoint_arn])
-    rescue
-      puts json: {state: 1}
+    if device.register_endpoint
+      render json: {state: 0}
+    else
+      render json: {state: 1}
     end
-    render json: {state: 0}
   end
   
   private

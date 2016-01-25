@@ -11,8 +11,8 @@ class School < ActiveRecord::Base
   pg_search_scope :search_full_text, against: {
     school_name: 'A',
     loc_addr: 'B',
-    loc_city: 'A',
-    loc_state: 'B',
+    loc_city: 'C',
+    loc_state: 'D',
   }
 
   def json_list_format

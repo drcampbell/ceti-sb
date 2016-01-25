@@ -1,7 +1,7 @@
 class SearchService
   def search(model, params)
     if params[:search]
-      @search = model.search_full_text(params[:search])
+      @search = model.search_full_text(params[:search]).limit(100)
     # Search model records tagged with a tag
     elsif params[:tag]
       @search = model.tagged_with(params[:tag])

@@ -7,7 +7,8 @@ class API::SchoolsController < API::ApplicationController
     params[:per_page] = 15
     @schools = SearchService.new.search(School, params)
     @schools = @schools.map{|school| school.json_list_format}
-    render json: {"schools"=> @schools}.as_json
+    puts @schools
+    render json: {:schools => @schools}.as_json
   end
   
   # def near_me

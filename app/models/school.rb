@@ -15,4 +15,22 @@ class School < ActiveRecord::Base
     loc_state: 'B',
   }
 
+  def handle_abbr
+    value = self.school_name
+    if value == nil
+      return nil
+    end
+    value = value.titlecase
+    abbr = {"Sch" => " School ", "Ln" => "Lane", "Elem" => "Elementary"}
+    values = value.split(" ")
+    newvalues =[]
+    values.each do |v|
+      if abbr[v] != nil
+	newvalues += [abbr[v]]
+      else
+	newvalues += [v]
+      end
+    end
+    newvalues.join(" ")
+  end
 end

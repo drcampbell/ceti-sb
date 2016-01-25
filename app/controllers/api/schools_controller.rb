@@ -5,7 +5,7 @@ class API::SchoolsController < API::ApplicationController
   # GET /schools.json
   def index
     params[:per_page] = 15
-    SearchService.new.search(School, params)
+    @schools = SearchService.new.search(School, params)
     # TODO Package schools for android in model
     if @schools # Add some information to the schools to return
       results = Array.new(@schools.count) { Hash.new }

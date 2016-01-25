@@ -1,27 +1,12 @@
-class API::UsersController < API::ApplicationController
-
-  #before_filter :authenticate_user!
-  #before_action :correct_user,   only: [:update, :destroy]
-  #before_action :admin_user,     only: :destroy
-  respond_to :json
+class API::UsersController < API::ApplicationController #before_filter :authenticate_user!  #before_action :correct_user,   only: [:update, :destroy] #before_action :admin_user,     only: :destroy respond_to :json
 
   def index
     params[:per_page] = 15
     @users = SearchService.new.search(User, params)
     # TODO Package users for android in model
     if @users # Format the data for Android (Add fields with real names)     
-      results = Array.new(@users.count) { Hash.new }
-      for i in 0..results.count-1
-        if @users[i].role == "Teacher" || @users[i].role == "Both"
-          association = handle_abbr(School.find(@users[i].school_id).school_name)
-        elsif @users[i].role == "Speaker"
-          association == @users[i].business
-        end
-        results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
-      end
-      @users = results
+      @users = @users.map{ |user| user.json_list_format }
     end
-
     render json: {:users => @users}.as_json
   end
 
@@ -48,23 +33,10 @@ class API::UsersController < API::ApplicationController
                     "badge_id"=> badges[i].id, 
                     "badge_url" => Badge.find(badges[i].badge_id).file_name}
     end
-    render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges_array}
+    render json: { user: @user.json_format, events: list_events(events).as_json, badges: badges_array}
 
   end
 
-  def format_user(user)
-    if user.school_id && user.school_id != ""
-      school_name =School.find(user.school_id).school_name
-    else
-      school_name = nil
-    end
-    user_message = {id: user.id, name:user.name, role:user.role, 
-                    grades:user.grades, job_title:user.job_title,
-                    business:user.business, biography:user.biography,
-                    category:user.speaking_category, school_id:user.school_id,
-                    school_name:school_name}
-    return user_message
-  end
 
   def edit
     @user = current_user
@@ -73,7 +45,7 @@ class API::UsersController < API::ApplicationController
   def update
     @user = User.find(current_user.id)
     if @user.update_attributes(secure_params)
-      render json: {state:0, user:format_user(@user)}
+      render json: {state:0, user:@user.json_format}
     else
       render json: {state:1}
     end

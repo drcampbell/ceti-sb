@@ -117,6 +117,29 @@ class User < ActiveRecord::Base
                 .where(active: true)
   end
 
+  def json_format
+    if self.school_id && self.school_id != ""
+      school_name =School.find(self.school_id).school_name
+    else
+      school_name = nil
+    end
+    user_message = {id: self.id, name:self.name, role:self.role, 
+                    grades:self.grades, job_title:self.job_title,
+                    business:self.business, biography:self.biography,
+                    category:self.speaking_category, school_id:self.school_id,
+                    school_name:school_name}
+    return user_message
+  end
+
+  def json_list_format
+    if self.role == "Teacher" || self.role == "Both"
+      association = School.find(self.school_id).handle_abbr
+    elsif self.role == "Speaker"
+      association == self.business
+    end
+    {"id" => self.id, "name" => self.name, "association" => association}
+  end
+ 
   private
   
     def needs_password_change_email?

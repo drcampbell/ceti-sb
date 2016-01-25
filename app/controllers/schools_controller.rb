@@ -14,7 +14,6 @@ class SchoolsController < ApplicationController
   #   @schools = School.near('Columbus, OH', 20)
   #   #@search = Sunspot.search(School) do
   #   #@schools = @search.results
-
   # end
 
   # GET /schools/1

@@ -4,14 +4,6 @@ class SchoolsController < ApplicationController
   # GET /schools
   # GET /schools.json
   def index
-    # @schools = Sunspot.search(School) do
-    #   fulltext params[:search]
-    #   #paginate(:page, params[:page])
-    #   paginate :page =>2, :per_page =>15
-    # end
-    # @schools = School.paginate(:page => 1, :per_page => 2)
-
-    #@schools = School.first
     respond_to do |format|
         format.html {  }
         format.json { render json: @schools.as_json }
@@ -48,7 +40,6 @@ class SchoolsController < ApplicationController
   end
 
   def claim_school
-    #@school = School.find(params[:school_id])
     @user = User.find(params[:user_id])
     @user.school_id = params[:school_id]
     @user.save

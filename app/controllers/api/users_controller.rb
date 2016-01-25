@@ -3,7 +3,6 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
   def index
     params[:per_page] = 15
     @users = SearchService.new.search(User, params)
-    # TODO Package users for android in model
     if @users # Format the data for Android (Add fields with real names)     
       @users = @users.map{ |user| user.json_list_format }
     end
@@ -12,19 +11,9 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
 
   def show
     @user = User.find(params[:id])
-
-    # if @user.school_id && @user.school_id != ""
-    #   school_name =School.find(@user.school_id).school_name
-    # else
-    #   school_name = nil
-    # end
-
-    # user_message = {id: @user.id, name:@user.name, role:@user.role, 
-    #                 grades:@user.grades, job_title:@user.job_title,
-    #                 business:@user.business, biography:@user.biography,
-    #                 category:@user.speaking_category, school_id:@user.school_id,
-    #                 school_name:school_name}
+    # TODO Use Search Service to perform this action
     events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
+    # TODO Use a model to perform this 
     badges = @user.user_badges
     badges_array = Array.new(badges.count){Hash.new}
     for i in 0..badges.count-1

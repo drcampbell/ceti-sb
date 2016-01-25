@@ -1,10 +1,10 @@
 class SearchService
   def search(model, params)
     if params[:search]
-      @search = model.search_full_text(params[:search]).paginate(page: params[:page])
+      @search = model.search_full_text(params[:search])
     # Search model records tagged with a tag
     elsif params[:tag]
-      @search = model.tagged_with(params[:tag]).paginate(page: params[:page], per_page: params[:per_page])
+      @search = model.tagged_with(params[:tag])
     # Search model by location id
     elsif model == Event and params[:loc_id]
       @search = model.where("loc_id" => params[:loc_id])
@@ -16,7 +16,8 @@ class SearchService
       @search = model.where("school_id" => params[:school_id]).order(event_start: :desc)
     # If nothing else matches just return all of them!
     else
-      @search = model.all.paginate(page: params[:page], per_page: params[:per_page])
+      @search = model.all
     end
+    @search.paginate(page: params[:page], per_page: params[:per_page])
   end
 end

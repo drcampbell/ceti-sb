@@ -34,10 +34,12 @@ User.create!(name:                  'Kevin',
              job_title:             'Bossman',
              business:              'School Business',
              role:                  :Admin)
+
 if Rails.env.development?
   b = Badge.create({})
   File.open("app/assets/images/def_school_badge_small.jpg") do |f|
     b.file = f
+  b.file_name = "def_school_badge_small.jpg"
   end
   b.save
 elsif Rails.env.production?
@@ -142,16 +144,16 @@ users = User.where('role = ? OR role = ?', 1, 3)
                         title:    Faker::Lorem.sentence(rand(1..5)),
                         event_start:    Time.zone.now,
                         event_end:      Time.zone.now,
-                        school_id: user.school_id)
+                        loc_id: user.school_id)
   end
 end
 
 # CLAIMS
 
-events = Event.order(:created_at).take(20)
-events.each do |event|
-  event.claims.create!(user_id: rand(4..11), )
-end
+#events = Event.order(:created_at).take(20)
+#events.each do |event|
+#  event.claims.create!(user_id: rand(4..11), )
+#end
 
 # SPEAKER, ADMIN LOCATIONS
 

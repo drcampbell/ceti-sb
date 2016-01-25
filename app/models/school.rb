@@ -15,6 +15,13 @@ class School < ActiveRecord::Base
     loc_state: 'B',
   }
 
+  def json_list_format
+    city_state = self.loc_city+", "+self.loc_state
+    return {"id" => self.id, 
+	    "school_name" => self.school_name,
+	    "city_state" => city_state}
+  end
+
   def handle_abbr
     value = self.school_name
     if value == nil

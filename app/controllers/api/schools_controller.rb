@@ -6,19 +6,8 @@ class API::SchoolsController < API::ApplicationController
   def index
     params[:per_page] = 15
     @schools = SearchService.new.search(School, params)
-    # TODO Package schools for android in model
-    if @schools # Add some information to the schools to return
-      results = Array.new(@schools.count) { Hash.new }
-      for i in 0..@schools.count-1
-        city_state = @schools[i].loc_city+", "+@schools[i].loc_state
-        results[i] = {"id" => @schools[i].id, "school_name" => @schools[i].school_name, "city_state" => city_state}
-      end
-      @schools = results
-    end
-
-    respond_to do |format|
-        format.json { render json: {"schools"=> @schools}.as_json }
-    end
+    @schools = @schools.map{|school| school.json_list_format}
+    render json: {"schools"=> @schools}
   end
   
   # def near_me

@@ -12,7 +12,7 @@ Rails 4.2.1
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
 
-#### AWS Dependencies ####
+##### AWS Dependencies #####
 Python			
 
 "As of writing need 2.7 or 3.4 check AWS"

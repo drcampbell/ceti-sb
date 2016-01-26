@@ -11,7 +11,7 @@ class SearchService
     # Search model by user id
     elsif model == Event and params[:user_id]
       if params[:all]
-        @search = model.where("user_id = ? or speaker_id = ?", params["user_id"], params["user_id"]).order(event_start: :desc)
+        @search = model.where("user_id = ? or speaker_id = ?", params[:user_id], params[:user_id]).order(event_start: :desc)
       else
         @search = model.where("user_id" => params[:user_id]).order(event_start: :desc)
       end

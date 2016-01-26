@@ -4,6 +4,8 @@ This guide is assuming you are in a linux environment, specifically Ubuntu. This
 ### Dependencies ###
 JRE
 
+RVM
+
 Ruby 2.2.1p85 This will probably be out of date 
 
 Rails 4.2.1

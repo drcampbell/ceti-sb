@@ -33,6 +33,7 @@ EB CLI
 
 `$ sudo pip install awsebcli`
 
+##### PostGreSQL Dependency #####
 You'll need an instance of [PostGreSQL](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-ubuntu-14-04)
 running on your local machine to run a development server on your machine. Follow the 
 link to view instructions on how to set this up.  

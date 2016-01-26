@@ -85,7 +85,7 @@
     <% elsif current_user.id == claim.user_id %>
       <% cancellation = 'Cancel Claim' %>
     <% end %>
-    <% if current_user.id == claim.user_id && event_start < Time.now %>
+    <% if current_user.id == claim.user_id && event.event_start < Time.now %>
       <p> 
         <%= button_to cancellation, 
               {action: "cancel", controller: "claims", id: claim.id}, 

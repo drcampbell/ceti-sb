@@ -12,15 +12,25 @@ Rails 4.2.1
 
 [Set up Git](https://help.github.com/articles/set-up-git/)
 
-Python			"As of writing need 2.7 or 3.4 check AWS"
+Python			
 
-python-dev		`$ sudo apt-get install python-dev`
+"As of writing need 2.7 or 3.4 check AWS"
 
-pip				`$ sudo apt-get install python-pip`
+python-dev		
 
-AWS CLI			`$ sudo pip install awscli`
+`$ sudo apt-get install python-dev`
 
-EB CLI			`$ sudo pip install awsebcli`
+pip				
+
+`$ sudo apt-get install python-pip`
+
+AWS CLI			
+
+`$ sudo pip install awscli`
+
+EB CLI			
+
+`$ sudo pip install awsebcli`
 
 You'll need an instance of [PostGreSQL](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-ruby-on-rails-application-on-ubuntu-14-04)
 running on your local machine to run a development server on your machine. Follow the 

@@ -21,7 +21,7 @@ class Searchvectorforreal < ActiveRecord::Migration
       tsvector_update_trigger(search_vector, 'pg_catalog.english', school_name, loc_addr, loc_city, loc_state);
     SQL
 
-    School.find_each {|s| s.touch}
+    #School.find_each {|s| s.touch}
   end
   
   def down

@@ -10,6 +10,8 @@ gem 'jquery-rails' #, '~> 4.0.0'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+#gem 'libv8', '~> 4.5', '>= 4.5.95.5'
+gem 'node'
 
 group :development, :test do
   #gem 'sqlite3'
@@ -26,7 +28,7 @@ group :development, :test, :production do
   gem 'sendgrid'
   gem 'simple_form'
   gem 'mail_form'
-  gem 'therubyracer'
+  #gem 'therubyracer'
   #gem 'unicorn'
   #gem 'unicorn-rails'
   gem 'upmin-admin'

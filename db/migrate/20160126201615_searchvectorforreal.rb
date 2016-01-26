@@ -18,7 +18,7 @@ class Searchvectorforreal < ActiveRecord::Migration
       BEFORE INSERT OR UPDATE
       ON schools
       FOR EACH ROW EXECUTE PROCEDURE
-      tsvector_update_trigger (search_vector, 'pg_catalog.english', school_name, loc_addr, loc_city, loc_state);
+      tsvector_update_trigger(search_vector, 'pg_catalog.english', school_name, loc_addr, loc_city, loc_state);
     SQL
 
     School.find_each {|s| s.touch}

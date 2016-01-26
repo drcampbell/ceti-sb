@@ -89,7 +89,7 @@ Create a PostGreSQL database and then run the migrations:
 
 ```
 $ rake db:create		# Create the development database
-$ rake db:schemas:load	# Load the Schemas defined by the migrations
+$ rake db:schema:load	# Load the Schemas defined by the migrations
 ```
 
 At this point you need to make sure that you have a JRE installed.

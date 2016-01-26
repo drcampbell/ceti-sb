@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125224559) do
+ActiveRecord::Schema.define(version: 20160126201615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20160125224559) do
     t.string   "grade_hi"
     t.boolean  "charter"
     t.text     "address"
+    t.tsvector "search_vector"
   end
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id", using: :btree
@@ -153,6 +154,7 @@ ActiveRecord::Schema.define(version: 20160125224559) do
   add_index "schools", ["loc_city"], name: "index_schools_on_loc_city", using: :btree
   add_index "schools", ["loc_state"], name: "index_schools_on_loc_state", using: :btree
   add_index "schools", ["school_name"], name: "index_schools_on_school_name", using: :btree
+  add_index "schools", ["search_vector"], name: "schools_search_idx", using: :gin
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

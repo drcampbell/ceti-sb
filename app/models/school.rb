@@ -8,12 +8,20 @@ class School < ActiveRecord::Base
   #reverse_geocoded_by :latitude, :longitude, :address => :address
   #after_validation :reverse_geocode
 
-  pg_search_scope :search_full_text, against: {
-    school_name: 'A',
-    loc_addr: 'B',
-    loc_city: 'C',
-    loc_state: 'D',
-  }
+  pg_search_scope :search_full_text, 
+    against: {
+      school_name: 'A',
+      loc_addr: 'B',
+      loc_city: 'C',
+      loc_state: 'D',
+    },
+    using: { 
+      tsearch: {
+	dictionary: "english",
+	tsvector_column: "search_vector",
+	prefix: true
+      }
+    }
 
   def json_list_format
     city_state = self.loc_city+", "+self.loc_state

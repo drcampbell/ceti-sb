@@ -4,27 +4,11 @@ class API::SchoolsController < API::ApplicationController
   # GET /schools
   # GET /schools.json
   def index
-    p = 15 # Number of pages per pagination
-    if params[:search]
-      @schools = School.search_full_text(params[:search]).paginate(page: params[:page], per_page: p)
-    elsif params[:tag]
-      @schools = School.tagged_with(params[:tag]).paginate(page: params[:page], per_page: p)
-    else
-      @schools = School.all.paginate(page: params[:page], per_page: p)
-    end
-
-    if @schools # Add some information to the schools to return
-      results = Array.new(@schools.count) { Hash.new }
-      for i in 0..@schools.count-1
-        city_state = @schools[i].loc_city+", "+@schools[i].loc_state
-        results[i] = {"id" => @schools[i].id, "school_name" => @schools[i].school_name, "city_state" => city_state}
-      end
-      @schools = results
-    end
-
-    respond_to do |format|
-        format.json { render json: {"schools"=> @schools}.as_json }
-    end
+    params[:per_page] = 15
+    @schools = SearchService.new.search(School, params)
+    @schools = @schools.map{|school| school.json_list_format}
+    puts @schools
+    render json: {:schools => @schools}.as_json
   end
   
   # def near_me

@@ -5,13 +5,8 @@ class UsersController < ApplicationController
   #before_action :admin_user,     only: :destroy
 
   def index
-    if params[:search]
-      @users = User.search_full_text(params[:search]).paginate(page: params[:page])
-    elsif params[:tag]
-      @users = User.tagged_with(params[:tag]).paginate(page: params[:page])
-    else
-      @users = User.all.paginate(page: params[:page])
-    end
+    params[:per_page] = 15
+    @users = SearchService.new.search(User, params)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @users.as_json }

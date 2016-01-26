@@ -73,18 +73,7 @@ class User < ActiveRecord::Base
   end
 
   def notifications()
-    notifications = Notification.where(user_id: self.id)
-    results = []
-    notifications.each do |x|
-      r = x.attributes
-      r[:user_name] = User.find(x.user_id).name
-      r[:act_user_name] = User.find(x.act_user_id).name
-      if x.event_id != 0
-        r[:event_title] = Event.find(x.event).title
-      end
-      results.append(r)
-    end
-    return results.reverse
+    Notification.where(user_id: self.id).order(id: :desc)
   end
 
   def unread_notifications()
@@ -117,6 +106,29 @@ class User < ActiveRecord::Base
                 .where(active: true)
   end
 
+  def json_format
+    if self.school_id && self.school_id != ""
+      school_name =School.find(self.school_id).school_name
+    else
+      school_name = nil
+    end
+    user_message = {id: self.id, name:self.name, role:self.role, 
+                    grades:self.grades, job_title:self.job_title,
+                    business:self.business, biography:self.biography,
+                    category:self.speaking_category, school_id:self.school_id,
+                    school_name:school_name}
+    return user_message
+  end
+
+  def json_list_format
+    if self.role == "Teacher" || self.role == "Both"
+      association = School.find(self.school_id).handle_abbr
+    elsif self.role == "Speaker"
+      association == self.business
+    end
+    {"id" => self.id, "name" => self.name, "association" => association}
+  end
+ 
   private
   
     def needs_password_change_email?

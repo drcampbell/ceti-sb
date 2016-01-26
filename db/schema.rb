@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160122002533) do
+ActiveRecord::Schema.define(version: 20160125224559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,6 +149,10 @@ ActiveRecord::Schema.define(version: 20160122002533) do
   end
 
   add_index "schools", ["badge_id"], name: "index_schools_on_badge_id", using: :btree
+  add_index "schools", ["loc_addr"], name: "index_schools_on_loc_addr", using: :btree
+  add_index "schools", ["loc_city"], name: "index_schools_on_loc_city", using: :btree
+  add_index "schools", ["loc_state"], name: "index_schools_on_loc_state", using: :btree
+  add_index "schools", ["school_name"], name: "index_schools_on_school_name", using: :btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

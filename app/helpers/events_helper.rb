@@ -1,16 +1,8 @@
 module EventsHelper
 
 	def get_events(params)
-
-		if params.class == School
-			@search = Event.where(loc_id: params.id)
-		elsif params.class == ActionController::Parameters
-			@search = Event.search_full_text(params[:search])
-	  elsif params[:tag]
-	      @search = Event.tagged_with(params[:tag])
-		end
-		@events = @search.paginate page: params[:page]
-		return @events
+		params[:per_page] = 30
+		@events = SearchService.new.search(Event, params)
 	end
 # Old function for get_events...saving because i bastardized it
 	#	def get_events(params)

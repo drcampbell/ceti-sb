@@ -1,76 +1,26 @@
-class API::UsersController < API::ApplicationController
-
-  #before_filter :authenticate_user!
-  #before_action :correct_user,   only: [:update, :destroy]
-  #before_action :admin_user,     only: :destroy
-  respond_to :json
+class API::UsersController < API::ApplicationController #before_filter :authenticate_user!  #before_action :correct_user,   only: [:update, :destroy] #before_action :admin_user,     only: :destroy respond_to :json
 
   def index
-    p = 15 # Number of entries per page for pagination
-    if params[:search]
-      @users = User.search_full_text(params[:search]).paginate(page: params[:page], per_page:15)
-    elsif params[:tag]
-      @users = User.tagged_with(params[:tag]).paginate(page: params[:page], per_page: 15)
-    else
-      @users = User.all.paginate(page: params[:page], per_page: 15)
-    end
-
+    params[:per_page] = 15
+    @users = SearchService.new.search(User, params)
     if @users # Format the data for Android (Add fields with real names)     
-      results = Array.new(@users.count) { Hash.new }
-      for i in 0..results.count-1
-        if @users[i].role == "Teacher" || @users[i].role == "Both"
-          association = handle_abbr(School.find(@users[i].school_id).school_name)
-        elsif @users[i].role == "Speaker"
-          association == @users[i].business
-        end
-        results[i] = {"id" => @users[i].id, "name" => @users[i].name, "association" => association}
-      end
-      @users = results
+      @users = @users.map{ |user| user.json_list_format }
     end
-
     render json: {:users => @users}.as_json
   end
 
   def show
     @user = User.find(params[:id])
-
-    # if @user.school_id && @user.school_id != ""
-    #   school_name =School.find(@user.school_id).school_name
-    # else
-    #   school_name = nil
-    # end
-
-    # user_message = {id: @user.id, name:@user.name, role:@user.role, 
-    #                 grades:@user.grades, job_title:@user.job_title,
-    #                 business:@user.business, biography:@user.biography,
-    #                 category:@user.speaking_category, school_id:@user.school_id,
-    #                 school_name:school_name}
-    events = Event.where("user_id = ? or speaker_id = ?", @user.id, @user.id).order(event_start: :desc).take(20)
-    badges = @user.user_badges
-    badges_array = Array.new(badges.count){Hash.new}
-    for i in 0..badges.count-1
-      event = Event.find(badges[i].event_id)
-      badges_array[i] = {"event_title" => event.title, 
-                    "badge_id"=> badges[i].id, 
-                    "badge_url" => Badge.find(badges[i].badge_id).file_name}
-    end
-    render json: { user: format_user(@user), events: list_events(events).as_json, badges: badges_array}
+    # Get the users events TODO pass in all = true for Android 
+    events = SearchService.new.search(Event, {user_id: @user.id, all: true})
+    # Get the users badges and convert them to an appropriate format 
+    badges = @user.user_badges.map{ |badge| badge.json_list_format }
+    render json: { user: @user.json_format, 
+                   events: events.map{|event| event.json_list_format}.as_json,
+                   badges: badges}
 
   end
 
-  def format_user(user)
-    if user.school_id && user.school_id != ""
-      school_name =School.find(user.school_id).school_name
-    else
-      school_name = nil
-    end
-    user_message = {id: user.id, name:user.name, role:user.role, 
-                    grades:user.grades, job_title:user.job_title,
-                    business:user.business, biography:user.biography,
-                    category:user.speaking_category, school_id:user.school_id,
-                    school_name:school_name}
-    return user_message
-  end
 
   def edit
     @user = current_user
@@ -79,7 +29,7 @@ class API::UsersController < API::ApplicationController
   def update
     @user = User.find(current_user.id)
     if @user.update_attributes(secure_params)
-      render json: {state:0, user:format_user(@user)}
+      render json: {state:0, user:@user.json_format}
     else
       render json: {state:1}
     end
@@ -110,43 +60,20 @@ class API::UsersController < API::ApplicationController
   end
 
   def show_badges
-    user = User.find(:user_id)
-    badges = User.user_badges
-    results = Array.new(badges.count){Hash.new}
-    for i in 0..badges.count-1
-      event = Event.find(badges[i].event_id)
-      results[i] = {"event_title" => event.title, 
-                    "badge_id"=> badges[i].badge_id, 
-                    "badge_url" => badges[i].file_name}
-    end
-    return results
-
+    @user = User.find(:user_id)
+    return @user.user_badges.map{|badge| badge.json_list_format}
   end
 
   def get_badge
     badge = UserBadge.find(params[:user_badge_id])
-    event = Event.find(badge.event_id)
-    render json: {
-      user_id: params[:user_id],
-      user_name: User.find(params[:user_id]).name,
-      event_owner: User.find(event.user_id).name,
-      event_owner_id: event.user_id,
-      event_name: event.title,
-      badge_url: Badge.find(badge.badge_id).file_name,
-      school_name: event.loc_name,
-      badge_id: badge.id}
+    render json: badge.json_format
   end
 
   def notifications
     pages = 15
-    notifications = current_user.notifications()
-    if params[:page]
-      p = params[:page].to_i
-      notifications = notifications[p*pages..(p+1)*pages-1]
-    else
-      notifications = notifications[0..pages-1]
-    end
-    render json: {notifications: notifications, count: current_user.unread_notifications()}
+    notifications = current_user.notifications().paginate(page: params[:page], per_page: pages)
+    render json: {notifications: notifications.map{|n| n.json_format}, 
+                  count: current_user.unread_notifications()}
   end
 
   def read_notification()
@@ -171,29 +98,17 @@ class API::UsersController < API::ApplicationController
     if device != nil
       device.update(token: params[:token])
     else
-      device = {user_id: current_user.id, device_name: params[:device_name], token: params[:token] }
-      device = Device.create(device)
+      device = Device.create({user_id: current_user.id, 
+                              device_name: params[:device_name], 
+                              token: params[:token] })
     end
-    begin
-      sns = Aws::SNS::Client.new(region: 'us-west-2')
-      endpoint = sns.create_platform_endpoint(
-        platform_application_arn: ENV["SNS_APP_ARN"],
-        token: device.token)
-      device.update(endpoint_arn: endpoint[:endpoint_arn])
-    rescue
-      puts json: {state: 1}
+    if device.register_endpoint
+      render json: {state: 0}
+    else
+      render json: {state: 1}
     end
-    render json: {state: 0}
   end
   
-  def list_events(events)
-    results = Array.new(events.count){Hash.new}
-    for i in 0..events.count-1
-      results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
-    end
-    return results
-  end
-
   private
 
   # Confirms an admin user.

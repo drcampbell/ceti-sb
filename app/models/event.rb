@@ -141,6 +141,14 @@ class Event < ActiveRecord::Base
     return result
   end
 
+  def json_list_format
+    {
+      id: self.id,
+      event_title: self.title,
+      event_start: self.start()
+    }
+  end
+
   def pending_claims()
     claims = Claim.where(event_id: self.id).where(active: true)
     results = Array.new(claims.count)

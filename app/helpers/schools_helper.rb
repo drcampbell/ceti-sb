@@ -72,13 +72,7 @@ module SchoolsHelper
 	end
 
     def get_schools(params)
-      if params[:search]
-        @search = School.search_full_text(params[:search]).paginate(page: params[:page])
-      elsif params[:tag]
-        @schools = School.tagged_with(params[:tag]).paginate(page: params[:page])
-      else
-        @schools = School.all.paginate(page: params[:page])
-      end
+      SearchService.new.search(School, params)
     end
 
 	def handle_abbr(value)

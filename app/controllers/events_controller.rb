@@ -44,32 +44,6 @@ class EventsController < ApplicationController
     end
   end
 
-#   def index
-#     #fulltext params[:search]
-#     #paginate(page: params[:page])
-#     render text: params[:search]
-#     #@search = Event.findby(params[:search])
-#     #@search = Event.find(params[:search])
-#     #@search = Sunspot.search(Event) do
-# #      fulltext params[:search]
-#       # with(:start).less_than(Time.zone.now)
-# #      facet(:event_month)
-# #      with(:event_month, params[:month]) if params[:month].present?
-# #      paginate(page: params[:page])
-#  #   end
-#     if params[:search]
-#  #     @events = @search.results
-#     elsif params[:tag]
-#       #@events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-#     else
-#  #     @events = @search.results
-#     end
-#     respond_to do |format|
-#       format.html # index.html.erb
-#       format.json { render json: @events.as_json }
-#     end
-#   end
-
   def show
     if user_signed_in?
       respond_to do |format|

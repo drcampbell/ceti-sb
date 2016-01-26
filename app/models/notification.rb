@@ -77,6 +77,15 @@ class Notification < ActiveRecord::Base
 
 	#Notification.create(user_id: 63,act_user_id: 34,event_id: 411,n_type: :event_update,read: false)
 
+	def json_format
+		result = self.attributes
+    result[:user_name] = User.find(self.user_id).name
+    result[:act_user_name] = User.find(self.act_user_id).name
+    if self.event_id != 0
+      result[:event_title] = Event.find(self.event).title
+    end
+		return result
+	end
 
 	def link
 		link = ""

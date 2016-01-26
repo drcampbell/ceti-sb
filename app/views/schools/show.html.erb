@@ -35,8 +35,7 @@
 
  </aside>
   <div class="col-md-8">
-  	<% puts @school.class %>
-  	<% @events = get_events(@school) %>
+	<% @events = get_events({loc_id: @school.id}) %>
   	<% puts @events %>
     <% if @events.any? %>
         <h3>Events (<%= @events.count %>)</h3>

@@ -9,24 +9,8 @@ class API::EventsController < API::ApplicationController
   #@@PAGE = 15
 
   def index
-    pages = 15
-    if params[:search]
-      @events = Event.search_full_text(params[:search])
-    elsif params[:tag]
-      @events = Event.tagged_with(params[:tag])
-    elsif params[:loc_id]
-      @events = Event.where("loc_id" => params[:loc_id])
-    # Handle user specific parameters  
-    elsif params[:user_id]
-      @events = Event.where("user_id" => params[:user_id]).order(event_start: :desc)
-    # Handle school specific parameters
-    elsif params[:school_id]
-      @events = Event.where("school_id" => params[:school_id]).order(event_start: :desc)
-    end
-    @events = @events.paginate page: params[:page].to_i+1, per_page: 15
-#    if not params[:search]
-#      @events = getPage(pList, params[:page])
-#    end
+    params[:per_page] = 15
+    @events = SearchService.new.search(Event, params)
     render json: {:events => list_events(@events)}.as_json
   end
 

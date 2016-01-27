@@ -149,20 +149,9 @@ class Event < ActiveRecord::Base
     }
   end
 
-  def pending_claims()
-    claims = Claim.where(event_id: self.id).where(active: true)
-    results = Array.new(claims.count)
-    for i in 0..claims.count-1
-      user = User.find(claims[i].user_id)
-      results[i] =  {"user_id" => user.id, 
-                      "event_id"=> self.id,
-                     "user_name" => user.name,
-                     "business" => user.business, 
-                     "job_title" => user.job_title, 
-                     "school_id"  =>  user.school_id, 
-                     "claim_id"=> claims[i].id}
-     end
-     return results
+  def pending_claims(params)
+    claims = Claim.where(event_id: self.id).where(active: true).paginate(params[:page])
+    return claims.map{|c| c.json_list_format}
   end
 
   def present_time()

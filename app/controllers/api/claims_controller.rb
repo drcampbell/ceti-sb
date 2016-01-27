@@ -23,7 +23,7 @@ class API::ClaimsController < API::ApplicationController
     else
       #render_401 
     end
-    claims = event.pending_claims()
+    claims = event.pending_claims(params)
     # claims = Claim.where(event_id: event_id)
     # results = Array.new(claims.count){Hash.new}
     # for i in 0..claims.count-1

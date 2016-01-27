@@ -69,6 +69,19 @@ class Claim < ActiveRecord::Base
     end
   end
 
+  def json_list_format
+      user = User.find(self.user_id)
+      {
+        "user_id" => user.id, 
+        "event_id"=> self.id,
+        "user_name" => user.name,
+        "business" => user.business, 
+        "job_title" => user.job_title, 
+        "school_id"  =>  user.school_id, 
+        "claim_id"=> self.id
+      }
+  end
+
   def teacher_confirm(event)
   	if self.update_attribute(:confirmed_by_teacher, true)
 	  	event.update(speaker_id: self.user_id)

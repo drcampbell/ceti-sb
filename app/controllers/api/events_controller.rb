@@ -54,14 +54,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def list_events(events)
-    if events
-      results = Array.new(events.count){Hash.new}
-      for i in 0..events.count-1
-        results[i] = {"id" => events[i].id, "event_title" => events[i].title, "event_start"=> events[i].start()}
-      end
-      events = results
-    end
-    return events
+    return events.map{|e| e.json_list_format}
   end
 
   def filterDate(events)

@@ -150,7 +150,7 @@ class Event < ActiveRecord::Base
   end
 
   def pending_claims(params)
-    claims = Claim.where(event_id: self.id).where(active: true).paginate(params[:page])
+    claims = Claim.where(event_id: self.id).where(active: true).paginate(page: params[:page])
     return claims.map{|c| c.json_list_format}
   end
 

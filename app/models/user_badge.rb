@@ -19,8 +19,8 @@ class UserBadge < ActiveRecord::Base
   def json_format
     event = Event.find(self.event_id)
     {
-      user_id: self.id,
-      user_name: User.find(self.id).name,
+      user_id: self.user_id,
+      user_name: User.find(self.user_id).name,
       event_owner: User.find(event.user_id).name,
       event_owner_id: event.user_id,
       event_name: event.title,

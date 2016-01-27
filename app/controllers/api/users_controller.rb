@@ -89,8 +89,10 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     notifications.each do |x|
       x.update(read: true)
     end
-    render json: {notifications: current_user.notifications(), 
-                    count: current_user.unread_notifications()}
+    render json: {
+      notifications: current_user.notifications().paginate(page: 1).map{|n| n.json_format}, 
+      count: current_user.unread_notifications()
+    }
   end
 
   def register_device

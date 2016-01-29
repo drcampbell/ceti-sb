@@ -3,7 +3,7 @@ class SearchService
     if params[:search]
       @search = model.search_full_text(params[:search])
       if model == Event
-        @search = @search.order(event_start: :desc)
+        @search = @search.reorder(event_start: :desc)
       end
     # Search model records tagged with a tag
     elsif params[:tag]
@@ -14,13 +14,13 @@ class SearchService
     # Search model by user id
     elsif model == Event and params[:user_id]
       if params[:all]
-        @search = model.where("user_id = ? or speaker_id = ?", params[:user_id], params[:user_id]).order(event_start: :desc)
+        @search = model.where("user_id = ? or speaker_id = ?", params[:user_id], params[:user_id]).reorder(event_start: :desc)
       else
-        @search = model.where("user_id" => params[:user_id]).order(event_start: :desc)
+        @search = model.where("user_id" => params[:user_id]).reorder(event_start: :desc)
       end
     # Search model by school id
     elsif model == Event and params[:school_id]
-      @search = model.where("school_id" => params[:school_id]).order(event_start: :desc)
+      @search = model.where("school_id" => params[:school_id]).reorder(event_start: :desc)
     # If nothing else matches just return all of them!
     else
       @search = model.all

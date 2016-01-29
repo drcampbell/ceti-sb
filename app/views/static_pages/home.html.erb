@@ -29,13 +29,14 @@
     <div class="center jumbotron">
       <h1>Welcome to the School Business App</h1>
 
-      <h2>
+      <h2><p>
         Developed by 
     <a href="http://http://www.ceti.cse.ohio-state.edu/">CETI</a> 
     at the <a href="http://www.osu.edu/">Ohio State University</a>
     in partnership with 
     <a href="http://www.delphoscityschools.org/">Delphos City Schools</a>, and is funded by the 
-    <a href="http://education.ohio.gov/Topics/Straight-A-Fund/">Straight A Grant</a>.
+    <a href="http://education.ohio.gov/Topics/Straight-A-Fund/">Straight A Grant</a>. </p><p>We are currently in beta, and if you'd like to try the Android version of the application, find out how to 
+    <%= link_to "get started!", getting_started_path  %></p>
       </h2>
 
       <%= link_to 'Sign up now!', new_user_registration_path, class: 'btn btn-lg btn-primary' %>

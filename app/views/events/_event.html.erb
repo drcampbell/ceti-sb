@@ -49,7 +49,7 @@
   </div> <!-- column -->
 
   <p>
-  <% if (event.start() > Time.now) &&
+  <% if (not event.is_canceled) && (event.start() > Time.now) &&
         (event.claims.where('confirmed_by_teacher = ?', true).count < 1) &&
         (event.claims.where('user_id = ?', current_user.id).count < 1) &&
         (event.user != current_user) %>
@@ -60,49 +60,52 @@
     <% end %>
   </p>
 
+  <!-- Section: This is where actions that may be taken by the user are located -->
   <p>
-  <% event.claims.each do |claim| %>
-    <!-- CONFIRM claim? -->    
-    <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
-        <%= button_to "Confirm #{claim.user.name} as speaker", 
-              teacher_confirm_claim_path(claim, :event_id => event.id), 
-              data: { confirm: 'Are you sure?' }, 
-              class: 'btn btn-primary btn-xs' %> 
-    <% end %>
-    <!-- REJECT claim? -->
-    <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
-      <p> 
-        <%= button_to "Reject #{claim.user.name} as speaker", 
-              {action: "reject", controller: "claims", id: claim.id}, 
-              data: { confirm: 'Are you sure?' }, 
-              method: :delete,
-              class: 'btn btn-primary btn-xs' %> 
-      </p>
-    <% end %>
-
-    <% if (event.start() > Time.now) %> 
-      <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
-      <% if current_user.id == event.speaker_id %>
-       <% cancellation = 'Cancel Speaking Engagement' %>
-      <% elsif current_user.id == claim.user_id %>
-        <% cancellation = 'Cancel Claim' %>
+  <% if (not event.is_canceled) %>
+    <% event.claims.each do |claim| %>
+      <!-- CONFIRM claim? -->    
+      <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
+          <%= button_to "Confirm #{claim.user.name} as speaker", 
+                teacher_confirm_claim_path(claim, :event_id => event.id), 
+                data: { confirm: 'Are you sure?' }, 
+                class: 'btn btn-primary btn-xs' %> 
       <% end %>
-      <% if current_user.id == claim.user_id && event.event_start < Time.now %>
+      
+      <!-- REJECT claim? -->
+      <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
         <p> 
-         <%= button_to cancellation, 
-              {action: "cancel", controller: "claims", id: claim.id}, 
-              method: :delete, 
-              data: { confirm: 'Are you sure?' }, 
-              class: 'btn btn-primary' %> 
+          <%= button_to "Reject #{claim.user.name} as speaker", 
+                {action: "reject", controller: "claims", id: claim.id}, 
+                data: { confirm: 'Are you sure?' }, 
+                method: :delete,
+                class: 'btn btn-primary btn-xs' %> 
         </p>
       <% end %>
-    <% end %>
-  <% end %>
+
+      <!-- Provide cancellation button to claimer/speaker -->
+      <% if current_user.id == claim.user_id and event.start() > Time.now %> 
+        <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
+        <% if current_user.id == event.speaker_id %>
+         <% cancellation = 'Cancel Speaking Engagement' %>
+        <% elsif current_user.id == claim.user_id %>
+          <% cancellation = 'Cancel Claim' %>
+        <% end %>
+        <p> 
+        <%= button_to cancellation, 
+                {action: "cancel", controller: "claims", id: claim.id}, 
+                method: :delete, 
+                data: { confirm: 'Are you sure?' }, 
+                class: 'btn btn-primary' %> 
+        </p>
+      <% end %><!-- End cancellation -->
+    <% end %><!-- End loop -->
+  <% end %><!-- End if for event cancellation -->
   </p>
 
   <!-- If you are the owner of the event -->
   <a>
-  <% if current_user == event.user %>
+  <% if current_user == event.user and (not event.is_canceled) %>
     <% if event.event_end < Time.now and event.speaker_id > 0 and not event.complete %>
       <% speaker = User.find(event.speaker_id) %>
       <%= button_to "Award Badge to #{speaker.name}", 
@@ -122,7 +125,7 @@
             method: :delete, 
             class: 'btn btn-primary btn-xs' %>
     <% end %>
-  <% else %>
+  <% elsif current_user != event.user %>
     <%= button_to 'Message The Organizer', 
           {action: "write_message", controller: "users", id: event.user_id}, 
           method: :get, 

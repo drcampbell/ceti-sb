@@ -53,6 +53,10 @@ class Event < ActiveRecord::Base
     filterDate(Event.where("user_id = ? OR speaker_id = ?",  user_id, user_id).where(active: true))#speaker_id: current_user.id)
   end    
 
+  def is_canceled
+    not self.active and not self.complete
+  end
+
   def get_confirmed(user_id)
     filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where.not(speaker_id: 0).where(active: true))
   end

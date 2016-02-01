@@ -24,46 +24,8 @@
 
 <div id="events">
   <% @events.each do |event| %>
-      <h2><%= link_to event.title, event %></h2>
-
-      <p> <strong>Location: </strong> 
-        <%= link_to handle_abbr(School.find(event.user.school_id).school_name.titlecase), 
-            School.find(event.user.school_id) %> 
-      </p>
-      <p> <strong>Organizer: </strong> 
-        <%= link_to event.user.name, event.user %> 
-      </p>
-
-      <p>
-        <% unless event.claims.each.nil? %>
-                <strong>Speaker: </strong>
-                <%= raw event.claims.each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
-        <% end %>
-      </p>
-
-      <p><strong>Tags: </strong><%= raw event.tag_list.map { |t| link_to t, tag_path(t) }.join(', ') %></p>
-      <p><strong>Time: </strong><%= present_time(event.event_start, event.event_end) %></p>
-      <p>
-        <% if event.claims.where('confirmed_by_teacher = ?', true).count < 1 &&
-                event.claims.where('user_id = ?', current_user.id).count < 1 &&
-                event.user != current_user%>
-            <%= button_to 'claim this event', claim_event_path(:event_id => event.id, :user_id => current_user.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %>
-        <% end %>
-      </p>
-
-      <p>
-        <% event.claims.each do |claim| %>
-
-            <% if current_user == event.user && !claim.confirmed_by_teacher %>
-              <p> <%= button_to "Confirm #{claim.user.name} as speaker", teacher_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
-          <% end %>
-
-          <% if current_user.id == claim.user_id && claim.confirmed_by_teacher && !claim.confirmed_by_speaker %>
-              <p> <%= button_to 'Confirm this speaking event', speaker_confirm_claim_path(claim, :event_id => event.id), data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-xs' %> </p>
-          <% end %>
-
-        <% end %>
-    <% end %>
+    <%= render partial: "event_list", locals: {event: event} %>
+  <% end %>
 </div>
 
 <%= will_paginate %>

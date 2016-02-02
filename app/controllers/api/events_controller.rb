@@ -97,21 +97,27 @@ class API::EventsController < API::ApplicationController
     @event = Event.find(params[:id])
   end
 
+  def verifyChange(event, jsonEvent, key)
+    case key
+    when "event_start"
+      return String(event.start()) != jsonEvent[key]  
+    when "event_end"
+      return String(event.end()) != jsonEvent[key]  
+    else
+      return String(event[key]) != jsonEvent[key]  
+  end
+
   def update
     @event = Event.find(params[:id])
-    eParams = params[:event]
-    puts params
-    puts eParams
+    params = event_params
     diff = false
-    eParams.keys.each do |x|
-      if @event[x] != eParams[x]
-        diff = true
-        break
-      end
+    params.keys.each do |key|
+      diff = verifyChange(@event, params, key)
+      if diff then break end
     end
 
     if diff
-      success = @event.update(eParams)
+      success = @event.update(params)
       if @event && success
         @event.handle_update()
         render :json => {:state => 0, :event => @event.jsonEvent(current_user.id) }

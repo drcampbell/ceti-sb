@@ -110,8 +110,8 @@ class API::EventsController < API::ApplicationController
 
   def update
     @event = Event.find(params[:id])
-    params = params[:event]
     puts params
+    puts event_params
     diff = false
     params.keys.each do |key|
       diff = verifyChange(@event, params, key)

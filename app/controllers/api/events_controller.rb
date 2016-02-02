@@ -105,6 +105,7 @@ class API::EventsController < API::ApplicationController
       return String(event.end()) != jsonEvent[key]  
     else
       return String(event[key]) != jsonEvent[key]  
+    end
   end
 
   def update

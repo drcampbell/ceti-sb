@@ -89,6 +89,7 @@ class Event < ActiveRecord::Base
       return String(self.end()) != value
     else
       return String(self[key]) != value
+    end
   end
 
   def is_different(params)

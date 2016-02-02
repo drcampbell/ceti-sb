@@ -123,19 +123,11 @@ class EventsController < ApplicationController
       @event.attributes = params
       adjust_time(@event)
       validate_event(@event)
-      if !@event.is_different(params)
-        redirect_to @event
-      end
-      success = @event.save
-      if success and Rails.env.production?
-        @event.handle_update()
-        # Claim.where(event_id: @event.id).each do |x|
-        #   Notification.create(user_id: x.user_id,
-        #                     act_user_id: @event.user_id,
-        #                     event_id: @event.id,
-        #                     n_type: :event_update,
-        #                     read: false)
-        # end
+      if @event.is_different(params)
+        success = @event.save
+        if success and Rails.env.production?
+          @event.handle_update()
+        end
       end
     rescue InvalidTime
       flash['danger'] = "You must enter a start time that preceeds the end time."

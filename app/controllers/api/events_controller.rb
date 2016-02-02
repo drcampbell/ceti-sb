@@ -100,6 +100,8 @@ class API::EventsController < API::ApplicationController
   def update
     @event = Event.find(params[:id])
     eParams = params[:event]
+    puts params
+    puts eParams
     diff = false
     eParams.keys.each do |x|
       if @event[x] != eParams[x]

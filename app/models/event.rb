@@ -81,6 +81,25 @@ class Event < ActiveRecord::Base
     CompleteEventJob.set(queue: :default).perform_later()
   end
 
+  def verify(key, value)
+    case key
+    when "event_start"
+      return String(self.start()) != value
+    when "event_end"
+      return String(self.end()) != value
+    else
+      return String(self[key]) != value
+  end
+
+  def is_different(params)
+    diff = false
+    params.symbolize_keys.keys.each do |key|
+      diff = self.verify(key, params[key])
+      if diff then break end
+    end
+    return diff
+  end
+
   def handle_update()
     Claim.where(event_id: self.id).each do |x|
       Notification.create(user_id: x.user_id,

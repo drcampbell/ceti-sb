@@ -123,14 +123,7 @@ class EventsController < ApplicationController
       @event.attributes = params
       adjust_time(@event)
       validate_event(@event)
-      diff = false
-      params.keys.each do |x|
-        if @event[x] != params[x]
-          diff = true
-          break
-        end
-      end
-      if not diff
+      if !@event.is_different(params)
         redirect_to @event
       end
       success = @event.save

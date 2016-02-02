@@ -112,12 +112,7 @@ class API::EventsController < API::ApplicationController
     @event = Event.find(params[:id])
     params = event_params
     puts params
-    diff = false
-    params.keys.each do |key|
-      diff = verifyChange(@event, params, key)
-      if diff then break end
-    end
-
+    diff = @event.is_different(params)
     if diff
       success = @event.update(params)
       if @event && success

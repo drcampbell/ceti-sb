@@ -99,18 +99,17 @@ class API::EventsController < API::ApplicationController
 
   def update
     @event = Event.find(params[:id])
-    params = event_params
+    eParams = params[:event]
     diff = false
-    params.keys.each do |x|
-      if @event[x] != params[x]
+    eParams.keys.each do |x|
+      if @event[x] != eParams[x]
         diff = true
         break
       end
     end
+
     if diff
-
-      success = @event.update(params)
-
+      success = @event.update(eParams)
       if @event && success
         @event.handle_update()
         render :json => {:state => 0, :event => @event.jsonEvent(current_user.id) }

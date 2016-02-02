@@ -83,9 +83,9 @@ class Event < ActiveRecord::Base
 
   def verify(key, value)
     case key
-    when "event_start"
+    when :event_start
       return String(self.start()) != value
-    when "event_end"
+    when :event_end
       return String(self.end()) != value
     else
       return String(self[key]) != value

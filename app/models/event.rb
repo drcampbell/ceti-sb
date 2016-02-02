@@ -94,7 +94,8 @@ class Event < ActiveRecord::Base
 
   def is_different(params)
     diff = false
-    params.symbolize_keys.keys.each do |key|
+    params = params.symbolize_keys
+    params.keys.each do |key|
       diff = self.verify(key, params[key])
       if diff then break end
     end

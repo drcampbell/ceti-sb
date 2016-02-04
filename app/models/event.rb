@@ -92,16 +92,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def is_different(params)
-    diff = false
-    params = params.symbolize_keys
-    params.keys.each do |key|
-      diff = self.verify(key, params[key])
-      if diff then break end
-    end
-    return diff
-  end
-
   def handle_update()
     Claim.where(event_id: self.id).each do |x|
       Notification.create(user_id: x.user_id,

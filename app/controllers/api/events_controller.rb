@@ -111,9 +111,11 @@ class API::EventsController < API::ApplicationController
   def update
     @event = Event.find(params[:id])
     params = event_params
-    puts params
-    diff = @event.is_different(params)
-    if diff
+    attrs  = @event.attributes
+    @event.attributes = params
+    updated = false
+    if not params.map{|x,y| attrs[x] == @event[x]}.all?
+      updated = true 
       success = @event.update(params)
       if @event && success
         @event.handle_update()

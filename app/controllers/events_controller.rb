@@ -117,14 +117,14 @@ class EventsController < ApplicationController
   end
 
   def update
+    success = false
+    updated = false
     begin
       @event = Event.find(params[:id])
       params = event_params # Run the parameters through safety 
       attrs = @event.attributes
       @event.attributes = params
       adjust_time(@event)
-      success = false
-      updated = false
       # Check if the new parameters match the old.  (Is there an update?)
       if not params.map{|x,y| attrs[x] == @event[x]}.all?
         updated = true

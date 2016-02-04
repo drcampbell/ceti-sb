@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
                   .where(active: true, complete: false)
                   .where('claims.cancelled' => false)
                   .where('claims.rejected' => false)
+                  .where('event_start > ?' => Time.now) 
     return events
   end
 

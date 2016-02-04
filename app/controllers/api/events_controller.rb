@@ -15,7 +15,7 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_claims
-    events = current_user.get_pending_claims()
+    events = current_user.get_pending_claims().paginate(page: params[:page], per_page: params[:per_page])
     list_events(filterDate(events))
     if params[:page]
       events = getPage(events, params[:page])

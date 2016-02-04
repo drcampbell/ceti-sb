@@ -164,7 +164,7 @@ class EventsController < ApplicationController
         format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
         format.all {render_404}
       elsif @event && !updated
-        format.html {render @event}
+        format.html {redirect_to @event}
       end
     end
   end

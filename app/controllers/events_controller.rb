@@ -125,7 +125,8 @@ class EventsController < ApplicationController
       adjust_time(@event)
       success = false
       updated = false
-      if not params.map{|x,y| attrs[x] == @event[x]}.all?#@event.is_different(params) # Do we need to do work?
+      # Check if the new parameters match the old.  (Is there an update?)
+      if not params.map{|x,y| attrs[x] == @event[x]}.all?
         updated = true
         validate_event(@event) # Check for violations of input
         success = @event.save # Save the event
@@ -151,23 +152,19 @@ class EventsController < ApplicationController
     end
 
     respond_to do |format|
-      if @event && success
-        if updated
-          format.html do       
-            flash[:success] = 'Event updated'
-            redirect_to @event
-          end
-        else
-          format.html do
-            redirect_to @event
-          end
+      if @event && success && updated
+        format.html do       
+          flash[:success] = 'Event updated'
+          redirect_to @event
         end
         format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
-        format.all { render_404 }
-      elsif @event != nil
+        format.all { render_404 } 
+      elsif @event && !success && updated
         format.html {render :edit, :alert => 'Unable to update event.'}
         format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
         format.all {render_404}
+      elsif @event && !updated
+        format.html {render @event}
       end
     end
   end

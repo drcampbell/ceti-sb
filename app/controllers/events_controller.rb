@@ -65,8 +65,8 @@ class EventsController < ApplicationController
       if user_signed_in?
         params = event_params
         @event = current_user.events.build(params)
-        validate_event(@event)
         adjust_time(@event)
+        validate_event(@event)
         respond_to do |format|
           format.html do
             if @event.save

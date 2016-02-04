@@ -123,12 +123,10 @@ class EventsController < ApplicationController
       attrs = @event.attributes
       @event.attributes = params
       adjust_time(@event)
-
-      Rails.logger = Logger.new(STDOUT)
-      logger.debug "Event params: #{params}"
-      if params.map{|x,y| attrs[x] == @event[x]}.all?#@event.is_different(params) # Do we need to do work?
-        #@event.attributes = params
-        #adjust_time(@event)
+      success = false
+      updated = false
+      if not params.map{|x,y| attrs[x] == @event[x]}.all?#@event.is_different(params) # Do we need to do work?
+        updated = true
         validate_event(@event) # Check for violations of input
         success = @event.save # Save the event
         if success and Rails.env.production?
@@ -154,10 +152,15 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event && success
-
-        format.html do       
-          flash[:success] = 'Event updated'
-          redirect_to @event
+        if updated
+          format.html do       
+            flash[:success] = 'Event updated'
+            redirect_to @event
+          end
+        else
+          format.html do
+            redirect_to @event
+          end
         end
         format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
         format.all { render_404 }

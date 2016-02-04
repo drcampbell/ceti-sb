@@ -2,8 +2,10 @@
 <% build = "school2biz-0.6.4-release.apk" %>
 <h1>Getting Started</h1>
 <p>
-Currently our application is in beta. To try it out, using your Android Mobile device, you can <a href="https://s3-us-west-1.amazonaws.com/ceti-sb/builds/"+build>download the Android APK</a> onto your Android Mobile device.  
-<%= button_to "Download", "https://s3-us-west-1.amazonaws.com/ceti-sb/builds/"+build, method: "get", remote: true %> 
+Currently our application is in beta. To try it out, using your Android Mobile device, you can 
+<%= link_to "download the Android APK", "https://s3-us-west-1.amazonaws.com/ceti-sb/builds/" + build %> 
+onto your Android Mobile device.  
+<%= button_to "Download", "https://s3-us-west-1.amazonaws.com/ceti-sb/builds/"+build, method: :get %> 
 </p>
 <h2>Installation Procedure</h2>
 <p>Before you can install the School2Biz application, you will need to modify your devices security settings.  By default, Android OS only allows apps from the Google Play Store to be installed on your device.  We are getting ready to submit our app to the Google Play Store, but in the meantime you can take the following steps to install the app.</p>

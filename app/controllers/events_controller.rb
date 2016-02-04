@@ -119,10 +119,16 @@ class EventsController < ApplicationController
   def update
     begin
       @event = Event.find(params[:id])
-      params = event_params # Run the parameters through safety checker
-      if @event.is_different(params) # Do we need to do work?
-        @event.attributes = params
-        adjust_time(@event)
+      params = event_params # Run the parameters through safety 
+      attrs = @event.attributes
+      @event.attributes = params
+      adjust_time(@event)
+
+      Rails.logger = Logger.new(STDOUT)
+      logger.debug "Event params: #{params}"
+      if params.map{|x,y| attrs[x] == @event[x]}.all?#@event.is_different(params) # Do we need to do work?
+        #@event.attributes = params
+        #adjust_time(@event)
         validate_event(@event) # Check for violations of input
         success = @event.save # Save the event
         if success and Rails.env.production?

@@ -52,25 +52,25 @@ module EventsHelper
 		  e.strftime("%l")+":"+e.strftime("%M"),e.strftime("%p")].join(" ")
 	end
 
-	def get_all()
-		return filterDate(Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true))
-	end
+	#def get_all()
+		#return filterDate(Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true))
+	#end
+#
+	#def get_approvals()
+		#return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0).where(active: true))
+	#end
 
-	def get_approvals()
-		return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0).where(active: true))
-	end
-
-	def get_claims()
-		return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true))
-	end
+	#def get_claims()
+		#return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true))
+	#end
 	
-	def get_confirmed()
-		id = current_user.id
-    return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => 0).where(active: true))   
-	end
+	#def get_confirmed()
+		#id = current_user.id
+    #return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => 0).where(active: true))   
+	#end
 
-	def filterDate(events)
-    events.where("event_start > ?", Time.now)
-  end
+	#def filterDate(events)
+    #events.where("event_start > ?", Time.now)
+  #end
 
 end

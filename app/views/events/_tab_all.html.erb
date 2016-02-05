@@ -4,7 +4,7 @@
 	<li ><%= link_to "Claims", root_path(:tab => "tab_claims") %></li>
 	<li ><%= link_to "Confirmed", root_path(:tab => "tab_confirmed") %></li>
 </ul>
-<% if @events = get_all() %>
+<% if @events = current_user.get_all_events({}) %>
     <ol class="events">
       <%= render @events %>
     </ol>

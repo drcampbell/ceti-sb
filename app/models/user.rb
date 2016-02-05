@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
           .where(active: true, complete: false)
           .where('claims.cancelled' => false)
           .where('claims.rejected' => false)
-          .where('event_start > ?' => Time.now) 
+          .where('event_start > ?', Time.now) 
           .paginate(page: params[:page], per_page: params[:per_page])
   end
       #.where('claims.active' => true))
@@ -66,14 +66,14 @@ class User < ActiveRecord::Base
           .where(active: true)
           .where('claims.active' => true)
           .where('claims.rejected' => false)
-          .where('event_start > ?' => Time.now)
+          .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def get_all_events(params)
     Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
           .where(active: true) #speaker_id: current_user.id)
-          .where('event_start > ?' => Time.now)
+          .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end    
  
@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
     Event.where("user_id = ? OR speaker_id = ?", self.id, self.id)
           .where.not(speaker_id: 0)
           .where(active: true)
-          .where('event_start > ?' => Time.now)
+          .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end
 

@@ -62,7 +62,7 @@
 
   <!-- Section: This is where actions that may be taken by the user are located -->
   <p>
-  <% if (not event.is_canceled) %>
+  <% if (not event.is_canceled) and event.start() > Time.now %>
     <% event.claims.each do |claim| %>
       <!-- CONFIRM claim? -->    
       <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>

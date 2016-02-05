@@ -32,14 +32,6 @@ module EventsHelper
 #    #return filterDate(events.where(active: true))
 #	end
 
-	def get_events2(school)
-		raise Exception.new("Old Method!")
-		#@search = Sunspot.search(Event) do
-#			with :loc_id, school.id
-#		end
-#		@events = filterDate(@search.results.where(active: true))
-	end
-
 	def valid_event(event)
 		event.user != nil && event.content != nil && event.title != nil
 	end
@@ -51,26 +43,4 @@ module EventsHelper
 			"-",
 		  e.strftime("%l")+":"+e.strftime("%M"),e.strftime("%p")].join(" ")
 	end
-
-	#def get_all()
-		#return filterDate(Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true))
-	#end
-#
-	#def get_approvals()
-		#return filterDate(Event.joins(:claims).where('events.user_id' => current_user.id).where('events.speaker_id'=> 0).where(active: true))
-	#end
-
-	#def get_claims()
-		#return filterDate(Event.joins(:claims).where('claims.user_id' => current_user.id).where.not(speaker_id: current_user.id).where(active: true))
-	#end
-	
-	#def get_confirmed()
-		#id = current_user.id
-    #return filterDate(Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(:speaker_id => 0).where(active: true))   
-	#end
-
-	#def filterDate(events)
-    #events.where("event_start > ?", Time.now)
-  #end
-
 end

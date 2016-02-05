@@ -15,50 +15,27 @@ class API::EventsController < API::ApplicationController
   end
 
   def pending_claims
-    events = current_user.get_pending_claims().paginate(page: params[:page], per_page: params[:per_page])
-    list_events(filterDate(events))
-    if params[:page]
-      events = getPage(events, params[:page])
-    end
-    render json: {:events => events}.as_json
+    @events = current_user.get_pending_claims(params)
+    render json: {:events => list_events(@events)}.as_json
   end
 
   def pending_events
-    events = Event.joins(:claims).where('events.user_id' => current_user.id)
-                  .where('events.speaker_id'=> 0).where(active: true)
-                  .where('claims.active' => true).where('claims.rejected' => false)
-    list_events(filterDate(events))
-    if params[:page]
-      events = getPage(events, params[:page])
-    end
-    render json: {:events => events}.as_json
+    @events = current_user.get_event_approvals(params)
+    render json: {:events => list_events(@events)}.as_json
   end
 
   def my_events
-    events = Event.where("user_id = ? OR speaker_id = ?",  current_user.id, current_user.id).where(active: true)#speaker_id: current_user.id)
-    events = list_events(filterDate(events))
-    if params[:page]
-      events = getPage(events, params[:page])
-    end
-    render json: {:events => events}.as_json
+    @events = current_user.get_all_events(params)
+    render json: {:events => list_events(@events)}.as_json
   end    
 
   def confirmed
-    id = current_user.id
-    events = Event.where("user_id = ? OR speaker_id = ?", id, id).where.not(speaker_id: 0).where(active: true)
-    list_events(filterDate(events))
-    if params[:page]
-      events = getPage(events, params[:page])
-    end
-    render json: {:events => events}.as_json
+    @events = current_user.get_confirmed(params)
+    render json: {:events => list_events(@events)}.as_json
   end
 
   def list_events(events)
     return events.map{|e| e.json_list_format}
-  end
-
-  def filterDate(events)
-    events.where("event_start > ?", Time.now)
   end
 
   def show
@@ -173,16 +150,6 @@ class API::EventsController < API::ApplicationController
         end
       end
       permitted
-    end
-
-    def getPage(pList, page)
-      pages = 15
-      if page and page != ""
-        p = page.to_i
-        return pList[p * pages..(p+1)*pages -1]
-      else
-        return pList[0..pages-1]
-      end
     end
 
   # Confirms the correct user.

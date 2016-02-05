@@ -49,14 +49,40 @@ class User < ActiveRecord::Base
 
   end
 
-  def get_pending_claims()
-    events = Event.joins(:claims).where('claims.user_id' => self.id)
-                  .where.not(speaker_id: self.id)
-                  .where(active: true, complete: false)
-                  .where('claims.cancelled' => false)
-                  .where('claims.rejected' => false)
-                  .where('event_start > ?' => Time.now) 
-    return events
+  def get_pending_claims(params)
+    Event.joins(:claims).where('claims.user_id' => self.id)
+          .where.not(speaker_id: self.id)
+          .where(active: true, complete: false)
+          .where('claims.cancelled' => false)
+          .where('claims.rejected' => false)
+          .where('event_start > ?' => Time.now) 
+          .paginate(page: params[:page], per_page: params[:per_page])
+  end
+      #.where('claims.active' => true))
+
+  def get_event_approvals(params)
+    Event.joins(:claims).where('events.user_id' => self.id)
+          .where('events.speaker_id'=> 0)
+          .where(active: true)
+          .where('claims.active' => true)
+          .where('claims.rejected' => false)
+          .where('event_start > ?' => Time.now)
+          .paginate(page: params[:page], per_page: params[:per_page])
+  end
+
+  def get_all_events(params)
+    Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
+          .where(active: true) #speaker_id: current_user.id)
+          .where('event_start > ?' => Time.now)
+          .paginate(page: params[:page], per_page: params[:per_page])
+  end    
+ 
+  def get_confirmed(params)
+    Event.where("user_id = ? OR speaker_id = ?", self.id, self.id)
+          .where.not(speaker_id: 0)
+          .where(active: true)
+          .where('event_start > ?' => Time.now)
+          .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def send_message(to_id, message)

@@ -20,7 +20,7 @@ class SearchService
       end
     # Search model by school id
     elsif model == Event and params[:school_id]
-      @search = model.where("school_id" => params[:school_id]).reorder(event_start: :desc)
+      @search = model.where("loc_id" => params[:school_id]).reorder(event_start: :desc)
     # If nothing else matches just return all of them!
     else
       @search = model.all

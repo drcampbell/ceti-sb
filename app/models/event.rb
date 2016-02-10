@@ -9,7 +9,9 @@ class Event < ActiveRecord::Base
   acts_as_taggable
   after_create :init
   validates_presence_of :title, :event_start, :event_end
-
+  validates :title,
+            format: {without: /\A(\S+ )*\S+\z/i, 
+                     message: "must be a valid alphanumeric string"}
   pg_search_scope :search_full_text, against: {
     title: 'A',
     content: 'B',

@@ -34,7 +34,8 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated'
       redirect_to @user
     else
-      redirect_to @user, :alert => 'Unable to update user.'
+      render :profile
+      #redirect_to @user, :alert => 'Unable to update user.'
     end
   end
 

@@ -13,6 +13,12 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :location
   acts_as_taggable
   acts_as_token_authenticatable
+  validates_presence_of :name
+  validates_length_of :name, :job_title, :business, :grades,  maximum: 70
+  validates_length_of :biography, maximum: 2048
+  validates :name,
+             format: {with: /\A(\S+ )*\S+\z/i, 
+                      message: "must be a valid alphanumeric string"}
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

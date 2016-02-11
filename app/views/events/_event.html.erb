@@ -3,7 +3,13 @@
 
   <div class="col-xs-8 col-sm-8"> 
   <p><!--<strong>Title: </strong>-->
-    <h3><%= link_to event.title, event %></h3>
+    <h3>
+      <% if event.is_canceled %>
+        <del><%= link_to event.title, event %></del>
+      <% else %>
+        <%= link_to event.title, event %>
+      <% end %>
+    </h3> 
   </p>
   <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
 

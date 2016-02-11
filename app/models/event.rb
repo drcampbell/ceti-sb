@@ -10,7 +10,7 @@ class Event < ActiveRecord::Base
   after_create :init
   validates_presence_of :title, :event_start, :event_end
   validates :title,
-            format: {without: /\A(\S+ )*\S+\z/i, 
+            format: {with: /\A(\S+ )*\S+\z/i, 
                      message: "must be a valid alphanumeric string"}
   pg_search_scope :search_full_text, against: {
     title: 'A',

@@ -3,8 +3,14 @@
 
   <div class="col-xs-8 col-sm-8"> 
   <p><!--<strong>Title: </strong>-->
-    <h1><%= link_to event.title, event %></h1></p>
-    
+    <h1>
+      <% if event.is_canceled %>
+        <del><%= link_to event.title, event %></del>
+      <% else %>
+        <%= link_to event.title, event %>
+      <% end %>
+    </h1>
+  </p> 
   <p>
     <% unless event.claims.each.nil? %>
         <strong>Speaker: </strong>

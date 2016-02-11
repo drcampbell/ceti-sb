@@ -24,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
             @minimum_password_length = resource_class.password_length.min
           end
           resource.errors.full_messages.each do |x|
-            flash['danger'] = x
+            flash.now['danger'] = x
           end
           respond_with resource
         end

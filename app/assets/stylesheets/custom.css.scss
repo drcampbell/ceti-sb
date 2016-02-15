@@ -92,6 +92,7 @@ p {
 /* footer */
 
 footer {
+  text-align:center;
   margin-top: 45px;
   padding-top: 5px;
   border-top: 1px solid $gray-medium-light;
@@ -103,14 +104,15 @@ footer {
     }
   }
   small {
-    float: left;
+    /*float: left;*/
   }
   ul {
-    float: right;
+
+    /*float: right;*/
     list-style: none;
     li {
-      float: left;
-      margin-left: 15px;
+      float: center;
+      /*margin-left: 15px;*/
     }
   }
 }
@@ -191,6 +193,7 @@ input {
 .checkbox {
   margin-top: -10px;
   margin-bottom: 10px;
+  width: 130px;
   span {
     margin-left: 20px;
     font-weight: normal;

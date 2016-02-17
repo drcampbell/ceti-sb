@@ -47,7 +47,7 @@ class API::RegistrationsController < Devise::RegistrationsController
     self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
     @user = User.find(current_user.id)
     puts resource
-    params = params.each{ |k,v| params[k] = v.strip}
+    #params.each{ |k,v| params[k] = v.strip}
     successfully_updated = update_resource(resource, account_update_params)
     if successfully_updated
       #sign_in user, resource, :bypass => true

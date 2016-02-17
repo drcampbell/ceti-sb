@@ -54,7 +54,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       profile[:school_name] = School.find(profile["school_id"]).school_name
       render json: {state:0,user:profile}
     else
-      render json: {state:1}
+      render json: {state:1, message: @user.errors.full_messages}
     end
   end
 

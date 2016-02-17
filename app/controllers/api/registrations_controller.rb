@@ -31,6 +31,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       #   end
       # end
       # format.json do
+        params = params.each{ |k,v| params[k] = v.strip}
         @user = User.create(sign_up_params)
         if @user.errors.messages == {}
           UserMailer.welcome(@user.id).deliver_now
@@ -46,7 +47,7 @@ class API::RegistrationsController < Devise::RegistrationsController
     self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
     @user = User.find(current_user.id)
     puts resource
-    #puts account_update_params
+    params = params.each{ |k,v| params[k] = v.strip}
     successfully_updated = update_resource(resource, account_update_params)
     if successfully_updated
       #sign_in user, resource, :bypass => true
@@ -54,7 +55,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       profile[:school_name] = School.find(profile["school_id"]).school_name
       render json: {state:0,user:profile}
     else
-      render json: {state:1, message: @user.errors.full_messages}
+      render json: {state:1, message: @user.errors.full_messages.join('\n')}
     end
   end
 

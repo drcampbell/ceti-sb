@@ -1,11 +1,10 @@
+<% event = @event %>
 <li id="<%= event.id %>">
+
 <div class="row">
-<!--
-<aside class="col-xs-2 col-sm-2">
-   #image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name, 
-       # class: "img-responsive center-block", width: '80', style: "margin-top:15px;" %>  
-      </aside> -->
-  <div class="col-xs-10 col-sm-10"> 
+
+  <div class="col-xs-8 col-sm-8"> 
+  <p><!--<strong>Title: </strong>-->
     <h3>
       <% if event.is_canceled %>
         <del><%= link_to event.title, event %></del> (Canceled)
@@ -13,13 +12,18 @@
         <%= link_to event.title, event %>
       <% end %>
     </h3> 
+  </p>
   <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
 
 </div>
+<aside class="col-xs-4 col-sm-4">
+  <%= image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name, 
+        class: "img-responsive" %>  
+</aside>
 
 <!-- Provide Badge Image -->
 <div class="col-xs-6 col-md-6">
-  <p class="text-small">
+  <p>
     <strong>Location: </strong> 
     <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.loc_id}" %> 
   </p>
@@ -49,6 +53,7 @@
   <p><strong>Tags: </strong>
     <%= raw event.tags.map(&:name).map { |t| link_to t, tag_path(t) }.join(', ') %></p>
 
+  <p><strong>Description: </strong><%= event.content %></p>
   </div> <!-- column -->
 
   <p>

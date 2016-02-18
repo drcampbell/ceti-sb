@@ -32,7 +32,6 @@
 
   <p><strong>Time:</strong> <%= present_time(event.event_start, event.event_end)  %></p>
 
-  <p><strong>Description: </strong><%= event.content %></p>
   </div> <!-- column -->
     <aside class="col-xs-4 col-sm-4">
   <%= image_tag Badge.find(School.find(event.loc_id).badge_id).file.url class: "img-responsive" %>  

@@ -23,7 +23,11 @@ class SearchService
       @search = model.where("loc_id" => params[:school_id]).reorder(event_start: :desc)
     # If nothing else matches just return all of them!
     else
-      @search = model.all
+      if model == Event
+        @search = model.all.reorder(event_start: :desc)
+      else
+        @search = model.all
+      end
     end
     @search.paginate(page: params[:page], per_page: params[:per_page])
   end

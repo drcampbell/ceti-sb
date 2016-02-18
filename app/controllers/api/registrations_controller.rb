@@ -73,14 +73,9 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def profile
-    # if current_user.school_id == 1 
-    #   return redirect_to :choose
-    # end
-    #build_resource({})
     profile = current_user.attributes
     profile[:school_name] = School.find(profile["school_id"]).school_name
     render json: profile.as_json.except("authentication_token","created_at","updated_at","encrypted_password","reset_password_token","reset_password_sent_at", "remember_created_at")
-    #return render "users/#{current_user.id}"
   end
 
   protected

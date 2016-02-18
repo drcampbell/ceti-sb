@@ -84,7 +84,8 @@ class UsersController < ApplicationController
   end
 
   def secure_params
-    params.require(:user).permit(:id, :role, :name, :email, :school_id, :biography, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
+    p = params.require(:user).permit(:id, :role, :name, :email, :school_id, :biography, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
+    p.each{|k,v| p[k] = v.strip
   end
 
   def correct_user

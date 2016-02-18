@@ -47,7 +47,6 @@ class API::RegistrationsController < Devise::RegistrationsController
     self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
     @user = User.find(current_user.id)
     puts resource
-    params.each{ |k,v| params[k] = v.strip}
     successfully_updated = update_resource(resource, account_update_params)
     if successfully_updated
       #sign_in user, resource, :bypass => true
@@ -97,10 +96,12 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def sign_up_params
-    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation)
+    p = params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation)
+    p.each{ |k,v| p[k] = v.strip}
   end
 
   def account_update_params
-    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password)#, location_attributes: [:address])
+    p = params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password)#, location_attributes: [:address])
+    p.each{ |k,v| p[k] = v.strip}
   end
 end

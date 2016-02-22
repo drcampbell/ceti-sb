@@ -34,8 +34,10 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated'
       redirect_to @user
     else
-      render :profile
-      #redirect_to @user, :alert => 'Unable to update user.'
+      @user.errors.full_messages.each do |m|
+        flash[:danger] = m
+      end
+      redirect_to :profile
     end
   end
 

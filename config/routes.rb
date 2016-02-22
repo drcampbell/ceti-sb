@@ -83,6 +83,8 @@ Rails.application.routes.draw do
   # TODO Make these https secure
   post    'email_responses/bounce' => 'email_responses#bounce'
   post    'email_responses/complaint' => 'email_responses#complaint'
+
+  # Handle Claims
   delete  'claims/:id/reject' => 'claims#reject'
   delete  'claims/:id/cancel' => 'claims#cancel'
   match   'claims/:id/teacher_confirm' => 'claims#teacher_confirm', :via => [:post], :as => 'teacher_confirm_claim'

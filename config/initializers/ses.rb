@@ -2,7 +2,12 @@ module Aws
 	module SES
 		class Client
 			def deliver!(mail)
-				ses_return = send_email( source: Array(mail.from).first,
+				if mail.from
+					source = Array(mail.from).first
+				else
+					source = "schoolbusinessapp@gmail.com"
+				end
+				ses_return = send_email( source: source,
 					destination: {
 						to_addresses: mail.destinations
 						},

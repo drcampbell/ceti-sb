@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
     #unless: lambda { |StaticPagesController| }
   before_filter :authenticate_user!
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :set_cache_headers
+
   include ActionController::MimeResponds
   include ActionController::StrongParameters
   # Prevent CSRF attacks by raising an exception.
@@ -38,6 +40,12 @@ class ApplicationController < ActionController::Base
     # Confirms a speaker user.
     def speaker_user
       redirect_to(:signin) unless user_signed_in? && (current_user.role == 'Speaker' || current_user.role == 'Both')
+    end
+
+    def set_cache_headers
+      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
 
     # def authenticate_user_from_token!

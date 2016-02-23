@@ -5,6 +5,14 @@ prepend_before_filter :allow_params_authentication!, only: :create
 prepend_before_filter only: [:create, :destroy] {request.env["devise.skip_timeout"] = true}
 #respond_to :json
 
+def new
+  if user_signed_in? 
+    redirect_to(root_path)
+  else
+    super
+  end 
+end
+
 # POST /resource/sign_in
 def create
   # respond_to do |format|

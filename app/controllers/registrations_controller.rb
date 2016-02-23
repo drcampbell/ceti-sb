@@ -40,6 +40,14 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def new
+    if user_signed_in?
+      redirect_to root_path
+    else
+      super
+    end  
+  end
+  
   def profile
     # if current_user.school_id == 1
     #   return redirect_to :choose

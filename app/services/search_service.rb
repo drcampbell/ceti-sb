@@ -27,6 +27,9 @@ class SearchService
         @search = model.all.reorder(event_start: :desc)
       else
         @search = model.all
+        if model == School
+          @search = search.reorder(school_name: :asc)
+        end
       end
     end
     @search.paginate(page: params[:page], per_page: params[:per_page])

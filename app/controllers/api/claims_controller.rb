@@ -94,20 +94,17 @@ class API::ClaimsController < API::ApplicationController
     # Teacher confirms a speaker
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:claim_id])
+    # Does the current user own the event and can we update it?
     if current_user.id == @event.user_id and @claim.teacher_confirm(@event)
-      # @event.update(speaker_id: @claim.user_id)
-      # if User.find(@claim.user_id).set_confirm
-      #   UserMailer.confirm_speaker(@event.user_id, @claim.user_id, @event.id).deliver_now
-      # end
-      # Notification.create(user_id: @claim.user_id,
-      #                     act_user_id: @event.user_id,
-      #                     event_id: @event.id,
-      #                     n_type: :confirm_speaker,
-      #                     read: false)
       render json: {status: 0, event: @event.jsonEvent(current_user.id)}
     else
-      render json: {status: 1}
-    end
+      if @claim.cancelled
+        render json: {status: 1, messages: "User " + User.find(@claim.user_id).name + 
+                                " has cancelled their claim."}
+      else
+        render json: {status: 1}
+      end # Claim Cancelled
+    end # Update Claim
   end
 
   def speaker_confirm

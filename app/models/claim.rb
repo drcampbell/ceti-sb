@@ -91,20 +91,23 @@ class Claim < ActiveRecord::Base
   end
 
   def teacher_confirm(event)
+    if self.cancelled
+      return false
+    end
   	if self.update_attribute(:confirmed_by_teacher, true)
 	  	event.update(speaker_id: self.user_id)
       if Rails.env.production?
         if User.find(self.user_id).set_confirm
-              UserMailer.confirm_speaker(event.user_id, 
-                                     self.user_id, 
-                                     event.id).deliver_now
-        end
+          UserMailer.confirm_speaker(event.user_id, 
+                                 self.user_id, 
+                                 event.id).deliver_now
+        end # ActionMailer
         Notification.create(user_id: self.user_id,
                               act_user_id: event.user_id,
                               event_id: event.id,
                               n_type: :confirm_speaker,
                               read: false)
-      end
+      end # Rails.env.production?
 	  	return true
 	  else
 	  	return false

@@ -80,6 +80,9 @@ class ClaimsController < ApplicationController
     if @claim.teacher_confirm(@event)
       redirect_to(root_url)
       flash[:notice] = 'Claim was successfully confirmed.'
+    else
+      redirect_to(@event)
+      flash[:danger] = 'User '+User.find(@claim.user_id).name + " has cancelled their claim."
     end
   end
 

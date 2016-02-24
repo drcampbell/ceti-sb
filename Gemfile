@@ -54,12 +54,14 @@ group :development, :test, :production do
   gem 'whenever', :require => false
   gem 'carrierwave'
   gem 'aws-s3'
-end
-
-group :development, :production do
   gem 'pg'
   gem 'pg_search'
 end
+
+#group :development, :production do
+#  gem 'pg'
+#  gem 'pg_search'
+#end
 
 group :development do
   gem 'better_errors'

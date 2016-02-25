@@ -28,7 +28,7 @@ class SearchService
       else
         @search = model.all
         if model == School
-          @search = search.reorder(school_name: :asc)
+          @search = @search.reorder(school_name: :asc)
         end
       end
     end

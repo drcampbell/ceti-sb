@@ -8,8 +8,9 @@
 one:
   title: "An event"
   content: "An event"
+  event_start: <%= Time.now %>
+  event_end: <%= Time.now+1 %>
   user_id: 1
-# column: value
-#
+
 two: {}
 #  column: value

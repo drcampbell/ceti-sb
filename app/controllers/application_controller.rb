@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   before_filter :configure_permitted_parameters, if: :devise_controller?
   before_filter :set_cache_headers
+  before_action :set_locale
 
   include ActionController::MimeResponds
   include ActionController::StrongParameters
@@ -13,6 +14,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
 
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+  
   def hello
     render text: "hello cruel world"
   end

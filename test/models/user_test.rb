@@ -7,7 +7,9 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_valid
-    assert user.valid?
+    User.all.each do |user|
+      assert user.valid?
+    end
   end
 
 end

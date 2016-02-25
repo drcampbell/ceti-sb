@@ -123,9 +123,12 @@ class EventsController < ApplicationController
   def update
     success = false
     updated = false
+    @event = Event.find(params[:id])
+    params = event_params # Run the parameters through safety 
+    if params == {}
+      raise ActionController::ParameterMissing
+    end
     begin
-      @event = Event.find(params[:id])
-      params = event_params # Run the parameters through safety 
       attrs = @event.attributes
       @event.attributes = params
       adjust_time(@event)

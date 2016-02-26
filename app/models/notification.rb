@@ -34,6 +34,9 @@ class Notification < ActiveRecord::Base
 	end
 
 	def send_gcm()
+		if !Rails.env.production?
+			return
+		end
 		sns = Aws::SNS::Client.new(region: 'us-west-2')
 		devices = Device.where(user_id: self.user_id)
 		for device in devices
@@ -82,7 +85,7 @@ class Notification < ActiveRecord::Base
     result[:user_name] = User.find(self.user_id).name
     result[:act_user_name] = User.find(self.act_user_id).name
     if self.event_id != 0
-      result[:event_title] = Event.find(self.event).title
+      result[:event_title] = Event.find(self.event_id).title
     end
 		return result
 	end

@@ -5,17 +5,16 @@ class Claim < ActiveRecord::Base
   validates_uniqueness_of :user_id, scope: :event_id
 
   def create_claim
-    event = Event.find(self.event_id)
     if Rails.env.production?
-      if User.find(event.user_id).set_claims
+      if User.find(self.event.user_id).set_claims
         UserMailer.event_claim(self.user_id, 
-                               event.user_id, 
+                               self.event.user_id, 
                                self.event_id).deliver_now
       end
     end
-    Notification.create(user_id: event.user_id,
+    Notification.create(user_id: self.event.user_id,
                         act_user_id: self.user_id,
-                        event_id: event.id,
+                        event_id: self.event_id,
                         n_type: :claim,
                         read: false)
   end
@@ -23,15 +22,14 @@ class Claim < ActiveRecord::Base
   def reject()
     self.update(:rejected => true)
     self.update(:active => false)
-    event = Event.find(self.event_id)
     if Rails.env.production?
       UserMailer.reject_claim(self.user_id,
-                              event.user_id,
+                              self.event.user_id,
                               self.event_id).deliver_now
     end
     Notification.create(user_id:self.user_id,
-                        act_user_id: event.user_id,
-                        event_id: event.id,
+                        act_user_id: self.event.user_id,
+                        event_id: self.event_id,
                         n_type: :reject_claim,
                         read: false)
   end
@@ -49,7 +47,7 @@ class Claim < ActiveRecord::Base
   def cancel()
     self.update(active: false)
     self.update(cancelled: true)
-    event = Event.find(self.event_id)
+    event = self.event
     if event.speaker_id == self.user_id
       event.update(speaker_id: 0) # Reset speaker id for search
       # Reactivate old claims
@@ -91,20 +89,20 @@ class Claim < ActiveRecord::Base
       }
   end
 
-  def teacher_confirm(event)
+  def teacher_confirm
     if self.cancelled
       return false
     end
     if self.update_attribute(:confirmed_by_teacher, true)
-      event.update(speaker_id: self.user_id)
-      if Rails.env.production? and User.find(self.user_id).set_confirm
-          UserMailer.confirm_speaker(event.user_id, 
+      self.event.update(speaker_id: self.user_id)
+      if Rails.env.production? and self.user.set_confirm
+          UserMailer.confirm_speaker(self.event.user_id, 
                                    self.user_id, 
-                                   event.id).deliver_now
+                                   self.event_id).deliver_now
       end # ActionMailer
       Notification.create(user_id: self.user_id,
-                            act_user_id: event.user_id,
-                            event_id: event.id,
+                            act_user_id: self.event.user_id,
+                            event_id: self.event_id,
                             n_type: :confirm_speaker,
                             read: false)
       return true

@@ -5,7 +5,9 @@ class User < ActiveRecord::Base
   after_update :send_password_change_email, if: :needs_password_change_email?
   has_many :events, dependent: :destroy
   has_many :claims, dependent: :destroy
-  has_many :user_badges
+  has_many :notifications, dependent: :destroy
+  has_many :notifications, as: :act_user, dependent: :destroy
+  has_many :user_badges, dependent: :destroy
   has_many :devices
   belongs_to :school
   has_one :location, :through => :school

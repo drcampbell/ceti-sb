@@ -1,0 +1,14 @@
+cancelled:
+  user: both
+  event: one
+  cancelled: true
+  active: false
+
+rejected:
+  user: speaker
+  event: two
+  rejected: true
+
+active:
+  user: speaker
+  event: one

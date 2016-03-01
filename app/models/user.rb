@@ -19,6 +19,9 @@ class User < ActiveRecord::Base
   validates :name,
              format: {with: /\A(\S+ )*\S+\z/i, 
                       message: "must be a valid alphanumeric string"}
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  validates :email, format: {with: VALID_EMAIL_REGEX,
+                             message: "must be a valid email address"}
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

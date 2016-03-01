@@ -50,29 +50,33 @@ class Claim < ActiveRecord::Base
     event = self.event
     if event.speaker_id == self.user_id
       event.update(speaker_id: 0) # Reset speaker id for search
-      # Reactivate old claims
-      event.claims.map{|claim| claim.reactivate() }
-      if Rails.env.production?
-        UserMailer.cancel_speaker(self.user_id,
-                              event.user_id,
-                              self.event_id).deliver_now
-      end
-      Notification.create(user_id: event.user_id,
-                    act_user_id: self.user_id,
-                    event_id: event.id,
-                    n_type: :cancel_speaker,
-                    read: false)
-    else     
-      if Rails.env.production?
-        UserMailer.cancel_claim(self.user_id,
+      if event.event_start > Time.now
+        # Reactivate old claims
+        event.claims.map{|claim| claim.reactivate() }
+        if Rails.env.production?
+          UserMailer.cancel_speaker(self.user_id,
                                 event.user_id,
                                 self.event_id).deliver_now
-      end
-      Notification.create(user_id:event.user_id,
+        end
+        Notification.create(user_id: event.user_id,
                       act_user_id: self.user_id,
                       event_id: event.id,
-                      n_type: :cancel_claim,
-                      read: false)     
+                      n_type: :cancel_speaker,
+                      read: false)
+      end
+    else     
+      if event.start > Time.now
+        if Rails.env.production?
+          UserMailer.cancel_claim(self.user_id,
+                                  event.user_id,
+                                  self.event_id).deliver_now
+        end
+        Notification.create(user_id:event.user_id,
+                        act_user_id: self.user_id,
+                        event_id: event.id,
+                        n_type: :cancel_claim,
+                        read: false)     
+      end
     end
   end
 

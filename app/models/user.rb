@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   has_many :events, dependent: :destroy
   has_many :claims, dependent: :destroy
   has_many :notifications, dependent: :destroy
-  has_many :notifications, as: :act_user, dependent: :destroy
   has_many :user_badges, dependent: :destroy
   has_many :devices
   belongs_to :school
@@ -142,6 +141,17 @@ class User < ActiveRecord::Base
     return Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
                 .where("event_start > ?", Time.now)
                 .where(active: true)
+  end
+
+  def clean_user
+    claims = self.claims
+    claims.each do |claim|
+      claim.cancel
+    end
+    notifications = Notification.where(act_user_id: self.id)
+    notifications.each do |n|
+      n.update(act_user_id: 0)
+    end
   end
 
   def json_format

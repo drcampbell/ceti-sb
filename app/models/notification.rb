@@ -9,28 +9,36 @@ class Notification < ActiveRecord::Base
 		content = ""
 		case n_type
 		when "claim"
-			content = "#{User.find(act_user_id).name} has claimed your event: #{Event.find(event_id).title}"
+			content = "#{self.act_user_name} has claimed your event: #{Event.find(event_id).title}"
 		when "confirm_speaker"
-			content =  "#{User.find(act_user_id).name} has confirmed you as the speaker of event: #{Event.find(event_id).title}"
+			content =  "#{self.act_user_name} has confirmed you as the speaker of event: #{Event.find(event_id).title}"
 		when "event_update"
-			content = "#{User.find(act_user_id).name} has updated event: #{Event.find(event_id).title}"
+			content = "#{self.act_user_name} has updated event: #{Event.find(event_id).title}"
 		when "message"
-			content = "#{User.find(act_user_id).name} has sent you a message."
+			content = "#{self.act_user_name} has sent you a message."
 		when "award_badge"
-			content = "Award #{User.find(act_user_id).name} a badge."
+			content = "Award #{self.act_user_name} a badge."
 		when "new_badge"
-			content = "#{User.find(act_user_id).name} awards you a badge!"
+			content = "#{self.act_user_name} awards you a badge!"
 		when "cancel"
-			content = "#{User.find(act_user_id).name} has canceled the event: #{Event.find(event_id).title}"
+			content = "#{self.act_user_name} has canceled the event: #{Event.find(event_id).title}"
 		when "reject_claim"
-			content = "#{User.find(act_user_id).name} has chosen a different candidate for their event"
+			content = "#{self.act_user_name} has chosen a different candidate for their event"
 		when "cancel_claim"
-			content = "#{User.find(act_user_id).name} has canceled their claim for event: #{Event.find(event_id).title}"
+			content = "#{self.act_user_name} has canceled their claim for event: #{Event.find(event_id).title}"
 		when "cancel_speaker"
-			content = "#{User.find(act_user_id).name} has to cancel their speaking engagement for event: #{Event.find(event_id).title}"
+			content = "#{self.act_user_name} has to cancel their speaking engagement for event: #{Event.find(event_id).title}"
 		end
 		test = "deletethis"
 		return content
+	end
+
+	def act_user_name
+		if self.act_user_id > 0
+			act_user_name = User.find(self.act_user_id).name
+		else
+			act_user_name = "Deleted User"
+		end
 	end
 
 	def send_gcm()
@@ -49,14 +57,14 @@ class Notification < ActiveRecord::Base
 				event = Event.find(self.event_id)
 				# Package information as this generates a fragment within Android
 				if n_type == "award_badge"
-					data['speaker_name'] = User.find(self.act_user_id).name
+					data['speaker_name'] = self.act_user_name
 					data['event_name'] = Event.find(self.event_id).title
 					data['badge_url'] = Badge.find(School.find(event.id).badge_id).file_name
 				# Package information as this generates a fragment within Android
 				elsif n_type =="new_badge"
 					data['user_name'] = User.find(self.user_id).name
 					data['user_id'] = self.user_id
-					data['event_owner'] = User.find(self.act_user_id).name
+					data['event_owner'] = self.act_user_name
 					data['event_owner_id'] = self.act_user_id
 					data['event_name'] = event.title
 					badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
@@ -83,7 +91,7 @@ class Notification < ActiveRecord::Base
 	def json_format
 		result = self.attributes
     result[:user_name] = User.find(self.user_id).name
-    result[:act_user_name] = User.find(self.act_user_id).name
+    result[:act_user_name] = self.act_user_name
     if self.event_id != 0
       result[:event_title] = Event.find(self.event_id).title
     end

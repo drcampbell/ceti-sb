@@ -43,6 +43,11 @@ class API::RegistrationsController < Devise::RegistrationsController
     # end
   end
 
+  def destroy
+    current_user.clean_user
+    super
+  end
+
   def update
     self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
     @user = User.find(current_user.id)

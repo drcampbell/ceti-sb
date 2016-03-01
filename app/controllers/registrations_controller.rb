@@ -57,6 +57,11 @@ class RegistrationsController < Devise::RegistrationsController
     #return render "users/#{current_user.id}"
   end
 
+  def destroy
+    current_user.clean_user
+    super
+  end
+
   def update
     @user = User.find(current_user.id)
     successfully_updated = @user.update_with_password(devise_parameter_sanitizer.sanitize(:account_update))

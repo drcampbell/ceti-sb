@@ -8,7 +8,7 @@
 <p id="notice"><%= notice %></p>
 
 <div align="center">
-<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@school.badge_id).file_name  %>
+<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@school.badge_id).file_name %>
 </div>
 
 <% @fields.each do |key, value| %>
@@ -21,16 +21,15 @@
 <div class="btn-group" style="text-align:center">
 	<% if user_signed_in? && @school.id > 1 &&
 		(current_user.role == 'Teacher' || current_user.role == 'Both') %>
-<!-- 		 if current_user.school_id == 1 %> -->
-			<%= button_to 'Make My School', claim_school_path(:user_id => current_user.id, :school_id => @school.id), 
+	<%= button_to 'Make My School', 
+					claim_school_path(user_id: current_user.id, school_id: @school.id), 
 					method: :post, 
 					data: {confirm: "Confirm: Make \"#{handle_abbr(@school.school_name)}\" your school?"},
 					class: "btn btn-lg btn-primary" %>
-			<!--button_to# 'Find My School', :choose,
-				#method: :get, class: "btn-lg btn-primary" %>
-		#end %>-->
 	<% end %>
-	<%= button_to "Back to Search", {:controller => "schools", :action => "index"}, :method => :get, :class => "btn btn-lg btn-primary" %>
+	<%= button_to "Back to Search", {controller: "schools", action: "index"},
+	 				method: :get, 
+					class: "btn btn-lg btn-primary" %>
 </div>
 
  </aside>

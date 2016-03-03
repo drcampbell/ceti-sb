@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-         :lockable
+        # :lockable
   multisearchable against: [:name, :job_title, :business, :school, :biography]
   pg_search_scope :search_full_text, against: {
     name: 'A',
@@ -95,7 +95,35 @@ class User < ActiveRecord::Base
           .paginate(page: params[:page], per_page: params[:per_page])
   end
 
+  def soft_delete
+    self.events.each do |event|
+      if event.start > Time.now
+        event.cancel
+      end
+    end
+    claims = self.claims
+    claims.each do |claim|
+      claim.cancel
+    end
+    #notifications = Notification.where(act_user_id: self.id)
+    #notifications.each do |n|
+    #  n.update(act_user_id: 0)
+    #end
+    update_attribute(:deleted_at, Time.current)
+  end
+
+  def active_for_authentication?
+    super && !deleted_at
+  end
+
+  def inactive_message
+    !deleted_at ? super : :deleted_account
+  end
+
   def send_message(to_id, message)
+    if self.deleted_at 
+      return false
+    end
     begin
       UserMailer.send_message(self.id, to_id, message).deliver_now
       Notification.create(user_id: to_id,
@@ -141,17 +169,6 @@ class User < ActiveRecord::Base
     return Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
                 .where("event_start > ?", Time.now)
                 .where(active: true)
-  end
-
-  def clean_user
-    claims = self.claims
-    claims.each do |claim|
-      claim.cancel
-    end
-    notifications = Notification.where(act_user_id: self.id)
-    notifications.each do |n|
-      n.update(act_user_id: 0)
-    end
   end
 
   def json_format

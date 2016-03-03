@@ -23,9 +23,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
-    @user = current_user
-  end
+#  def edit
+#    @user = current_user
+#  end
 
   def update
     @user = User.find(current_user.id)
@@ -34,7 +34,10 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated'
       redirect_to @user
     else
-      redirect_to @user, :alert => 'Unable to update user.'
+      @user.errors.full_messages.each do |m|
+        flash[:danger] = m
+      end
+      redirect_to :profile
     end
   end
 
@@ -83,7 +86,8 @@ class UsersController < ApplicationController
   end
 
   def secure_params
-    params.require(:user).permit(:id, :role, :name, :email, :school_id, :biography, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
+    p = params.require(:user).permit(:id, :role, :name, :email, :school_id, :biography, :grades, :job_title, :business, :current_password, :tag_list, location_attributes: [:user_id, :address])
+    p.each{|k,v| p[k] = v.strip}
   end
 
   def correct_user

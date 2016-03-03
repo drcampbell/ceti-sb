@@ -2,49 +2,45 @@
 <% if user_signed_in? %>
   <div class="row">
 
-      <!-- <aside class="col-md-4"> -->
-        <section class="user_info">
-          <%= render 'shared/user_info' %>
-        </section>
-        <section class="getting_started">
-          <%= button_to "Get the Android App!", getting_started_path, method: :get %>
-        </section>
-          <% @events = current_user.get_events().paginate(page: params[:page]) %>
+    <!-- <aside class="col-md-4"> -->
+    <section class="user_info">
+      <%= render 'shared/user_info' %>
+      <%= render 'layouts/google_play' %>
+    </section>
+    <% @events = current_user.get_events().paginate(page: params[:page]) %>
 
-        <section class="event_calendar">
-          <%= render 'events/week_calendar' %>
-        </section>
+    <section class="event_calendar">
+      <%= render 'events/week_calendar' %>
+    </section>
         
-      <div class="row">
-        <p>  </p>
-        <div class="col-md-8">
-        <%= button_to "Create New Event", 'events/new', class: 'btn-primary', method: :get %>
-      </div>
-      </div>
-      <div class="row">
-      <div class="col-md-8">
+    <div class="row">
+      <p>  </p>
+      <!--<div class="col-md-8">-->
+      <%= button_to "Create New Event", 'events/new', class: 'btn-primary', method: :get %>
+    </div>
+    </div>
+    <div class="row">
         <h3>Event Feed</h3>
         <%= render "events/#{tab}" %>
-      </div>
     </div>
-    </div>
+  </div>
 <% else %>
-    <div class="center jumbotron">
-      <h1>Welcome to the School Business App</h1>
+  <div class="center jumbotron">
+    <h1>Welcome to the School Business App</h1>
 
-      <h2><p>
-        Developed by 
-    <a href="http://http://www.ceti.cse.ohio-state.edu/">CETI</a> 
-    at the <a href="http://www.osu.edu/">Ohio State University</a>
-    in partnership with 
-    <a href="http://www.delphoscityschools.org/">Delphos City Schools</a>, and is funded by the 
-    <a href="http://education.ohio.gov/Topics/Straight-A-Fund/">Straight A Grant</a>. </p><p>We are currently in beta, and if you'd like to try the Android version of the application, find out how to 
-    <%= link_to "get started!", getting_started_path  %></p>
-      </h2>
+    <h2>
+      <p>Developed by 
+      <a href="http://http://www.ceti.cse.ohio-state.edu/">CETI</a> 
+      at the <a href="http://www.osu.edu/">Ohio State University</a>
+      in partnership with 
+      <a href="http://www.delphoscityschools.org/">Delphos City Schools</a>
+      , and is funded by the 
+      <a href="http://education.ohio.gov/Topics/Straight-A-Fund/">Straight A Grant</a>. </p>
+    </h2>
+    <%= link_to 'Sign up now!', new_user_registration_path, class: 'btn btn-lg btn-primary' %>
+    <%= render 'layouts/google_play' %>
+  </div>
 
-      <%= link_to 'Sign up now!', new_user_registration_path, class: 'btn btn-lg btn-primary' %>
-    </div>
-
-   <!-- <%= link_to image_tag('rails.png', alt: 'Rails logo'),
-                          'http://rubyonrails.org/' %> -->
+ <!-- <%= link_to image_tag('rails.png', alt: 'Rails logo'),
+                        'http://rubyonrails.org/' %> -->
 <% end %>

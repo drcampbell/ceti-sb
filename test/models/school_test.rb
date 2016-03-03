@@ -7,7 +7,9 @@ class SchoolTest < ActiveSupport::TestCase
   end
 
   def test_valid
-    assert school.valid?
+    School.all.each do |school|
+      assert school.valid?
+    end
   end
 
 end

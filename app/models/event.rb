@@ -8,8 +8,11 @@ class Event < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   acts_as_taggable
   after_create :init
-  validates_presence_of :title, :event_start, :event_end
-
+  validates :user_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :event_start, :event_end, presence: true
+  validates :title, length: {minimum: 2, maximum: 256},
+            format: {with: /\A(\S+ )*\S+\z/i, 
+                     message: "must be a valid alphanumeric string"}
   pg_search_scope :search_full_text, against: {
     title: 'A',
     content: 'B',
@@ -148,7 +151,7 @@ class Event < ActiveRecord::Base
       result[:speaker] = "TBA"
     end
     claim = Claim.where(event_id: self.id, user_id: curr_user)
-    if claim.exists?
+    if claim.exists? and not claim[0].cancelled
       result[:claim_id] = claim[0].id
     else
       result[:claim_id] = 0

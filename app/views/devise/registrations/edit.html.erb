@@ -2,22 +2,29 @@
 <h1>Edit Your Account</h1>
 <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <div class="col-md-6 col-md-offset-3">
+            <%= simple_form_for(resource, 
+                                as: resource_name, 
+                                url: registration_path(resource_name), 
+                                html: { method: :put }) do |f| %>
             <%= devise_error_messages! %>
 
             <div class="form-group">
-              <%= f.label :name %>
-              <%= f.text_field :name, class: 'form-control' %>
-              <%= f.label :email %>
-              <%= f.email_field :email, class: 'form-control' %>
+                <%= f.label :name %>
+                <%= f.text_field :name, class: 'form-control' %>
+                <%= f.label :email %>
+                <%= f.email_field :email, class: 'form-control' %>
 
-              <% unless resource.role == 'Admin' %>
-                  <div class="form-group">
+            <% unless resource.role == 'Admin' %>
+                <div class="form-group">
                     <%= f.label :role %>
-                    <%= f.select :role, ['Speaker', 'Teacher', 'Both'], {}, {:selected => @user.role, class: 'btn btn-default dropdown-toggle'} %>
-                  </div>
-              <% end %>
+                    <%= f.select :role, 
+                            ['Speaker', 'Teacher', 'Both'],
+                            {}, 
+                            {:selected => @user.role, 
+                             class: 'btn btn-default dropdown-toggle'} %>
+                </div>
+            <% end %>
 
             <%= f.fields_for :location, current_user.location, { :method => :get } do |address_fields| %>
                   <%= address_fields.label :address %>
@@ -41,8 +48,6 @@
                 <%= f.submit 'Update', class: 'btn btn-primary' %>
             </div>
         <% end %>
-      </div>
-    </div>
 
     <% unless resource.role == 'Admin' %>
         <h4 align="center">Cancel Account</h4>
@@ -50,4 +55,6 @@
         <%= button_to 'Cancel my account', registration_path(resource_name), :data => { :confirm => 'Are you sure?' }, :method => :delete, :class => 'btn btn-primary' %>
     <% end %>
     
+        </div>
+    </div>
 </div>

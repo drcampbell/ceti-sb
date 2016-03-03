@@ -6,6 +6,7 @@
 #
 default: &default
   adapter: postgresql
+  encoding: unicode
   pool: 5
   timeout: 5000
   adapter: postgresql
@@ -24,6 +25,9 @@ development:
   username: pguser
   password: password
 
+test:
+  <<: *default
+  database: test
 #development:
 #  <<: *default
 #  adapter: sqlite3  

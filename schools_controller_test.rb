@@ -3,6 +3,12 @@ require "test_helper"
 class SchoolsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
 
+  def setup
+    #@request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in :admin, @user
+    sign_in @user
+  end
+
   def school
     @school ||= schools :one
   end
@@ -20,10 +26,12 @@ class SchoolsControllerTest < ActionController::TestCase
 
   def test_create
     assert_difference('School.count') do
-      post :create, school: {  }
+      post :create, school: {school_name: "School For Ants"}
     end
 
     assert_redirected_to school_path(assigns(:school))
+    sign_out :user
+    sign_out @user
   end
 
   def test_show

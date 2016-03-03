@@ -20,8 +20,9 @@
 
         <% if user_signed_in? %>
           <% @loglinks = {'Users'              => users_path, 
-                          'Events'             => events_path }%>
-                          <!-- 'Search by Location' => locations_path,
+                          'Events'             => events_path,
+                          'Schools'            => schools_path} %>
+          <!-- 'Search by Location' => locations_path,
                           'Claims'             => claims_path} 
                           %> -->
           <% @loglinks.each do |title, lpath| %>

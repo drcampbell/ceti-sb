@@ -77,9 +77,12 @@ class ClaimsController < ApplicationController
   def teacher_confirm
     @event = Event.find(params[:event_id])
     @claim = Claim.find(params[:id])
-    if @claim.teacher_confirm(@event)
+    if @claim.teacher_confirm
       redirect_to(root_url)
       flash[:notice] = 'Claim was successfully confirmed.'
+    else
+      redirect_to(@claim.event)
+      flash[:danger] = 'User '+@claim.user.name + " has cancelled their claim."
     end
   end
 

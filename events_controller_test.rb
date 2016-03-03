@@ -28,7 +28,7 @@ class EventsControllerTest < ActionController::TestCase
         sign_out @user
       else 
         get :index
-        assert_redirected_to :signin
+        assert_redirected_to :sign_in
       end
     end
   end

@@ -73,8 +73,12 @@ class EventsController < ApplicationController
               flash[:success] = 'Event created!'
               redirect_to root_path
             else
+              #@event.errors.messages.map{|x,y| flash.now['danger'] = x.id2name }
+              @event.errors.full_messages.each do |x| 
+                flash.now['danger'] = x
+              end
               @feed_items = []
-              flash.now['danger'] = "Event creation failed!\nPlease complete required fields."
+              #flash.now['danger'] = "Event creation failed!\nPlease complete required fields."
               render :new  #'static_pages/home'
             end
           end
@@ -83,19 +87,19 @@ class EventsController < ApplicationController
         redirect_to signin
       end
     rescue InvalidTime
-      flash['danger'] = "You must enter a start time that preceeds the end time."
+      flash.now['danger'] = "You must enter a start time that preceeds the end time."
       render :new
     rescue ArgumentError
-      flash['danger'] = "You must enter a start time that preceeds the end time."
+      flash.now['danger'] = "You must enter a start time that preceeds the end time."
       render :new
     rescue MissingTitle
-      flash['danger'] = "You are missing a valid title"
+      flash.now['danger'] = "You are missing a valid title"
       render :new
     rescue MissingTime
-      flash['danger'] = "You are missing a valid start or end time"
+      flash.now['danger'] = "You are missing a valid start or end time"
       render :new
     rescue EventInPast
-      flash['danger'] = "You have entered a start time that has already elapsed."
+      flash.now['danger'] = "You have entered a start time that has already elapsed."
       render :new
     end
   end
@@ -119,9 +123,12 @@ class EventsController < ApplicationController
   def update
     success = false
     updated = false
+    @event = Event.find(params[:id])
+    params = event_params # Run the parameters through safety 
+    if params == {}
+      raise ActionController::ParameterMissing
+    end
     begin
-      @event = Event.find(params[:id])
-      params = event_params # Run the parameters through safety 
       attrs = @event.attributes
       @event.attributes = params
       adjust_time(@event)
@@ -135,19 +142,19 @@ class EventsController < ApplicationController
         end
       end
     rescue InvalidTime
-      flash['danger'] = "You must enter a start time that preceeds the end time."
+      flash.now['danger'] = "You must enter a start time that preceeds the end time."
       success = false
     rescue ArgumentError
-      flash['danger'] = "You must enter a start time that preceeds the end time."
+      flash.now['danger'] = "You must enter a start time that preceeds the end time."
       success = false
     rescue MissingTitle
-      flash['danger'] = "You are missing a valid title"
+      flash.now['danger'] = "You are missing a valid title"
       success = false
     rescue MissingTime
-      flash['danger'] = "You are missing a valid start or end time"
+      flash.now['danger'] = "You are missing a valid start or end time"
       success = false
     rescue EventInPast
-      flash['danger'] = "You have edited the event to be in the past"
+      flash.now['danger'] = "You have edited the event to be in the past"
       success = false
     end
 
@@ -160,7 +167,10 @@ class EventsController < ApplicationController
         format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
         format.all { render_404 } 
       elsif @event && !success && updated
-        format.html {render :edit, :alert => 'Unable to update event.'}
+        @event.errors.full_messages.each do |x| 
+          flash.now['danger'] = x
+        end
+        format.html {render :edit }
         format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
         format.all {render_404}
       elsif @event && !updated
@@ -203,7 +213,7 @@ class EventsController < ApplicationController
       flash[:success] = "You have claimed event: #{@event.title}"
       redirect_to(root_url)
     rescue ActiveRecord::RecordNotFound
-      flash['danger'] = "Event not found"
+      flash.now['danger'] = "Event not found"
       redirect_to(root_url)
     end
   end

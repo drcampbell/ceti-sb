@@ -31,6 +31,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       #   end
       # end
       # format.json do
+        params = params.each{ |k,v| params[k] = v.strip}
         @user = User.create(sign_up_params)
         if @user.errors.messages == {}
           UserMailer.welcome(@user.id).deliver_now
@@ -42,11 +43,15 @@ class API::RegistrationsController < Devise::RegistrationsController
     # end
   end
 
+  def destroy
+    current_user.clean_user
+    super
+  end
+
   def update
     self.resource = resource_class.to_adapter.get!(send(:current_user).to_key)
     @user = User.find(current_user.id)
     puts resource
-    #puts account_update_params
     successfully_updated = update_resource(resource, account_update_params)
     if successfully_updated
       #sign_in user, resource, :bypass => true
@@ -54,7 +59,7 @@ class API::RegistrationsController < Devise::RegistrationsController
       profile[:school_name] = School.find(profile["school_id"]).school_name
       render json: {state:0,user:profile}
     else
-      render json: {state:1}
+      render json: {state:1, message: @user.errors.full_messages.join('\n')}
     end
   end
 
@@ -73,14 +78,9 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def profile
-    # if current_user.school_id == 1 
-    #   return redirect_to :choose
-    # end
-    #build_resource({})
     profile = current_user.attributes
     profile[:school_name] = School.find(profile["school_id"]).school_name
     render json: profile.as_json.except("authentication_token","created_at","updated_at","encrypted_password","reset_password_token","reset_password_sent_at", "remember_created_at")
-    #return render "users/#{current_user.id}"
   end
 
   protected
@@ -96,10 +96,12 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def sign_up_params
-    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation)
+    p = params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation)
+    p.each{ |k,v| p[k] = v.strip}
   end
 
   def account_update_params
-    params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password)#, location_attributes: [:address])
+    p = params.require(:user).permit(:name, :role, :email, :school_id, :grades, :biography, :job_title, :business, :password, :password_confirmation, :current_password)#, location_attributes: [:address])
+    p.each{ |k,v| p[k] = v.strip}
   end
 end

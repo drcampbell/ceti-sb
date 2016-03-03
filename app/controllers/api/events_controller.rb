@@ -130,8 +130,16 @@ class API::EventsController < API::ApplicationController
     # TODO Handle a speaker already being selected
     begin
       @event = Event.find(params[:id])
-      @event.claims.create!(:user_id => current_user.id)
-      render :json => {:state => 0, :event => @event }
+      @claim = Claim.where(event_id: @event.id, user_id: current_user.id)[0]
+      if @claim and @claim.cancelled and not @claim.rejected
+        @claim.update({active: true, cancelled: false})
+        render :json => {:state => 0, :event => @event }
+      elsif @claim and @claim.rejected
+        render :json => {:state => 1, :message => "Your claim was rejected by the organizer"}
+      else
+        @event.claims.create!(:user_id => current_user.id)
+        render :json => {:state => 0, :event => @event }
+      end
     rescue ActiveRecord::RecordNotFound
       render :json => {:state => 1, :message => "Event not found" }
     end

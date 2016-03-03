@@ -21,3 +21,15 @@ admin:
   email: other@gmail.com
   encrypted_password: <%= Devise.bcrypt(User, '87654321') %>
   role: Admin
+
+david:
+  name: David
+  email: david@gmail.com
+  encrypted_password: <%= Devise.bcrypt(User, 'password') %>
+  role: Both
+
+test:
+  name: Tester
+  email: test@example.com
+  encrypted_password: <%= Devise.bcrypt(User, 'password')%>
+  role: Both

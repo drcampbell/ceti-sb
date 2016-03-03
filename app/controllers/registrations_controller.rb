@@ -24,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
             @minimum_password_length = resource_class.password_length.min
           end
           resource.errors.full_messages.each do |x|
-            flash['danger'] = x
+            flash.now['danger'] = x
           end
           respond_with resource
         end
@@ -40,6 +40,14 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def new
+    if user_signed_in?
+      redirect_to root_path
+    else
+      super
+    end  
+  end
+  
   def profile
     # if current_user.school_id == 1
     #   return redirect_to :choose
@@ -47,6 +55,11 @@ class RegistrationsController < Devise::RegistrationsController
     build_resource({})
     respond_with self.resource
     #return render "users/#{current_user.id}"
+  end
+
+  def destroy
+    current_user.clean_user
+    super
   end
 
   def update

@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
   def soft_delete
     self.events.each do |event|
       if event.start > Time.now
-        event.cancel
+        event.cancel(self.id)
       end
     end
     claims = self.claims

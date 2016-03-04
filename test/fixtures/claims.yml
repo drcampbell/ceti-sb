@@ -12,3 +12,11 @@ rejected:
 active:
   user: speaker
   event: one
+
+cancel_me:
+  user: both
+  event: one
+
+reject_me:
+  user: test
+  event: one

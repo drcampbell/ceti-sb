@@ -13,4 +13,10 @@ one:
   user_id: 1
 
 two: {}
+
+claim_me:
+  title: "Claim Me"
+  event_start: <%= Time.now %>
+  event_end: <%= Time.now+1 %>
+  user_id: 1
 #  column: value

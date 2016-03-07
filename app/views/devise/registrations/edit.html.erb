@@ -21,8 +21,8 @@
                     <%= f.select :role, 
                             ['Speaker', 'Teacher', 'Both'],
                             {}, 
-                            {:selected => @user.role, 
-                             class: 'btn btn-default dropdown-toggle'} %>
+                            selected: current_user.role, 
+                             class: 'btn btn-default dropdown-toggle' %>
                 </div>
             <% end %>
 

@@ -27,12 +27,12 @@
                   <%= f.text_field :tag_list %>
                 </div>
               <% end %>
-              <%= f.label :biography %>
-              <%= f.text_area :biography, :value => current_user.biography, class: 'form-control' %>
+              <%= f.input :biography, :value => current_user.biography, class: 'form-control' %>
               <% unless resource.role == 'Admin' %>
                   <div class="form-group">
-                    <%= f.label :role %>
-                    <%= f.select :role, ['Speaker', 'Teacher', 'Both'], {}, {:selected => @user.role, class: 'btn btn-default dropdown-toggle'} %>
+                    <%= f.input :role, collection: ['Teacher', 'Speaker', 'Both'], 
+                        :selected => current_user.role,
+                        class: 'btn btn-default dropdown-toggle' %>
                   </div>
               <% end %>
 

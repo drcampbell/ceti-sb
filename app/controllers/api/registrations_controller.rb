@@ -44,8 +44,11 @@ class API::RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    current_user.clean_user
-    super
+    resource.soft_delete
+    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    set_flash_message :notice, :destroyed if is_flashing_format?
+    yield resource if block_given?
+    render json: {state:0, message: "Your account has been deleted!"}
   end
 
   def update

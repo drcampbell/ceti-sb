@@ -1,3 +1,7 @@
-<li>
-  <%= link_to handle_abbr(school.school_name), school %>
+<li id="<%= school.id %>">
+  <div class="row" >
+    <%= link_to handle_abbr(school.school_name), school %>
+    <p>City: <%= school.loc_city %></p>
+    <p>State: <%= school.loc_state %></p>
+  </div>
 </li>

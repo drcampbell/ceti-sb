@@ -29,27 +29,28 @@
             <li><%= link_to title, lpath %></li>
           <% end %>
 
-          <li id="fat-menu" class="dropdown">
+          <li id="notifications" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <%= notif_count = Notification.where(user_id: current_user.id, read: false).count %>
+              <span class="badge">
+                <%= current_user.unread_notifications() %>
+              </span>
               <b class="caret"></b>
             </a>
 
             <!-- TODO This could be improved -->
-            <ul class="dropdown-menu pull-right">
+            <ul class="dropdown-menu pull-right scrollable-menu">
               
-              <% @notifications = Notification.where(user_id: current_user.id).reverse.paginate %>
-              <% if @notifications.count > 0 %>
+              <% @notifications = current_user.notifications({})%>
               <% @notifications.each do |x| %>
                 <li><%= link_to x.content, "/notifications/"+x.id.to_s %></li>
                 <li class="divider"></li>
               <% end %>
+              <li id="infinite-scrolling">
+                <%= will_paginate(@notifications, params: {controller: "users", 
+                                                          action: "notifications"}) %>
+              </li>
               <!-- TODO Create Notification display page -->
-              <li><%= link_to "See All Notifications", "#" %></li>
-              <% else %>
-                <li><p>No Notifications</p></li>
-              <% end %>
-            </ul> 
+            </ul>
           </li>
 
           <li id="fat-menu" class="dropdown">

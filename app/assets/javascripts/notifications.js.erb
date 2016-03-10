@@ -1,0 +1,9 @@
+function app_notifications(){
+  $('#notifications').append('<%= j render @notifications %>');
+<% if @notifications.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate @notifications %>');
+<% else %>
+  $(window).off('scroll');
+  $('.pagination').remove();
+<% end %>
+}

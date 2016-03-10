@@ -52,6 +52,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def notifications
+    @notifications = current_user.notifications(params)
+    respond_to do |format|
+      format.html {render js: "app_notifications();"}
+      format.js {render "notifications.js.erb"}
+    end
+  end
+
   def read_notification
     notification = Notification.find(params[:id])
     notification.update_attribute(:read, true)

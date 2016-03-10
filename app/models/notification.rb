@@ -3,7 +3,12 @@ class Notification < ActiveRecord::Base
 								:reject_claim, :cancel_claim, :cancel_speaker]
 	belongs_to :user
 	belongs_to :event
+	after_initialize :init_notification, :if => :new_record?
 	after_create :send_gcm
+
+	def init_notification
+	    self.read ||= false
+	end
 
 	def content
 		content = ""

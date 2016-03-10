@@ -137,8 +137,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def notifications()
-    Notification.where(user_id: self.id).order(id: :desc)
+  def notifications(params)
+    Notification.where(user_id: self.id).order(id: :desc).paginate(page: params[:page], :per_page => 10)
   end
 
   def unread_notifications()

@@ -7,6 +7,11 @@ class SearchService
         #query += " " + state_to_abbr[st]
       #end
     #end
+    state_to_abbr.keys.each do |st|
+      if query.include? st
+        query[st] = state_to_abbr[st]
+      end
+    end
     return query
   end
 

@@ -76,7 +76,7 @@ Rails.application.routes.draw do
   get     'users/:tag',  to: 'users#index'
   get     'users/:user_id/badges' => 'users#show_badges'
   get     'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
-  post    'notifications/:id' => 'users#read_notification'
+  get    'notifications/:id' => 'users#read_notification'
   post    'make_mine', to: 'schools#make_mine'
   #get     'users/edit'      => 'registrations#edit'
   get     'android' => 'static_pages#android'

@@ -52,6 +52,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def read_notification
+    notification = Notification.find(params[:id])
+    notification.update_attribute(:read, true)
+    redirect_to notification.link
+  end
+
   def award_badge
     current_user.award_badge(params[:event_id], params[:award])
     redirect_to root_url 

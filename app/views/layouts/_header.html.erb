@@ -41,8 +41,7 @@
               <% @notifications = Notification.where(user_id: current_user.id).reverse.paginate %>
               <% if @notifications.count > 0 %>
               <% @notifications.each do |x| %>
-                <li><%= link_to x.content, x.link %></li>
-                <% x.update(read: true) %>
+                <li><%= link_to x.content, "/notifications/"+x.id.to_s %></li>
                 <li class="divider"></li>
               <% end %>
               <!-- TODO Create Notification display page -->

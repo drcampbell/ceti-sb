@@ -12,12 +12,12 @@
     <section class="event_calendar">
       <%= render 'events/week_calendar' %>
     </section>
-        
-    <div class="row">
-      <p>  </p>
-      <!--<div class="col-md-8">-->
-      <%= button_to "Create New Event", 'events/new', class: 'btn-primary', method: :get %>
-    </div>
+
+    <% if current_user.role != "Speaker" %>  
+      <div class="row", style="margin-top:10px;">
+        <%= button_to "Create New Event", 'events/new', class: 'btn btn-primary', method: :get %>
+      </div>
+    <% end %>
     </div>
     <div class="row">
         <h3>Event Feed</h3>

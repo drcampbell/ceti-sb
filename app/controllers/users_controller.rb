@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @users = SearchService.new.search(User, params)
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @users.as_json }
+      format.json { render json: @users.map{|u| u.json_list.format}.as_json }
     end
   end
 
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
       format.html do
         @events = @user.events.order(event_end: :desc).paginate(page: params[:page])
       end
-      format.json { render json: @user }
+      format.json { render json: @user.json_format }
     end
   end
 

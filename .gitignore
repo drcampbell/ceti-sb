@@ -24,6 +24,7 @@ db/*.sqlite3
 
 # sensitive data
 sc13prelim.txt
+*_data.txt
 
 #ignore swaps
 *.swo

@@ -31,7 +31,6 @@ class API::RegistrationsController < Devise::RegistrationsController
       #   end
       # end
       # format.json do
-        params = params.each{ |k,v| params[k] = v.strip}
         @user = User.create(sign_up_params)
         if @user.errors.messages == {}
           UserMailer.welcome(@user.id).deliver_now

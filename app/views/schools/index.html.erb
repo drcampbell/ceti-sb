@@ -12,9 +12,12 @@
   <p>
     <%= text_field_tag :search, params[:search] %>
     <%= submit_tag 'Search', :name => nil %>
-    <%= button_tag 'Near Me', :name => 'location', :action => 'near_me' %>
+      <!--:action => 'schools_near_me',
+      :class => 'btn-primary',
+      :method => :get %>-->
   </p>
 <% end %>
+    <%= button_to 'Near Me', 'near_me', method: :get %>
 
 <% @schools = get_schools(params) %>
 

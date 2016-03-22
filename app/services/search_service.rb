@@ -52,4 +52,21 @@ class SearchService
     end
     @search.paginate(page: params[:page], per_page: params[:per_page])
   end
+
+  def location(lat, long, radius, params)
+      #"SELECT * FROM schools WHERE earth_box(ll_to_earth(34.263197, -86.205836), 1000) @> ll_to_earth(schools.latitude, schools.longitude);"
+    results = ActiveRecord::Base.connection.exec_query(
+      "SELECT * 
+      FROM schools 
+      WHERE earth_box(ll_to_earth(#{lat}, #{long}), #{radius}) 
+      @> ll_to_earth(schools.latitude, schools.longitude);"
+    )
+    if results.present?
+      ids = results.map{|r| r['id']}
+      return School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
+    else
+      return nil
+    end
+  end
+
 end

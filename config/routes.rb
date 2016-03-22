@@ -54,7 +54,11 @@ Rails.application.routes.draw do
   end
 
   resources :users
-  resources :schools
+  resources :schools do
+    member do
+      get :near_me
+    end
+  end
   resources :events
   resources :claims
   resources :locations
@@ -83,6 +87,8 @@ Rails.application.routes.draw do
   # TODO Make these https secure
   post    'email_responses/bounce' => 'email_responses#bounce'
   post    'email_responses/complaint' => 'email_responses#complaint'
+  # Schools
+  get     'near_me' => 'schools#near_me', via: [:get], as: 'schools_near_me'
 
   # Handle Claims
   delete  'claims/:id/reject' => 'claims#reject'

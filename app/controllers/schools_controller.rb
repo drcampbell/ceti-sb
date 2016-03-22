@@ -10,11 +10,15 @@ class SchoolsController < ApplicationController
     end
   end
   
-  # def near_me
-  #   @schools = School.near('Columbus, OH', 20)
-  #   #@search = Sunspot.search(School) do
-  #   #@schools = @search.results
-  # end
+  def near_me
+    @schools = SearchService.new.location(34.263197, -86.205836, 1000, params)
+    #@search = Sunspot.search(School) do
+    #@schools = @search.results
+   respond_to do |format|
+    format.html {}
+    format.json {} 
+   end
+  end
 
   # GET /schools/1
   # GET /schools/1.json

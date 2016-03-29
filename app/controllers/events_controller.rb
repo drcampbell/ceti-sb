@@ -7,6 +7,8 @@ class EventsController < ApplicationController
 
   class InvalidTime < StandardError
   end
+  class InvalidPreceedingTime < StandardError
+  end
   class MissingTime < StandardError
   end
   class MissingTitle < StandardError
@@ -14,7 +16,7 @@ class EventsController < ApplicationController
   class EventInPast < StandardError
   end
 
-  rescue_from InvalidTime, :with => :invalid_time
+  rescue_from InvalidPreceedingTime, :with => :invalid_preceeding_time
 
   def index
     if not user_signed_in?
@@ -87,6 +89,9 @@ class EventsController < ApplicationController
         redirect_to signin
       end
     rescue InvalidTime
+      flash.now['danger'] = "You must enter a valid date."
+      render :new
+    rescue InvalidPreceedingTime
       flash.now['danger'] = "You must enter a start time that preceeds the end time."
       render :new
     rescue ArgumentError
@@ -142,6 +147,9 @@ class EventsController < ApplicationController
         end
       end
     rescue InvalidTime
+      flash.now['danger'] = "You must enter a valid date."
+      success = false
+    rescue InvalidPreceedingTime
       flash.now['danger'] = "You must enter a start time that preceeds the end time."
       success = false
     rescue ArgumentError
@@ -233,18 +241,22 @@ class EventsController < ApplicationController
       elsif event.title == ""
         raise MissingTitle
       elsif event.event_start >= event.event_end
-        raise InvalidTime
+        raise InvalidPreceedingTime
       elsif event.event_start <= Time.now
         raise EventInPast
       end
     end
 
     def adjust_time(event)
-      time_offset = Time.now.in_time_zone(event.time_zone).utc_offset
-      event.event_start -= time_offset
-      event.event_start = event.event_start.in_time_zone("UTC")
-      event.event_end -= time_offset
-      event.event_end = event.event_end.in_time_zone("UTC")
+      if event.event_start and event.event_end
+        time_offset = Time.now.in_time_zone(event.time_zone).utc_offset
+        event.event_start -= time_offset
+        event.event_start = event.event_start.in_time_zone("UTC")
+        event.event_end -= time_offset
+        event.event_end = event.event_end.in_time_zone("UTC")
+      else
+        raise InvalidTime
+      end
     end
 
 

@@ -11,12 +11,19 @@ class SchoolsController < ApplicationController
   end
   
   def near_me
-    @schools = SearchService.new.location(34.263197, -86.205836, 1000, params)
-    #@search = Sunspot.search(School) do
-    #@schools = @search.results
+    if not params[:zip]
+      redirect_to schools
+    end
+    zip = Zipcode.where(zip: params[:zip]).first
+    if params[:radius]
+      radius = eval(params[:radius]) * 1609.34
+    else
+      radius = 10 * 1609.34
+    end
+    @schools = SearchService.new.location(zip.lat, zip.long, radius, params)
    respond_to do |format|
-    format.html {}
-    format.json {} 
+     format.html {if @schools.empty? then flash[:alert] = "No schools found" end}
+    format.json {@schools.map{|s| s.json_list_format}} 
    end
   end
 

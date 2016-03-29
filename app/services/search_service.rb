@@ -65,7 +65,7 @@ class SearchService
       ids = results.map{|r| r['id']}
       return School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
     else
-      return nil
+      return School.where(id: 0).paginate(page: params[:page])
     end
   end
 

@@ -38,7 +38,7 @@
             <!-- TODO This could be improved -->
             <ul class="dropdown-menu pull-right">
               
-              <% @notifications = Notification.where(user_id: current_user.id).reverse.paginate %>
+              <% @notifications = current_user.notifications().paginate(page: params[:page]) %>
               <% if @notifications.count > 0 %>
               <% @notifications.each do |x| %>
                 <li><%= link_to x.content, "/notifications/"+x.id.to_s %></li>

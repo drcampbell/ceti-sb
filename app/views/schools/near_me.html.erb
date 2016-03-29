@@ -1,9 +1,12 @@
 <% provide(:title, 'Schools') %>
 <p id="notice"><%= notice %></p>
 <h1>Schools Near Me</h1>
+
+<%= render partial: "searchbyradius" %>
+
 <%= will_paginate %>
 
 <ul class="schools">
   <%= render @schools %>
 </ul>
-
+<%= will_paginate %>

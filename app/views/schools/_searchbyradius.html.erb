@@ -1,0 +1,13 @@
+<%= form_tag '/near_me', method: :get, class: "form-inline" do %>
+  <div class="form-group">
+  <%= label_tag 'Zip Code:' %>
+  <%= number_field_tag :zip, params[:zip], class: "form-control" %>
+  </div>
+  <div class="form-group">
+  <%= label_tag 'Radius in Miles:' %>
+  <%= number_field_tag 'radius', params[:radius], class: "form-control" %>
+  </div>
+  <div class="form-group">
+  <%= submit_tag 'Near Me', class: "btn btn-default btn-primary" %>
+  </div>
+<% end -%>

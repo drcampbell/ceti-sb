@@ -1,15 +1,15 @@
 class UsersController < ApplicationController
 
   #before_filter :authenticate_user!
-  #before_action :correct_user,   only: [:update, :destroy]
-  #before_action :admin_user,     only: :destroy
+#  before_action :correct_user,   only: [:update, :destroy]
+  before_action :admin_user,     only: :destroy
 
   def index
     params[:per_page] = 15
     @users = SearchService.new.search(User, params)
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @users.map{|u| u.json_list.format}.as_json }
+      format.json { render json: {users: @users.map{|u| u.json_list_format}}.as_json }
     end
   end
 
@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+#    User.find(params[:id]).destroy
     respond_to do |format|
       format.html do
         flash[:success] = 'User deleted'

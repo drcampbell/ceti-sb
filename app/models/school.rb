@@ -23,6 +23,18 @@ class School < ActiveRecord::Base
       }
     }
 
+  def json_format
+    return {
+      id: self.id, 
+      name: self.school_name,
+      address: self.loc_addr, 
+      city: self.loc_city,
+      state: self.loc_state, 
+      zip: self.loc_zip,
+      phone: self.phone
+    }
+  end
+
   def json_list_format
     city_state = self.loc_city+", "+self.loc_state
     return {"id" => self.id, 

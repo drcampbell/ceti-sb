@@ -6,7 +6,7 @@ class SchoolsController < ApplicationController
   def index
     respond_to do |format|
         format.html {  }
-        format.json { render json: @schools.as_json }
+        format.json { render json: {schools: @schools.map{|s| s.json_list_format}}.as_json }
     end
   end
   
@@ -41,7 +41,7 @@ class SchoolsController < ApplicationController
       format.html do
 
       end
-      format.json { render json: @school}
+      format.json { render json: @school.json_format}
     end
   end
 

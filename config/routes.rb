@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post    'account'         => 'registrations#edit'
     get     'profile'         => 'registrations#profile'
     post    'users/award_badge' => 'users#award_badge'
+    get     'users/cancel_account' => 'registrations#cancel_account'
   end
 
   namespace :api do
@@ -28,6 +29,7 @@ Rails.application.routes.draw do
       post    'notifications/:id' => 'users#read_notification'
       delete  'notifications' => 'users#all_notifications_read'
       post    'users/award_badge' => 'users#award_badge'
+      get     'users/cancel' => 'registrations#cancel_account'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

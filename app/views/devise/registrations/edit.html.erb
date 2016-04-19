@@ -51,7 +51,7 @@
     <% unless resource.role == 'Admin' %>
         <h4 align="center">Cancel Account</h4>
         <p align="center"><em>Unhappy? We'll be sad to see you go.</em></p>
-        <%= button_to 'Cancel my account', registration_path(resource_name), :data => { :confirm => 'Are you sure?' }, :method => :delete, :class => 'btn btn-primary' %>
+        <%= button_to 'Cancel my account', users_cancel_account_path, :method => :get, :class => 'btn btn-primary' %>
     <% end %>
     
         </div>

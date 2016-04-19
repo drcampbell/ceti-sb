@@ -1,5 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
-
+  prepend_before_action :authenticate_scope!, only: [:edit, :update, :destroy, :cancel_account]
   def create
     respond_to do |format|
       format.html do
@@ -57,8 +57,11 @@ class RegistrationsController < Devise::RegistrationsController
     #return render "users/#{current_user.id}"
   end
 
+  def cancel_account
+  end
+
   def destroy
-    if current_user.valid_password?(params[:current_password])
+    if current_user.valid_password?(sign_up_params[:password])
       resource.soft_delete
       Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
       set_flash_message :notice, :destroyed if is_flashing_format?

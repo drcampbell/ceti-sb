@@ -109,6 +109,7 @@ class User < ActiveRecord::Base
     #notifications.each do |n|
     #  n.update(act_user_id: 0)
     #end
+    self.update_attribute(:authentication_token, nil)
     update_attribute(:deleted_at, Time.current)
   end
 

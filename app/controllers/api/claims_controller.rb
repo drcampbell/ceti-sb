@@ -94,7 +94,7 @@ class API::ClaimsController < API::ApplicationController
     # Teacher confirms a speaker
     @claim = Claim.find(params[:claim_id])
     # Does the current user own the event and can we update it?
-    if current_user.id == claim.event.user_id and @claim.teacher_confirm
+    if current_user.id == @claim.event.user_id and @claim.teacher_confirm
       render json: {status: 0, event: @claim.event.jsonEvent(current_user.id)}
     else
       if @claim.cancelled

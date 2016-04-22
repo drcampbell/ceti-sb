@@ -69,4 +69,19 @@ class SearchService
     end
   end
 
+  def events_by_location(lat, long, radius, params)
+    schools = ActiveRecord::Base.connection.exec_query(
+      "SELECT * 
+      FROM schools 
+      WHERE earth_box(ll_to_earth(#{lat}, #{long}), #{radius}) 
+      @> ll_to_earth(schools.latitude, schools.longitude);"
+    )
+    if schools.present?
+      school_ids = schools.map{|s| s["id"]}
+      return Event.where(loc_id: school_ids).reorder(event_start: :desc)
+                  .paginate(page: params[:page], per_page: params[:per_page])
+    else
+      return Event.where(id: 0).paginate(page: params[:page])
+    end
+  end
 end

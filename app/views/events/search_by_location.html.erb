@@ -1,7 +1,7 @@
-<% provide(:title, 'Events') %>
+<% provide(:title, 'Events Near Me') %>
 <p id="notice"><%= notice %></p>
 
-<h1>Events</h1>
+<h1>Events Near Me</h1>
 
 
 
@@ -17,8 +17,9 @@
       <%= submit_tag 'Search', :name => nil %>
     </p>
 <% end %>
-
 <%= render partial: "location_form" %>
+
+<% @events = get_events(params) %>
 
 <%= will_paginate %>
 

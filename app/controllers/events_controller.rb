@@ -23,7 +23,17 @@ class EventsController < ApplicationController
       redirect_to :signin
       return
     end
-
+    if params[:location] and params[:zip] != ""
+      zip = Zipcode.where(zip: params[:zip]).first
+      if params[:radius] != "" 
+        radius = eval(params[:radius]) * 1609.34
+      else
+        radius = 10 * 1609.34
+      end
+      @events = SearchService.new.events_by_location(zip.lat, zip.long, radius, params)
+    else
+      @events = SearchService.new.search(Event, params)
+    end
     # @search = Sunspot.search(Event) do
     #   fulltext params[:search]
     #    with(:start).less_than(Time.zone.now)

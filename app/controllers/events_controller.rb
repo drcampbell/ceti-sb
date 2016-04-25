@@ -25,7 +25,7 @@ class EventsController < ApplicationController
     end
     if params[:location] and params[:zip] != ""
       zip = Zipcode.where(zip: params[:zip]).first
-      if params[:radius] != "" 
+      if params[:radius] != ""
         radius = eval(params[:radius]) * 1609.34
       else
         radius = 10 * 1609.34
@@ -34,25 +34,9 @@ class EventsController < ApplicationController
     else
       @events = SearchService.new.search(Event, params)
     end
-    # @search = Sunspot.search(Event) do
-    #   fulltext params[:search]
-    #    with(:start).less_than(Time.zone.now)
-    #  facet(:event_month)
-    #   with(:event_month, params[:month]) if params[:month].present?
-    #   paginate(page: params[:page])
-
-    # end
-    # #debugger
-    # if params[:search]
-    #   @events = @search.results
-    # elsif params[:tag]
-    #   @events = Event.tagged_with(params[:tag]).paginate(page: params[:page])
-    # else
-    #   @events = @search.results
-    # end
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @events.as_json }
+      format.json { render json: list_events(@events).as_json }
     end
   end
 
@@ -64,7 +48,7 @@ class EventsController < ApplicationController
         end
         format.json do
           @event = Event.find(params[:id])
-          render json: @event.as_json
+          render json: @event.json_format.as_json
         end
       end
     else
@@ -86,7 +70,7 @@ class EventsController < ApplicationController
               redirect_to root_path
             else
               #@event.errors.messages.map{|x,y| flash.now['danger'] = x.id2name }
-              @event.errors.full_messages.each do |x| 
+              @event.errors.full_messages.each do |x|
                 flash.now['danger'] = x
               end
               @feed_items = []
@@ -139,7 +123,7 @@ class EventsController < ApplicationController
     success = false
     updated = false
     @event = Event.find(params[:id])
-    params = event_params # Run the parameters through safety 
+    params = event_params # Run the parameters through safety
     if params == {}
       raise ActionController::ParameterMissing
     end
@@ -178,14 +162,14 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event && success && updated
-        format.html do       
+        format.html do
           flash[:success] = 'Event updated'
           redirect_to @event
         end
-        format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
-        format.all { render_404 } 
+        format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.json_format.to_json }}
+        format.all { render_404 }
       elsif @event && !success && updated
-        @event.errors.full_messages.each do |x| 
+        @event.errors.full_messages.each do |x|
           flash.now['danger'] = x
         end
         format.html {render :edit }
@@ -204,7 +188,7 @@ class EventsController < ApplicationController
       redirect_to root_url
     end
   end
-  
+
   def destroy
     @event = Event.find params[:id]
     if current_user.id == @event.user_id
@@ -239,6 +223,10 @@ class EventsController < ApplicationController
   private
     def set_event
       @event = Event.find(params[:id])
+    end
+
+    def list_events(events)
+      return events.map{|e| e.json_list_format}
     end
 
     def event_params

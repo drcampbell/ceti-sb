@@ -10,7 +10,17 @@ class API::EventsController < API::ApplicationController
 
   def index
     params[:per_page] = 15
-    @events = SearchService.new.search(Event, params)
+    if params[:location] and params[:zip] != ""
+      zip = Zipcode.where(zip: params[:zip]).first
+      if params[:radius] != ""
+        radius = eval(params[:radius]) * 1609.34
+      else
+        radius = 10 * 1609.34
+      end
+      @events = SearchService.new.events_by_location(zip.lat, zip.long, radius, params)
+    else
+      @events = SearchService.new.search(Event, params)
+    end
     render json: {:events => list_events(@events)}.as_json
   end
 
@@ -27,7 +37,7 @@ class API::EventsController < API::ApplicationController
   def my_events
     @events = current_user.get_all_events(params)
     render json: {:events => list_events(@events)}.as_json
-  end    
+  end
 
   def confirmed
     @events = current_user.get_confirmed(params)
@@ -41,19 +51,19 @@ class API::EventsController < API::ApplicationController
   def show
     if user_signed_in?
       @event = Event.find(params[:id])
-      result = @event.jsonEvent(current_user.id)  
+      result = @event.jsonEvent(current_user.id)
       render json: result.as_json
     end
   end
 
   def create
     if user_signed_in?
-      begin 
+      begin
         @event = current_user.events.build(event_params)
         @event.save
         render :json => {:state => 0, :event => @event.to_json }
       rescue ActionController::ParameterMissing => e
-          render :json => {:state => 1, :messages => "Parameter #{e.param} is required"}#@event.errors.full_messages }      
+          render :json => {:state => 1, :messages => "Parameter #{e.param} is required"}#@event.errors.full_messages }
       end
     end
   end
@@ -77,11 +87,11 @@ class API::EventsController < API::ApplicationController
   def verifyChange(event, jsonEvent, key)
     case key
     when "event_start"
-      return String(event.start()) != jsonEvent[key]  
+      return String(event.start()) != jsonEvent[key]
     when "event_end"
-      return String(event.end()) != jsonEvent[key]  
+      return String(event.end()) != jsonEvent[key]
     else
-      return String(event[key]) != jsonEvent[key]  
+      return String(event[key]) != jsonEvent[key]
     end
   end
 
@@ -92,7 +102,7 @@ class API::EventsController < API::ApplicationController
     @event.attributes = params
     updated = false
     if not params.map{|x,y| attrs[x] == @event[x]}.all?
-      updated = true 
+      updated = true
       success = @event.update(params)
       if @event && success
         @event.handle_update()
@@ -150,8 +160,8 @@ class API::EventsController < API::ApplicationController
       @event = Event.find(params[:id])
     end
 
-    def event_params   
-      permitted = params.require(:event).permit(:content, :title, :loc_id, :event_start, :event_end, :tags, :time_zone) #:tag_list,       
+    def event_params
+      permitted = params.require(:event).permit(:content, :title, :loc_id, :event_start, :event_end, :tags, :time_zone) #:tag_list,
       [:title, :event_start, :event_end].each do |x|
         if not permitted.has_key?(x) or permitted[x] == ""
           raise ActionController::ParameterMissing, x

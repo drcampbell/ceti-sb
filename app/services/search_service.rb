@@ -81,7 +81,8 @@ class SearchService
       return Event.where(loc_id: school_ids).reorder(event_start: :desc)
                   .paginate(page: params[:page], per_page: params[:per_page])
     else
-      return Event.where(id: 0).paginate(page: params[:page])
+      return Event.where(loc_id: 0).paginate(page: params[:page])
     end
   end
+
 end

@@ -2,17 +2,17 @@
 <div class="row">
 <!--
 <aside class="col-xs-2 col-sm-2">
-   #image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name, 
-       # class: "img-responsive center-block", width: '80', style: "margin-top:15px;" %>  
+   #image_tag ENV["S3_BUCKET"]+"badges/"+ Badge.find(School.find(event.loc_id).badge_id).file_name,
+       # class: "img-responsive center-block", width: '80', style: "margin-top:15px;" %>
       </aside> -->
-  <div class="col-xs-10 col-sm-10"> 
+  <div class="col-xs-10 col-sm-10">
     <h3>
       <% if event.is_canceled %>
         <del><%= link_to event.title, event %></del> (Canceled)
       <% else %>
         <%= link_to event.title, event %>
       <% end %>
-    </h3> 
+    </h3>
   <p>Posted <%= time_ago_in_words(event.created_at) %> ago.</p>
 
 </div>
@@ -20,8 +20,8 @@
 <!-- Provide Badge Image -->
 <div class="col-xs-6 col-md-6">
   <p class="text-small">
-    <strong>Location: </strong> 
-    <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.loc_id}" %> 
+    <strong>Location: </strong>
+    <%= link_to handle_abbr(School.find(event.loc_id).school_name.titlecase), "/schools/#{event.loc_id}" %>
   </p>
   <p>
     <strong>Time:</strong> <%= event.present_time()  %>
@@ -43,7 +43,7 @@
     <% end %>
   </p>
   <p><strong>Organizer: </strong>
-    <%= link_to event.user.name, event.user %></p>  
+    <%= link_to event.user.name, event.user %></p>
   </div>
   <div class="col-xs-12 col-md-12">
   <p><strong>Tags: </strong>
@@ -56,9 +56,9 @@
         (event.claims.where('confirmed_by_teacher = ?', true).count < 1) &&
         (event.claims.where('user_id = ?', current_user.id).count < 1) &&
         (event.user != current_user) %>
-        <%= button_to 'Claim This Event', 
-              claim_event_path(:event_id => event.id, :user_id => current_user.id), 
-              data: { confirm: 'Are you sure?' }, 
+        <%= button_to 'Claim This Event',
+              claim_event_path(:event_id => event.id, :user_id => current_user.id),
+              data: { confirm: 'Are you sure?' },
               class: 'btn btn-primary' %>
     <% end %>
   </p>
@@ -66,43 +66,7 @@
   <!-- Section: This is where actions that may be taken by the user are located -->
   <p>
   <% if (not event.is_canceled) and event.start() > Time.now %>
-    <% event.claims.each do |claim| %>
-      <!-- CONFIRM claim? -->    
-      <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
-          <%= button_to "Confirm #{claim.user.name} as speaker", 
-                teacher_confirm_claim_path(claim, :event_id => event.id), 
-                data: { confirm: 'Are you sure?' }, 
-                class: 'btn btn-primary btn-xs' %> 
-      <% end %>
-      
-      <!-- REJECT claim? -->
-      <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
-        <p> 
-          <%= button_to "Reject #{claim.user.name} as speaker", 
-                {action: "reject", controller: "claims", id: claim.id}, 
-                data: { confirm: 'Are you sure?' }, 
-                method: :delete,
-                class: 'btn btn-primary btn-xs' %> 
-        </p>
-      <% end %>
-
-      <!-- Provide cancellation button to claimer/speaker -->
-      <% if current_user.id == claim.user_id and event.start() > Time.now %> 
-        <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
-        <% if current_user.id == event.speaker_id %>
-         <% cancellation = 'Cancel Speaking Engagement' %>
-        <% elsif current_user.id == claim.user_id %>
-          <% cancellation = 'Cancel Claim' %>
-        <% end %>
-        <p> 
-        <%= button_to cancellation, 
-                {action: "cancel", controller: "claims", id: claim.id}, 
-                method: :delete, 
-                data: { confirm: 'Are you sure?' }, 
-                class: 'btn btn-primary' %> 
-        </p>
-      <% end %><!-- End cancellation -->
-    <% end %><!-- End loop -->
+    <%= render partial: "claim", locals: {event: event} %>
   <% end %><!-- End if for event cancellation -->
   </p>
 
@@ -111,28 +75,28 @@
   <% if current_user == event.user and (not event.is_canceled) %>
     <% if event.event_end < Time.now and event.speaker_id > 0 and not event.complete %>
       <% speaker = User.find(event.speaker_id) %>
-      <%= button_to "Award Badge to #{speaker.name}", 
-            {action: "award_badge", controller: "users", event_id: event.id, award: true}, 
-            data: { confirm: 'Are you sure?' }, 
-            method: :post, 
+      <%= button_to "Award Badge to #{speaker.name}",
+            {action: "award_badge", controller: "users", event_id: event.id, award: true},
+            data: { confirm: 'Are you sure?' },
+            method: :post,
             class: 'btn-primary' %>
       <% end %>
     <% if event.event_start > Time.now %>
-      <%= button_to 'Edit the Event', 
-            {action: "edit", controller: "events", id:event.id}, 
-            method: :get, 
+      <%= button_to 'Edit the Event',
+            {action: "edit", controller: "events", id:event.id},
+            method: :get,
             class: "btn-primary" %>
-      <%= button_to 'Cancel The Event', 
-            {action: "cancel", controller: "events", id: event.id}, 
-            data: { confirm: 'Are you sure?' }, 
-            method: :delete, 
-            class: 'btn btn-primary btn-xs' %>
+      <%= button_to 'Cancel The Event',
+            {action: "cancel", controller: "events", id: event.id},
+            data: { confirm: 'Are you sure?' },
+            method: :delete,
+            class: 'btn btn-danger btn-xs' %>
     <% end %>
   <% elsif current_user != event.user %>
-    <%= button_to 'Message The Organizer', 
-          {action: "write_message", controller: "users", id: event.user_id}, 
-          method: :get, 
-          class:"btn-primary" %>    
+    <%= button_to 'Message The Organizer',
+          {action: "write_message", controller: "users", id: event.user_id},
+          method: :get,
+          class:"btn-primary" %>
   <% end %>
   </a>
 

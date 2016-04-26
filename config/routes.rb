@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       post    'notifications/:id' => 'users#read_notification'
       delete  'notifications' => 'users#all_notifications_read'
       post    'users/award_badge' => 'users#award_badge'
+      post     'users/password' => 'passwords#create'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

@@ -1,7 +1,8 @@
-
 <table width="auto">
-<% if current_user == event.user && event.claims.where(active: true) != nil %>
-  <tr>
+  <% if current_user == event.user and 
+       event.speaker_id == 0 and
+       event.claims.where(active: true) != [] %>
+  <tr><!-- Create Header Row -->
     <td><div style="text-align: center; font-weight: bold">Claimant<div></td>
     <td> <div style="text-align: center; font-weight: bold">Job Title<div></td>
     <td> </td>
@@ -9,28 +10,33 @@
   </tr>
 <% end %>
 <% event.claims.each do |claim| %>
-<p></p>
   <tr><td>&nbsp</td></tr>
+  <!-- Create claimant rows -->
   <tr style="margin-bottom: 10px">
-  <!-- CONFIRM claim? -->
-  <% if current_user == event.user && !claim.confirmed_by_teacher && claim.active %>
+    <% if current_user == event.user and 
+         event.speaker_id == 0 and 
+         !claim.confirmed_by_teacher and 
+         claim.active %>
     <div style="width: auto; margin-right: 10px; margin-left: 10px">
-    <td><div style="text-align: center;">Make <%= claim.user.name %> the speaker? </div></td>
-    <td><div style="text-align: center;"><%= if claim.user.job_title? then claim.user.job_title else "N/A" end %></div></td>
-    <td>
-      <%= button_to "Accept",
-              teacher_confirm_claim_path(claim, :event_id => claim.event.id),
+      <td>
+        <div style="text-align: center;">Make <%= claim.user.name %> the speaker? </div>
+      </td>
+      <td>
+        <div style="text-align: center;"><%= if claim.user.job_title? then claim.user.job_title else "N/A" end %></div>
+      </td>
+      <td>
+        <%= button_to "Accept",
+                teacher_confirm_claim_path(claim, :event_id => claim.event.id),
+                data: { confirm: 'Are you sure?' },
+                class: 'btn btn-success btn-xs' %>
+      </td>
+      <td>
+        <%= button_to "Reject",
+              {action: "reject", controller: "claims", id: claim.id},
               data: { confirm: 'Are you sure?' },
-              class: 'btn btn-success btn-xs' %>
-    </td>
-    <!-- REJECT claim? -->
-    <td>
-      <%= button_to "Reject",
-            {action: "reject", controller: "claims", id: claim.id},
-            data: { confirm: 'Are you sure?' },
-            method: :delete,
-            class: 'btn btn-danger btn-xs' %>
-    </td>
+              method: :delete,
+              class: 'btn btn-danger btn-xs' %>
+      </td>
     </div>
   <% end %>
 

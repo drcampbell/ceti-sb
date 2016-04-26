@@ -43,7 +43,7 @@
   </div>
   </p>
   <!-- Provide cancellation button to claimer/speaker -->
-  <% if current_user.id == claim.user_id and event.start() > Time.now %>
+  <% if current_user.id == claim.user_id and claim.active and event.start() > Time.now %>
     <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
     <% if current_user.id == event.speaker_id %>
      <% cancellation = 'Cancel Speaking Engagement' %>

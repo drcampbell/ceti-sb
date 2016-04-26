@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   validates_length_of :name, :job_title, :business, :grades,  maximum: 70
   validates_length_of :biography, maximum: 2048
   validates :name,
-             format: {with: /\A(\S+ )*\S+\z/i, 
+             format: {with: /\A(\S+ )*\S+\z/i,
                       message: "must be a valid alphanumeric string"}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, format: {with: VALID_EMAIL_REGEX,
@@ -63,9 +63,10 @@ class User < ActiveRecord::Base
     Event.joins(:claims).where('claims.user_id' => self.id)
           .where.not(speaker_id: self.id)
           .where(active: true, complete: false)
+          .where('claims.active' => true)
           .where('claims.cancelled' => false)
           .where('claims.rejected' => false)
-          .where('event_start > ?', Time.now) 
+          .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end
       #.where('claims.active' => true))
@@ -85,8 +86,8 @@ class User < ActiveRecord::Base
           .where(active: true) #speaker_id: current_user.id)
           .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
-  end    
- 
+  end
+
   def get_confirmed(params)
     Event.where("user_id = ? OR speaker_id = ?", self.id, self.id)
           .where.not(speaker_id: 0)
@@ -122,7 +123,7 @@ class User < ActiveRecord::Base
   end
 
   def send_message(to_id, message)
-    if self.deleted_at 
+    if self.deleted_at
       return false
     end
     begin
@@ -151,8 +152,8 @@ class User < ActiveRecord::Base
     if self.id == event.user_id
       if award
         badge_id = School.find(event.loc_id).badge_id
-        UserBadge.create(user_id: event.speaker_id, 
-                         badge_id: badge_id, 
+        UserBadge.create(user_id: event.speaker_id,
+                         badge_id: badge_id,
                          event_id: event.id)
         Notification.create(user_id: event.speaker_id,
                             act_user_id: self.id,
@@ -178,7 +179,7 @@ class User < ActiveRecord::Base
     else
       school_name = nil
     end
-    user_message = {id: self.id, name:self.name, role:self.role, 
+    user_message = {id: self.id, name:self.name, role:self.role,
                     grades:self.grades, job_title:self.job_title,
                     business:self.business, biography:self.biography,
                     category:self.speaking_category, school_id:self.school_id,
@@ -194,9 +195,9 @@ class User < ActiveRecord::Base
     end
     {"id" => self.id, "name" => self.name, "association" => association}
   end
- 
+
   private
-  
+
     def needs_password_change_email?
       encrypted_password_changed? && persisted?
     end

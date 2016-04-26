@@ -99,6 +99,7 @@ class Claim < ActiveRecord::Base
     end
     if self.update_attribute(:confirmed_by_teacher, true)
       self.event.update(speaker_id: self.user_id)
+      # Notify Speaker
       if Rails.env.production? and self.user.set_confirm
           UserMailer.confirm_speaker(self.event.user_id, 
                                    self.user_id, 
@@ -109,9 +110,15 @@ class Claim < ActiveRecord::Base
                             event_id: self.event_id,
                             n_type: :confirm_speaker,
                             read: false)
+      # Handle other claims
+      self.event.claims.each do |claim|
+        if claim != self 
+          claim.update(active: false) 
+        end
+      end
       return true
-	  else
-	  	return false
+    else
+      return false
     end
   end
 

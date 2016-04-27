@@ -28,7 +28,8 @@ Rails.application.routes.draw do
       get     'notifications'  => 'users#notifications'
       post    'notifications/:id' => 'users#read_notification'
       delete  'notifications' => 'users#all_notifications_read'
-      post    'users/award_badge' => 'users#award_badge'
+      get     'users/award_badge' => 'users#get_award_badge'
+      post    'users/award_badge' => 'users#post_award_badge'
       get     'users/cancel' => 'registrations#cancel_account'
     end
     post 'events/create' => 'events#create'

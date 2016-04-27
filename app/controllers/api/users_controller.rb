@@ -54,7 +54,19 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     end
   end
 
-  def award_badge
+  def get_award_badge
+    event = Event.find(params[:event_id])
+    badge = Badge.find(School.find(event.loc_id).badge_id)
+    isAwarded = UserBadge.where(event_id: event.id, badge_id: badge.id).present?
+    response = {badge_url: badge.file_name, 
+             event_name: event.title,
+             speaker_name:  User.find(event.speaker_id).name,
+             event_id: event.id,
+            isAwarded: isAwarded}
+    render json: response.as_json
+  end
+
+  def post_award_badge
     current_user.award_badge(params[:event_id], params[:award])
     render json: {state:0}
   end

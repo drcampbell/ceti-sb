@@ -40,7 +40,7 @@ class EventsController < ApplicationController
     # end
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @events.as_json }
+      #format.json { render json: @events.as_json }
     end
   end
 
@@ -50,10 +50,10 @@ class EventsController < ApplicationController
         format.html do
           @event = Event.find(params[:id])
         end
-        format.json do
-          @event = Event.find(params[:id])
-          render json: @event.as_json
-        end
+        #format.json do
+        #  @event = Event.find(params[:id])
+        #  render json: @event.as_json
+        #end
       end
     else
       redirect_to :signin
@@ -164,14 +164,14 @@ class EventsController < ApplicationController
           flash[:success] = 'Event updated'
           redirect_to @event
         end
-        format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
+        #format.json {render :json => {:state => {:code => 0}, status: :ok, :data => @event.to_json }}
         format.all { render_404 } 
       elsif @event && !success && updated
         @event.errors.full_messages.each do |x| 
           flash.now['danger'] = x
         end
         format.html {render :edit }
-        format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
+        #format.json {render :json => {:state => {:code => 1, status: :error, :messages => @user.errors.full_messages} }}
         format.all {render_404}
       elsif @event && !updated
         format.html {redirect_to @event}
@@ -194,13 +194,13 @@ class EventsController < ApplicationController
         format.html do
           @event.destroy
         end
-        format.json do
-          if @event.destroy
-            render :json => {:state => {:code => 0}}
-          else
-            render :json => {:state => {:code => 1, :messages => @user.errors.full_messages} }
-          end
-        end
+        #format.json do
+        #  if @event.destroy
+        #    render :json => {:state => {:code => 0}}
+        #  else
+        #    render :json => {:state => {:code => 1, :messages => @user.errors.full_messages} }
+        #  end
+        #end
       end
     end
   end

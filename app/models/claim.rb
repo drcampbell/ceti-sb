@@ -94,12 +94,14 @@ class Claim < ActiveRecord::Base
   end
 
   def teacher_confirm
+    # Case where claim is invalid
     if self.cancelled
       return false
     end
+    # Case where claim is confirmed
     if self.update_attribute(:confirmed_by_teacher, true)
       self.event.update(speaker_id: self.user_id)
-      # Notify Speaker
+      # Inform the claimant that the teacher has accepted their claim
       if Rails.env.production? and self.user.set_confirm
           UserMailer.confirm_speaker(self.event.user_id, 
                                    self.user_id, 
@@ -110,10 +112,16 @@ class Claim < ActiveRecord::Base
                             event_id: self.event_id,
                             n_type: :confirm_speaker,
                             read: false)
-      # Handle other claims
+      # Inform the other claims that the teacher has accepted someone else
       self.event.claims.each do |claim|
-        if claim != self 
-          claim.update(active: false) 
+        if claim.id != self.id
+          claim.update(active: false)
+          #TODO Add UserMailer?
+          Notification.create(user_id: claim.user_id,
+                              act_user_id: self.event.user_id,
+                              event_id: self.event_id,
+                              n_type: :reject_claim,
+                              read: false)
         end
       end
       return true

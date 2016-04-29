@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get     'users/award_badge' => 'users#get_award_badge'
       post    'users/award_badge' => 'users#post_award_badge'
       get     'users/cancel' => 'registrations#cancel_account'
+      post     'users/password' => 'passwords#create'
     end
     post 'events/create' => 'events#create'
     get 'events/pending_claims' => 'events#pending_claims'

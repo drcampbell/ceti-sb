@@ -1,6 +1,5 @@
 class Notification < ActiveRecord::Base
-	enum n_type: [:claim, :confirm_speaker, :event_update, :message, :award_badge, :new_badge, :cancel,
-								:reject_claim, :cancel_claim, :cancel_speaker]
+	enum n_type: [:claim, :confirm_speaker, :event_update, :message, :award_badge, :new_badge, :cancel, :reject_claim, :cancel_claim, :cancel_speaker]
 	belongs_to :user
 	belongs_to :event
 	after_create :send_gcm
@@ -29,7 +28,6 @@ class Notification < ActiveRecord::Base
 		when "cancel_speaker"
 			content = "#{self.act_user_name} has to cancel their speaking engagement for event: #{Event.find(event_id).title}"
 		end
-		test = "deletethis"
 		return content
 	end
 

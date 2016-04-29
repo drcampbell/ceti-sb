@@ -11,7 +11,7 @@ class LocationsController < ApplicationController
     end
     respond_to do |format|
       format.html {  }
-      format.json { render json: @locations.as_json }
+      #format.json { render json: @locations.as_json }
     end
   end
 
@@ -31,7 +31,7 @@ class LocationsController < ApplicationController
         format.json { render :show, status: :created, location: @location }
       else
         format.html { render :new }
-        format.json { render json: @location.errors, status: :unprocessable_entity }
+        #format.json { render json: @location.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -42,10 +42,10 @@ class LocationsController < ApplicationController
     respond_to do |format|
       if @location.update(location_params)
         format.html { redirect_to @location, notice: 'Location was successfully updated.' }
-        format.json { render :show, status: :ok, location: @location }
+        #format.json { render :show, status: :ok, location: @location }
       else
         format.html { render :edit }
-        format.json { render json: @location.errors, status: :unprocessable_entity }
+        #format.json { render json: @location.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -56,7 +56,7 @@ class LocationsController < ApplicationController
     @location.destroy
     respond_to do |format|
       format.html { redirect_to locations_url, notice: 'Location was successfully destroyed.' }
-      format.json { head :no_content }
+      #format.json { head :no_content }
     end
   end
 

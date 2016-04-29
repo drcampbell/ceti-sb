@@ -6,7 +6,7 @@ class SchoolsController < ApplicationController
   def index
     respond_to do |format|
         format.html {  }
-        format.json { render json: {schools: @schools.map{|s| s.json_list_format}}.as_json }
+        #format.json { render json: {schools: @schools.map{|s| s.json_list_format}}.as_json }
     end
   end
   
@@ -23,7 +23,7 @@ class SchoolsController < ApplicationController
     @schools = SearchService.new.location(zip.lat, zip.long, radius, params)
    respond_to do |format|
      format.html {if @schools.empty? then flash[:alert] = "No schools found" end}
-    format.json {@schools.map{|s| s.json_list_format}} 
+    #format.json {@schools.map{|s| s.json_list_format}} 
    end
   end
 
@@ -41,7 +41,7 @@ class SchoolsController < ApplicationController
       format.html do
 
       end
-      format.json { render json: @school.json_format}
+      #format.json { render json: @school.json_format}
     end
   end
 
@@ -80,10 +80,10 @@ class SchoolsController < ApplicationController
     respond_to do |format|
       if @school.save
         format.html { redirect_to @school, notice: 'School was successfully created.' }
-        format.json { render :show, status: :created, location: @school }
+        #format.json { render :show, status: :created, location: @school }
       else
         format.html { render :new }
-        format.json { render json: @school.errors, status: :unprocessable_entity }
+        #format.json { render json: @school.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -96,11 +96,11 @@ class SchoolsController < ApplicationController
     respond_to do |format|
       if @school && @school.update(school_params)
         format.html { redirect_to @school, notice: 'School was successfully updated.' }
-        format.json { render :show, status: :ok, location: @school }
+        #format.json { render :show, status: :ok, location: @school }
         format.all { render_404 }
       elsif @school != nil
         format.html { render :edit }
-        format.json { render json: @school.errors, status: :unprocessable_entity }
+        #format.json { render json: @school.errors, status: :unprocessable_entity }
         format.all { render_404 }
       end
     end
@@ -118,7 +118,7 @@ class SchoolsController < ApplicationController
     end
       respond_to do |format|
         format.html { redirect_to schools_path, notice: 'School was successfully destroyed.' }
-        format.json { head :no_content }
+        #format.json { head :no_content }
       end
   end
 

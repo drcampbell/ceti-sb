@@ -7,10 +7,10 @@ class ClaimsController < ApplicationController
       format.html do
         @claims = Claim.all.paginate(page: params[:page])
       end
-      format.json do
-        @claims = Claim.all
-        render json: @claims.as_json
-      end
+      #format.json do
+      #  @claims = Claim.all
+      #  render json: @claims.as_json
+      #end
     end
   end
 
@@ -19,10 +19,10 @@ class ClaimsController < ApplicationController
       format.html do
         @claim = Claim.find(params[:id])
       end
-      format.json do
-        @claim = Claim.find(params[:id])
-        render json: @claim.as_json
-      end
+      #format.json do
+      #  @claim = Claim.find(params[:id])
+      #  render json: @claim.as_json
+      #end
     end
   end
 
@@ -39,13 +39,13 @@ class ClaimsController < ApplicationController
           render 'static_pages/home'
         end
       end
-      format.json do
-        if @claim.save
-          render :json => {:state => {:code => 0}, :data => @claim.to_json }
-        else
-          render :json => {:state => {:code => 1, :messages => @claim.errors.full_messages} }
-        end
-      end
+      #format.json do
+      #  if @claim.save
+      #    render :json => {:state => {:code => 0}, :data => @claim.to_json }
+      #  else
+      #    render :json => {:state => {:code => 1, :messages => @claim.errors.full_messages} }
+      #  end
+      #end
     end
   end
 

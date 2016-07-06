@@ -40,6 +40,7 @@ class Notification < ActiveRecord::Base
 	end
 
 	def send_gcm()
+	  puts "send_gcm"
 		if !Rails.env.production?
 			return
 		end
@@ -71,11 +72,25 @@ class Notification < ActiveRecord::Base
 					data['badge_id'] = badge.id
 				end
 			end
-			begin # Publish to AWS SNS, note the dual to_json formatting.  
+			begin # Publish to AWS SNS, note the dual to_json formatting. 
+			  msg = {}
+			  if device.device_type != nil
+			  puts "Current device type = " + device.device_type
+          
+		    if(device.device_type == "ios")
+		      puts "Executing ios"
+		        apns_msg = "{\"aps\":{\"alert\":\"".concat(self.content) + "\"}, \"data\":" + data.to_json + "}"
+			     msg = {APNS_SANDBOX: apns_msg}.to_json
+			  else
+			    puts "Executing android"
+          msg = {GCM: {data: data}.to_json}.to_json
+			  end
+			  end
+			   puts msg
 				sns.publish({
 					target_arn: device.endpoint_arn,
 					message_structure: "json",
-					message: {GCM: {data: data}.to_json}.to_json
+					message: msg
 					})
 			# If the AWS endpoint is disabled, then don't send more notications to that device.  
 			rescue Aws::SNS::Errors::EndpointDisabled

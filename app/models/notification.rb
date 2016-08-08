@@ -80,7 +80,7 @@ class Notification < ActiveRecord::Base
 		    if(device.device_type == "ios")
 		      puts "Executing ios"
 		        apns_msg = "{\"aps\":{\"alert\":\"".concat(self.content) + "\"}, \"data\":" + data.to_json + "}"
-			     msg = {APNS_SANDBOX: apns_msg}.to_json
+			     msg = {APNS: apns_msg}.to_json
 			  else
 			    puts "Executing android"
           msg = {GCM: {data: data}.to_json}.to_json

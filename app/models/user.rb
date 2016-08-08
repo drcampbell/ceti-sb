@@ -150,6 +150,9 @@ class User < ActiveRecord::Base
   def award_badge(event_id, award)
     event = Event.find(event_id)
     if self.id == event.user_id
+      if(award == "false")
+        award = false;
+      end
       if award
         badge_id = School.find(event.loc_id).badge_id
         UserBadge.create(user_id: event.speaker_id,

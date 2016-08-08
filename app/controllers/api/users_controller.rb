@@ -114,12 +114,21 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     else
       device = Device.create({user_id: current_user.id, 
                               device_name: params[:device_name], 
-                              token: params[:token] })
+                              token: params[:token],
+                              device_type: params[:device_type] })
     end
-    if device.register_endpoint
-      render json: {state: 0}
+    if(params[:device_type] == "ios")
+      if device.register_ios_endpoint
+        render json: {state: 0}
+      else
+        render json: {state: 1}
+      end
     else
-      render json: {state: 1}
+      if device.register_endpoint
+        render json: {state: 0}
+      else
+        render json: {state: 1}
+      end
     end
   end
   

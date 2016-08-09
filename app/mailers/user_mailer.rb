@@ -9,8 +9,8 @@ class UserMailer < ApplicationMailer
 
   def password_changed(id)
   	@user = User.find(id)
-
-    //mail to: @user.email, subject: "School Business: Your Password Has Changed"
+	puts "\npassword change "
+    #mail to: @user.email, subject: "School Business: Your Password Has Changed"
     @message = "Hi #{@user.name}, <br>We wanted to let you know that your password was changed. If this was done without your knowledge, please contact us at schoolbusinessapp@gmail.com.<br><br>Thanks!<br><br>School Business Team"
     mail(to: @user.email, 
           content_type: "text/html",

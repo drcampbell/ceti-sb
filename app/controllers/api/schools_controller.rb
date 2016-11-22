@@ -20,19 +20,23 @@ class API::SchoolsController < API::ApplicationController
 
   # GET /schools/1
   # GET /schools/1.json
-  def near_me
-  if not params[:zip]
-    redirect_to schools
+   def near_me
+      if not params[:zip]
+        redirect_to schools
+      end
+      zip = Zipcode.where(zip: params[:zip]).first
+      if zip.nil? == false
+        if params[:radius]
+          radius = eval(params[:radius]) * 1609.34
+        else
+          radius = 10 * 1609.34
+        end
+        @schools = SearchService.new.location(zip.lat, zip.long, radius, params)
+      else
+        @schools = School.where(id:0).paginate(page: params[:page])
+      end
+      render json: {:schools => @schools}.as_json
   end
-  zip = Zipcode.where(zip: params[:zip]).first
-  if params[:radius]
-    radius = eval(params[:radius]) * 1609.34
-  else
-    radius = 10 * 1609.34
-  end
-  @schools = SearchService.new.location(zip.lat, zip.long, radius, params)
- render json: {:schools => @schools}.as_json
-end
   def show
     @fields = {'school_name'  => 'Name', 
                   'loc_addr'  => 'Address', 

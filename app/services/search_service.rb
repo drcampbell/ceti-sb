@@ -20,6 +20,8 @@ class SearchService
     if params[:search]
       query = handle_abbr(params[:search])
       @search = model.search_full_text(query)
+      #@search = @search.reorder(event_start: :desc)
+
       if model == Event
         @search = @search.reorder(event_start: :desc)
       end
@@ -63,10 +65,18 @@ class SearchService
     )
     if results.present?
       ids = results.map{|r| r['id']}
-      return School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
+      if params[:search]
+        puts "Searching within the resultset"
+        query = handle_abbr(params[:search])
+        @schools =  School.where(id: ids.to_a).search_full_text(query).paginate(page: params[:page], per_page: params[:per_page])
+      else
+        @schools =  School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
+      end
+
     else
-      return School.where(id: 0).paginate(page: params[:page])
+      @schools =  School.where(id: 0).paginate(page: params[:page])
     end
+    return @schools
   end
 
   def events_by_location(lat, long, radius, params)
@@ -77,12 +87,23 @@ class SearchService
       @> ll_to_earth(schools.latitude, schools.longitude);"
     )
     if schools.present?
+      puts "Schools found"
       school_ids = schools.map{|s| s["id"]}
-      return Event.where(loc_id: school_ids).reorder(event_start: :desc)
+       
+       if params[:search]
+        puts "Searching within the resultset"
+        query = handle_abbr(params[:search])
+        @event = Event.where(loc_id: school_ids).search_full_text(query).reorder(event_start: :desc)
                   .paginate(page: params[:page], per_page: params[:per_page])
-    else
-      return Event.where(loc_id: 0).paginate(page: params[:page])
+       else
+         @event = Event.where(loc_id: school_ids).reorder(event_start: :desc)
+                  .paginate(page: params[:page], per_page: params[:per_page])
+       end
+    else  
+      puts "no schools found"
+      @event = Event.where(loc_id: 0).paginate(page: params[:page])
     end
+    return @event
   end
 
 end

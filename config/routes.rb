@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     delete 'events/:id/cancel' => 'events#cancel'
     delete 'claims/:id/reject' => 'claims#reject'
     delete 'claims/:id/cancel' => 'claims#cancel'
+    get  'schools/near_me' => 'schools#near_me'
     resources :sessions
     resources :users
     resources :schools
@@ -93,7 +94,7 @@ Rails.application.routes.draw do
   post    'email_responses/complaint' => 'email_responses#complaint'
   # Schools
   get     'near_me' => 'schools#near_me', via: [:get], as: 'schools_near_me'
-
+  
   # Handle Claims
   delete  'claims/:id/reject' => 'claims#reject'
   delete  'claims/:id/cancel' => 'claims#cancel'

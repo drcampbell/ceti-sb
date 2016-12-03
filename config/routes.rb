@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   resources :events
   resources :claims
   resources :locations
+  resources :badges
   resources :static_pages
 
   root to: 'static_pages#home'

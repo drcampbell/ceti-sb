@@ -5,10 +5,15 @@
 			<h3 align="center">
 				<%= handle_abbr(@school.school_name).upcase %>
 			</h3>
-<p id="notice"><%= notice %></p>
 
 <div align="center">
-<%= image_tag ENV["S3_BUCKET"]+"badges/"+Badge.find(@school.badge_id).file_name %>
+	<% if (@badge != nil && 
+			@badge.file != nil && 
+			@badge.file.file!= nil && 
+			@badge.file.file.file != nil &&
+			@badge.file.file.file.split("/")[-1] != nil)%>
+		<%= image_tag(ENV["S3_BUCKET"]+"badges/"+@badge.file.file.file.split("/")[-1],size: "100x100")%>
+	<% end %>
 </div>
 
 <% @fields.each do |key, value| %>
@@ -19,13 +24,26 @@
 <% end %>
 
 <div class="btn-group" style="text-align:center">
-	<% if user_signed_in? && @school.id > 1 &&
+	<% if user_signed_in? && @school.id > 1 &&  
 		(current_user.role == 'Teacher' || current_user.role == 'Both') %>
-	<%= button_to 'Make My School', 
+		<% if current_user.school_id != @school.id %>
+			<%= button_to 'Make My School', 
 					claim_school_path(user_id: current_user.id, school_id: @school.id), 
 					method: :post, 
 					data: {confirm: "Confirm: Make \"#{handle_abbr(@school.school_name)}\" your school?"},
 					class: "btn btn-lg btn-primary" %>
+		<% else  %>
+		<div class = "well">
+   <%= form_for @badge do |f| %>
+	    <%= f.label :file %>
+	    <%= f.file_field :file %>
+		<%= f.hidden_field :school_id, :value=> @school.id%>
+   
+      <%= f.submit "Save", class: "btn btn-primary" %>
+   <% end %>
+</div>
+			
+		<% end %>
 	<% end %>
 	<%= button_to "Back to Search", {controller: "schools", action: "index"},
 	 				method: :get, 

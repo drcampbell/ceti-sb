@@ -30,13 +30,15 @@ class SchoolsController < ApplicationController
   # GET /schools/1
   # GET /schools/1.json
   def show
+   
     @fields = {'school_name'  => 'Name', 
                   'loc_addr'  => 'Address', 
                   'loc_city'  => 'City', 
                   'loc_state' => 'State',
                   'loc_zip'   => 'Zip',
                   'phone'     => 'Phone'}
-    @school = School.find(params[:id])
+    @school = School.find(params[:id])     
+    @badge = Badge.find(@school.badge_id)
     respond_to do |format|
       format.html do
 
@@ -63,10 +65,21 @@ class SchoolsController < ApplicationController
     end
     redirect_to :users
   end
+  
+  def upload_badge
+    puts "Uploading badge"
+    badge = Badge.find(@school.badge_id)
+    badge.file = file
+    badge.save!
+    uploader = BadgeUploader.new
+    uploader.store!(file)
+  end
+  
   # GET /schools/new
   def new
     @school = School.new
   end
+  
 
   # GET /schools/1/edit
   def edit
@@ -121,7 +134,7 @@ class SchoolsController < ApplicationController
         #format.json { head :no_content }
       end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_school

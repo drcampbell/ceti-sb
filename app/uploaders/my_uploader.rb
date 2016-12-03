@@ -1,9 +1,14 @@
-require 'aws-sdk'
 class MyUploader
-	def upload(path)
-		s3 = Aws::S3::Resource.new(region: ENV["AWS-REGION"])
-		obj = s3.bucket(ENV['S3-BUCKET']).object('key')
-		obj.upload_file(path)
+	def upload(file)
+	  s3 = Aws::S3::Resource.new(:region => "us-west-1")
+	  s3Bucket = s3.bucket("ceti-sb")
+	  obj = s3Bucket.object(file)
+    obj.upload_file("public/" + file, {acl: "public-read"})
+    
+	  s3BucketAcl = s3Bucket.acl
+	  s3BucketAcl.put({acl: "public-read"})
+   
+
 	end
 
 end

@@ -2,7 +2,7 @@
 if Rails.env.production?
 	Aws.config[:log_level] = :debug
 
-	creds = Aws::Credentials.new(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"], ENV["AWS_REGION"])
+	creds = Aws::Credentials.new(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_KEY"])
 	#mcreds = Aws::Credentials.new(ENV["SENDGRID_USERNAME"], ENV["SENDGRID_PASSWORD"])
 	Aws.config[:credentials] = creds
 

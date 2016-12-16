@@ -56,6 +56,9 @@ group :development, :test, :production do
   gem 'aws-s3'
   gem 'pg'
   gem 'pg_search'
+  gem 'aws-sdk', '~> 2'
+  gem 'aws-sdk-rails', '~> 1.0'
+  
 end
 
 #group :development, :production do
@@ -74,8 +77,7 @@ group :development do
   gem 'rb-fchange', :require=>false
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
-  gem 'aws-sdk', '~> 2'
-  gem 'aws-sdk-rails', '~> 1.0'
+  
 end
 
 group :test do
@@ -91,7 +93,7 @@ group :test do
 end
 
 group :production do
- 
+  
   gem 'fog-aws'
   gem 'fog'#, '~> 1.3.1'
   #gem 'rails_12factor'

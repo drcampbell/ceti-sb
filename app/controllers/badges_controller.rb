@@ -40,6 +40,10 @@ class BadgesController < ApplicationController
     puts "Updating badge!!"
     puts params
     @badge = Badge.new
+    # new_file_name = badge_params[:school_id] + "_" + badge_params[:file].filename
+# 
+    # FileUtils.move(badge_params[:file], File.join(File.dirname(badge_params[:file]), new_file_name))
+
     @badge.file = badge_params[:file]
    # @badge.fille_name = params[:file]
  
@@ -49,6 +53,7 @@ class BadgesController < ApplicationController
       school.badge_id = @badge.id
       school.save!
       uploader = MyUploader.new
+      #uploader.upload "badges/".concat(badge_params[:school_id]).concat("/").concat(@badge.file.filename)
       uploader.upload "badges/".concat(@badge.file.filename)
       # badge = Badge.find(school.badge_id)
     # badge.file = file

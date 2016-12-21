@@ -7,13 +7,9 @@
 			</h3>
 
 <div align="center">
-	<% if (@badge != nil && 
-			@badge.file != nil && 
-			@badge.file.file!= nil && 
-			@badge.file.file.file != nil &&
-			@badge.file.file.file.split("/")[-1] != nil)%>
-		<%= image_tag(ENV["S3_BUCKET"]+"badges/"+@badge.file.file.file.split("/")[-1],size: "100x100")%>
-	<% end %>
+	
+		<%= image_tag(ENV["S3_BUCKET"]+"badges/"+@badge.get_file_Name(),size: "100x100")%>
+	
 </div>
 
 <% @fields.each do |key, value| %>

@@ -1,3 +1,4 @@
+
 class SearchService
  
   def handle_abbr(query) 
@@ -65,10 +66,20 @@ class SearchService
     )
     if results.present?
       ids = results.map{|r| r['id']}
-      if params[:search]
+      puts("Value of search = " + params[:search])
+      if params[:search] && params[:search] != ""
         puts "Searching within the resultset"
         query = handle_abbr(params[:search])
-        @schools =  School.where(id: ids.to_a).search_full_text(query).paginate(page: params[:page], per_page: params[:per_page])
+        @schools = ActiveRecord::Base.connection.exec_query(
+          "select * 
+          from schools 
+          where id IN (#{ids.to_sentence})  
+          AND LOWER(school_name) like LOWER('%#{query}%')
+          ORDER BY id ASC ;"
+        )
+        
+        puts @schools
+        #@schools =  School.where(id: ids.to_a).search_full_text(query).paginate(page: params[:page], per_page: params[:per_page])
       else
         @schools =  School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
       end
@@ -90,7 +101,7 @@ class SearchService
       puts "Schools found"
       school_ids = schools.map{|s| s["id"]}
        
-       if params[:search]
+       if params[:search] && params[:search] != ""
         puts "Searching within the resultset"
         query = handle_abbr(params[:search])
         @event = Event.where(loc_id: school_ids).search_full_text(query).reorder(event_start: :desc)

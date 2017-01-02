@@ -21,8 +21,7 @@ class SearchService
     if params[:search]
       query = handle_abbr(params[:search])
       @search = model.search_full_text(query)
-      #@search = @search.reorder(event_start: :desc)
-
+     
       if model == Event
         @search = @search.reorder(event_start: :desc)
       end
@@ -66,20 +65,24 @@ class SearchService
     )
     if results.present?
       ids = results.map{|r| r['id']}
-      puts("Value of search = " + params[:search])
+      #puts("Value of search = " + params[:search])
       if params[:search] && params[:search] != ""
         puts "Searching within the resultset"
         query = handle_abbr(params[:search])
-        @schools = ActiveRecord::Base.connection.exec_query(
-          "select * 
-          from schools 
-          where id IN (#{ids.to_sentence})  
-          AND LOWER(school_name) like LOWER('%#{query}%')
-          ORDER BY id ASC ;"
-        )
-        
-        puts @schools
-        #@schools =  School.where(id: ids.to_a).search_full_text(query).paginate(page: params[:page], per_page: params[:per_page])
+        # page = ""
+        # if(params[:page] && params[:page] != "")
+          # page = "LIMIT #{params[:page]}"
+        # end
+        # @schools = ActiveRecord::Base.connection.exec_query(
+          # "select * 
+          # from schools 
+          # where id IN (#{ids.to_sentence})  
+          # AND LOWER(school_name) like LOWER('%#{query}%')
+          # ORDER BY school_name ASC #{page};"
+        # )
+#         
+        # puts @schools
+        @schools =  School.where(id: ids.to_a).search_full_text(query).paginate(page: params[:page], per_page: params[:per_page])
       else
         @schools =  School.where(id: ids.to_a).paginate(page: params[:page], per_page: params[:per_page])
       end

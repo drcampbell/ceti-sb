@@ -80,6 +80,11 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     badge = UserBadge.find(params[:user_badge_id])
     render json: badge.json_format
   end
+  
+  def get_awarded_badge
+    badge = UserBadge.where(user_id:params[:user_id], event_id:params[:event_id])
+    render json: badge.json_format
+  end
 
   def notifications
     pages = 15

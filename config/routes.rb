@@ -44,6 +44,8 @@ Rails.application.routes.draw do
     post 'send_message/:id'  => 'users#send_message'
     get 'users/:user_id/badges' => 'users#show_badges'
     get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
+    get 'users/:user_id/event_badge/:event_id' => 'users#get_awarded_badge'
+
     delete 'events/:id/cancel' => 'events#cancel'
     delete 'claims/:id/reject' => 'claims#reject'
     delete 'claims/:id/cancel' => 'claims#cancel'

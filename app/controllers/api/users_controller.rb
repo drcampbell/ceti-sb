@@ -113,6 +113,14 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
   end
 
   def register_device
+    token = params[:token]
+    
+    otherDevices = Device.where(token: token).where.not(user_id: current_user.id)
+    if(otherDevices != nil)
+      otherDevices.each do |x|
+        Device.delete(x.id)
+      end
+    end
     device = Device.find_by(user_id: current_user.id, device_name: params[:device_name])
     if device != nil
       device.update(token: params[:token])
@@ -134,6 +142,24 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
       else
         render json: {state: 1}
       end
+    end
+  end
+  
+  
+  def unregister_device
+    device = Device.find_by(user_id: current_user.id, 
+      device_name: params[:device_name],
+      token: params[:token],
+      device_type: params[:device_type])    
+    if device != nil
+        if device.unregister_endpoint        
+          device = Device.delete(device.id)
+          render json: {state: 0}
+        else
+          render json: {state: 1}
+        end
+    else
+      render json: {state: 1}
     end
   end
   

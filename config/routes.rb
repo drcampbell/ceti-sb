@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get     'users/settings' => 'registrations#settings'
       put     'users/settings' => 'registrations#update_settings'
       post    'register_device' => 'users#register_device'
+      post    'unregister_device' => 'users#unregister_device'
       get     'notifications'  => 'users#notifications'
       post    'notifications/:id' => 'users#read_notification'
       delete  'notifications' => 'users#all_notifications_read'

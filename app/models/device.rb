@@ -29,4 +29,17 @@ class Device < ActiveRecord::Base
     end
   end
   
+  def unregister_endpoint 
+    begin
+      puts "Unregistering device" + self.token
+      sns = Aws::SNS::Client.new(region: 'us-west-2')
+      endpoint = sns.delete_endpoint(endpoint_arn: self.endpoint_arn)
+      return true
+    rescue => error
+      puts "Unregistering failed : " + error.inspect
+      return false
+    end
+  end
+  
+  
 end

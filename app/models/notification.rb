@@ -93,7 +93,7 @@ class Notification < ActiveRecord::Base
 					message: msg
 					})
 			# If the AWS endpoint is disabled, then don't send more notications to that device.  
-			rescue Aws::SNS::Errors::EndpointDisabled
+			rescue Aws::SNS::Errors::EndpointDisabled, Aws::SNS::Errors::InvalidParameter
 				device.update_attribute(:endpoint_arn, nil)
 			end
 		end

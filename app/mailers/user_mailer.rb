@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-	default from: "schoolbusinessapp@gmail.com"
+	default from: "support@school2biz.com"
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
   #
@@ -10,7 +10,7 @@ class UserMailer < ApplicationMailer
   def password_changed(id)
   	@user = User.find(id)
     mail to: @user.email, subject: "School Business: Your Password Has Changed"
-    #@message = "Hi #{@user.name}, <br>We wanted to let you know that your password was changed. If this was done without your knowledge, please contact us at schoolbusinessapp@gmail.com.<br><br>Thanks!<br><br>School Business Team"
+    #@message = "Hi #{@user.name}, <br>We wanted to let you know that your password was changed. If this was done without your knowledge, please contact us at support@school2biz.com.<br><br>Thanks!<br><br>School Business Team"
     #mail(to: @user.email, content_type: "text/html", subject: "School Business: Your Password Has Changed")
   	puts "\npassword change "
   end
@@ -104,7 +104,7 @@ class UserMailer < ApplicationMailer
 
   def test_mail()
     mail = {
-      source: "schoolbusinessapp@gmail.com",
+      source: "support@school2biz.com",
       destination: {
         to_addresses: ["bounce@simulator.amazonses.com"],
         cc_addresses: [],
@@ -126,13 +126,13 @@ class UserMailer < ApplicationMailer
           },
         },
         },
-      reply_to_addresses: ["schoolbusinessapp@gmail.com"],
+      reply_to_addresses: ["support@school2biz.com"],
     }
   end
 
 def test2()
     mail2 = {
-      source: "schoolbusinessapp@gmail.com",
+      source: "support@school2biz.com",
       destination: {
         to_addresses: ["bounce@simulator.amazonses.com"],
         cc_addresses: [],

@@ -5,7 +5,7 @@ module Aws
 				if mail.from
 					source = Array(mail.from).first
 				else
-					source = "schoolbusinessapp@gmail.com"
+					source = "support@school2biz.com"
 				end
 				ses_return = send_email( source: source,
 					destination: {

@@ -58,7 +58,7 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     event = Event.find(params[:event_id])
     badge = Badge.find(School.find(event.loc_id).badge_id)
     isAwarded = UserBadge.where(event_id: event.id, badge_id: badge.id).present?
-    response = {badge_url: badge.file_name, 
+    response = {badge_url: badge.get_file_Name(), 
              event_name: event.title,
              speaker_name:  User.find(event.speaker_id).name,
              event_id: event.id,
@@ -79,6 +79,11 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
   def get_badge
     badge = UserBadge.find(params[:user_badge_id])
     render json: badge.json_format
+  end
+  
+  def get_awarded_badge
+    badge = UserBadge.where(user_id:params[:user_id], event_id:params[:event_id])
+    render json: badge[0].json_format
   end
 
   def notifications
@@ -108,6 +113,14 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
   end
 
   def register_device
+    token = params[:token]
+    
+    otherDevices = Device.where(token: token).where.not(user_id: current_user.id)
+    if(otherDevices != nil)
+      otherDevices.each do |x|
+        Device.delete(x.id)
+      end
+    end
     device = Device.find_by(user_id: current_user.id, device_name: params[:device_name])
     if device != nil
       device.update(token: params[:token])
@@ -129,6 +142,24 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
       else
         render json: {state: 1}
       end
+    end
+  end
+  
+  
+  def unregister_device
+    device = Device.find_by(user_id: current_user.id, 
+      device_name: params[:device_name],
+      token: params[:token],
+      device_type: params[:device_type])    
+    if device != nil
+        if device.unregister_endpoint        
+          device = Device.delete(device.id)
+          render json: {state: 0}
+        else
+          render json: {state: 1}
+        end
+    else
+      render json: {state: 1}
     end
   end
   

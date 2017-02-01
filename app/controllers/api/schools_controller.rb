@@ -7,7 +7,7 @@ class API::SchoolsController < API::ApplicationController
     params[:per_page] = 15
     @schools = SearchService.new.search(School, params)
     @schools = @schools.map{|school| school.json_list_format}
-    puts @schools
+    #puts @schools
     render json: {:schools => @schools}.as_json
   end
   
@@ -20,6 +20,25 @@ class API::SchoolsController < API::ApplicationController
 
   # GET /schools/1
   # GET /schools/1.json
+   def near_me
+      if not params[:zip]
+        redirect_to schools
+      end
+      zip = Zipcode.where(zip: params[:zip]).first
+      if zip.nil? == false
+        if params[:radius]
+          radius = eval(params[:radius]) * 1609.34
+        else
+          radius = 10 * 1609.34
+        end
+        @schools = SearchService.new.location(zip.lat, zip.long, radius, params)
+      else
+        @schools = School.where(id:0).paginate(page: params[:page])
+      end
+      @schools = @schools.map{|school| school.json_list_format}
+
+      render json: {:schools => @schools}.as_json
+  end
   def show
     @fields = {'school_name'  => 'Name', 
                   'loc_addr'  => 'Address', 
@@ -33,8 +52,12 @@ class API::SchoolsController < API::ApplicationController
                       state: @school.loc_state, zip: @school.loc_zip,
                       phone: @school.phone}
     badge = Badge.find(@school.badge_id)
+    
     events = Event.where(loc_id: @school.id).where("event_start > ?", Time.now).order("event_start").reverse
-    render json: {school: school_message, badge_url: badge.file_name, events: list_events(events).as_json}
+    
+    render json: {school: school_message, badge_url: badge.get_file_Name(), events: list_events(events).as_json}
+        
+   
   end
 
   def choose

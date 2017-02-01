@@ -36,11 +36,17 @@
       <a href="http://www.delphoscityschools.org/">Delphos City Schools</a>
       , and is funded by the 
       <a href="http://education.ohio.gov/Topics/Straight-A-Fund/">Straight A Grant</a>. </p>
+      <p> The App is being maintained by 
+		<a href="http://ontoborn.com/">Ontoborn Technologies LLC</a>
+		</p>
+
     </h2>
     <%= link_to 'Sign up now!', new_user_registration_path, class: 'btn btn-lg btn-primary' %>
     <%= render 'layouts/google_play' %>
+    <a  href = "https://itunes.apple.com/us/app/school-business/id1114294072?mt=8" >
+    <%= render 'layouts/apple_store' %>
+    </a>
+    
   </div>
 
- <!-- <%= link_to image_tag('rails.png', alt: 'Rails logo'),
-                        'http://rubyonrails.org/' %> -->
 <% end %>

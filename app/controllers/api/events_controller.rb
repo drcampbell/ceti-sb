@@ -12,12 +12,16 @@ class API::EventsController < API::ApplicationController
     params[:per_page] = 15
     if params[:location] and params[:zip] != ""
       zip = Zipcode.where(zip: params[:zip]).first
-      if params[:radius] != ""
-        radius = eval(params[:radius]) * 1609.34
+      if zip.nil? == false
+        if params[:radius] != ""
+          radius = eval(params[:radius]) * 1609.34
+        else
+          radius = 10 * 1609.34
+        end
+        @events = SearchService.new.events_by_location(zip.lat, zip.long, radius, params)
       else
-        radius = 10 * 1609.34
+        @events = Event.where(id:0).paginate(page: params[:page])
       end
-      @events = SearchService.new.events_by_location(zip.lat, zip.long, radius, params)
     else
       @events = SearchService.new.search(Event, params)
     end

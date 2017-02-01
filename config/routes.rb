@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get     'users/settings' => 'registrations#settings'
       put     'users/settings' => 'registrations#update_settings'
       post    'register_device' => 'users#register_device'
+      post    'unregister_device' => 'users#unregister_device'
       get     'notifications'  => 'users#notifications'
       post    'notifications/:id' => 'users#read_notification'
       delete  'notifications' => 'users#all_notifications_read'
@@ -44,9 +45,12 @@ Rails.application.routes.draw do
     post 'send_message/:id'  => 'users#send_message'
     get 'users/:user_id/badges' => 'users#show_badges'
     get 'users/:user_id/badges/:user_badge_id' => 'users#get_badge'
+    get 'users/:user_id/event_badge/:event_id' => 'users#get_awarded_badge'
+
     delete 'events/:id/cancel' => 'events#cancel'
     delete 'claims/:id/reject' => 'claims#reject'
     delete 'claims/:id/cancel' => 'claims#cancel'
+    get  'schools/near_me' => 'schools#near_me'
     resources :sessions
     resources :users
     resources :schools
@@ -66,6 +70,7 @@ Rails.application.routes.draw do
   resources :events
   resources :claims
   resources :locations
+  resources :badges
   resources :static_pages
 
   root to: 'static_pages#home'
@@ -93,7 +98,7 @@ Rails.application.routes.draw do
   post    'email_responses/complaint' => 'email_responses#complaint'
   # Schools
   get     'near_me' => 'schools#near_me', via: [:get], as: 'schools_near_me'
-
+  
   # Handle Claims
   delete  'claims/:id/reject' => 'claims#reject'
   delete  'claims/:id/cancel' => 'claims#cancel'

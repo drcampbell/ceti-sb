@@ -166,7 +166,7 @@ module SchoolsHelper
     # uploader = BadgeUploader.new
     # uploader.retrieve_from_store!(badge).url
     data = open(badge.url)
-    send_data data.read, filename: badge.file_name,
+    send_data data.read, filename: badge.get_file_Name(),
                         type: badge.f_type,
                         disposition: 'attachment', 
                         stream: 'true',

@@ -58,7 +58,7 @@ class Notification < ActiveRecord::Base
 				if n_type == "award_badge"
 					data['speaker_name'] = self.act_user_name
 					data['event_name'] = Event.find(self.event_id).title
-					data['badge_url'] = Badge.find(School.find(event.loc_id).badge_id).file_name
+					data['badge_url'] = Badge.find(School.find(event.loc_id).badge_id).get_file_Name()
 				# Package information as this generates a fragment within Android
 				elsif n_type =="new_badge"
 					data['user_name'] = User.find(self.user_id).name
@@ -67,7 +67,7 @@ class Notification < ActiveRecord::Base
 					data['event_owner_id'] = self.act_user_id
 					data['event_name'] = event.title
 					badge = UserBadge.where(user_id: self.user_id, event_id: event_id).last
-					data['badge_url'] = Badge.find(badge.badge_id).file_name
+					data['badge_url'] = Badge.find(badge.badge_id).get_file_Name()
 					data['school_name'] = event.loc_name
 					data['badge_id'] = badge.id
 				end
@@ -93,7 +93,7 @@ class Notification < ActiveRecord::Base
 					message: msg
 					})
 			# If the AWS endpoint is disabled, then don't send more notications to that device.  
-			rescue Aws::SNS::Errors::EndpointDisabled
+			rescue Aws::SNS::Errors::EndpointDisabled, Aws::SNS::Errors::InvalidParameter
 				device.update_attribute(:endpoint_arn, nil)
 			end
 		end

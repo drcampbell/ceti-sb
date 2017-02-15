@@ -65,6 +65,14 @@ class UserMailer < ApplicationMailer
     @event = Event.find(event_id)
     mail to: @claimer.email, subject: "School Business: #{@owner.name} has chosen not to move forward with your claim."
   end
+  
+  def event_updated(email, event_title)
+    @email = email
+    @title = event_title
+    puts "Sending email to #{email} for event #{event_title}"
+    mail to: email, subject: "School Business: Event #{event_title} has been updated by the event creator."
+  end
+  
 
   def welcome(user_id)
     @id = user_id

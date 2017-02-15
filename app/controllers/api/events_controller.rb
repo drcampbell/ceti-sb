@@ -59,7 +59,7 @@ class API::EventsController < API::ApplicationController
   def create
     if user_signed_in?
       begin
-        @event = current_user.events.build(event_params)
+        @event = current_user.events.build(event_params)        
         @event.save
         render :json => {:state => 0, :event => @event.to_json }
       rescue ActionController::ParameterMissing => e

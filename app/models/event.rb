@@ -96,15 +96,25 @@ class Event < ActiveRecord::Base
   end
 
   def handle_update()
-    Claim.where(event_id: self.id).each do |x|
+    if self.speaker_id != 0
+      @owner = User.find(self.speaker_id)
+      puts "Event timing has changed. Sending notification email tp #{@owner.email}."
+
+      UserMailer.event_updated(@owner.email, self.title).deliver_now
+    else
+      Claim.where(event_id: self.id).each do |x|
       Notification.create(user_id: x.user_id,
                         act_user_id: self.user_id,
                         event_id: self.id,
                         n_type: :event_update,
                         read: false)
-      if User.find(x.user_id).set_updates
-        # TODO UserMailer.send_update().deliver
+      claimant = User.find(x.user_id)
+      if claimant != nil 
+        puts "Event timing has changed. Sending notification to claimants."       
+        UserMailer.event_updated(claimant.email, self.title).deliver_now   
+          
       end
+    end
     end
   end
 

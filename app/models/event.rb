@@ -102,7 +102,7 @@ class Event < ActiveRecord::Base
 
       UserMailer.event_updated(@owner.email, self.title).deliver_now
     else
-      Claim.where(event_id: self.id).each do |x|
+      Claim.where(event_id: self.id).where(active: true).each do |x|
       Notification.create(user_id: x.user_id,
                         act_user_id: self.user_id,
                         event_id: self.id,

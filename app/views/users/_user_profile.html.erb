@@ -20,7 +20,12 @@
 
 	<% @user_fields.each do |key, value| %>
 	  <h4>
-	    <strong><%= key %>: </strong> <%= value %>
+	  <% if key == "School" %>
+	  	
+	    	<strong><%= key %>: </strong> <%= link_to value, "/schools/#{@user.school_id}" %>
+	    <% else %>
+	    	<strong><%= key %>: </strong> <%= value %>
+	   <% end %> 
 	  </h4>
 	<% end %>
 

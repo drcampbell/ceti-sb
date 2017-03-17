@@ -1,0 +1,50 @@
+
+<% provide(:title, 'Management Console') %>
+
+<%= form_tag '/admin', :method => :get do %>
+ <label>From date</label>
+  <input type ="date" name ="fdate" id = "tdate ">
+  <label >To date</label>
+ <input type ="date" name ="tdate" id = "tdate ">
+<%= submit_tag "Summary View" %>
+<%= submit_tag "Detailed View" %>
+<% end %>
+
+<table>
+	 <% if @data.present?%>
+		 <tr>
+		 	<td>From Date: <%= params[:fdate] %></td>
+		 	<td>To Date: <%= params[:tdate] %> </td>
+		 </tr>	
+		 <% if params[:commit] == "Detailed View"%>
+			 <tr>		 	
+			 	<th>Schools Name</th>
+			   	<th>Event Title</th>
+			   	<th>Events Content</th>
+			    <th>Start Date</th>
+			    <th>End Date</th>
+			    <th>Speaker</th>
+			    <th>Badge Awarded?</th>
+			 </tr>
+ 
+ 		<% else if params[:commit] == "Summary View"%>
+ 			<tr>		 	
+			 	<th>Schools Name</th>
+			   	<th>Events Created</th>
+			   	<th>Events Claimed</th>
+			    <th>No of Awarded Badges</th>
+			 </tr>
+		<% end %>
+		<% end %>
+ 	
+
+ <% @data.each do |dataList| %>
+   <tr>
+   	  	<% dataList.each do |cell| %>
+   		<td><%= cell %></td>
+    	<% end %>
+   </tr>
+ <% end %>
+ <% end %>
+</table>
+

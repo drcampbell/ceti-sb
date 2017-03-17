@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  mount Upmin::Engine => '/admin'
+  mount Upmin::Engine => '/webmaster'
 
   devise_for :users, :controllers => { registrations: 'registrations', sessions: "sessions" }
 
@@ -51,11 +51,13 @@ Rails.application.routes.draw do
     delete 'claims/:id/reject' => 'claims#reject'
     delete 'claims/:id/cancel' => 'claims#cancel'
     get  'schools/near_me' => 'schools#near_me'
+    get  'admin/date_search'  =>  'admin#date_search'
     resources :sessions
     resources :users
     resources :schools
     resources :events
     resources :claims
+    resources :admin
     match 'events/claim_event' => 'events#claim_event', :via => [:post], :as => 'claim_event'
  
 #  end
@@ -71,11 +73,18 @@ Rails.application.routes.draw do
   resources :claims
   resources :locations
   resources :badges
+  resources :admin do
+    collection do
+      get :date_search
+    end
+  end
+   # match 'admin/search' => 'admin#date_search', :via => [:post], :as => 'date_search'
   resources :static_pages
 
   root to: 'static_pages#home'
   get     'choose' => 'schools#choose'
   get     'help'    => 'static_pages#help'
+  
   get     'about'   => 'static_pages#about'
   get     'contact' => 'static_pages#contact'
   get     'signin'  => 'static_pages#signin'
@@ -108,4 +117,9 @@ Rails.application.routes.draw do
   match   'schools/claim_school' => 'schools#claim_school', :via => [:post], :as => 'claim_school'
   #match '/contacts', to: 'contacts#new',
   #resources "contacts", only: [:new, :create]
+  
+  #Admn Management Console
+  #get     'admin/console'    => 'admin#management_console'
+  get  'admin/date_search'  =>  'admin#date_search'
+
 end

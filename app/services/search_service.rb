@@ -224,12 +224,11 @@ class SearchService
        badge_counter = 0
         events_created.each do |events_row|
          @row_array = []
-        
+         @row_array << events_row['event_start']
+         @row_array << events_row['event_end']
          @row_array << events_row['school_name'] 
          @row_array << events_row['title']
          @row_array << events_row['content']
-         @row_array << events_row['event_start']
-         @row_array << events_row['event_end']
          @row_array << events_row['name']
          
          if events_row['badge_event_id'].present?

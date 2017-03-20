@@ -8,6 +8,10 @@
  <input type ="date" name ="tdate" id = "tdate ">
 <%= submit_tag "Summary View" %>
 <%= submit_tag "Detailed View" %>
+<% if @data.present?%>
+	<%= link_to 'Download CSV', controller: "admin", format: :csv, fdate: params[:fdate], tdate: params[:tdate],commit: params[:commit] %>
+<% end %>
+
 <% end %>
 
 <table>
@@ -17,12 +21,12 @@
 		 	<td>To Date: <%= params[:tdate] %> </td>
 		 </tr>	
 		 <% if params[:commit] == "Detailed View"%>
-			 <tr>		 	
+			 <tr>	
+			 	<th>Start Date</th>
+			    <th>End Date</th>	 	
 			 	<th>Schools Name</th>
 			   	<th>Event Title</th>
-			   	<th>Events Content</th>
-			    <th>Start Date</th>
-			    <th>End Date</th>
+			   	<th>Events Content</th>			    
 			    <th>Speaker</th>
 			    <th>Badge Awarded?</th>
 			 </tr>

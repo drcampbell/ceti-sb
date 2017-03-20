@@ -1,0 +1,4 @@
+<%= CSV.generate_line @header_array %>
+<% @data.each do |row| %>
+<%= CSV.generate_line(row) -%>
+<% end %>

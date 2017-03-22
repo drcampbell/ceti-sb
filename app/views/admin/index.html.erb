@@ -1,11 +1,28 @@
 
 <% provide(:title, 'Management Console') %>
-
+<%if @data.present? && params[:fdate] != "" && params[:tdate] != "" %>
+	<% startDate =  params[:fdate].gsub(/\s+/m, ' ').strip.split(" ")%>
+	 <% endDate = params[:tdate].gsub(/\s+/m, ' ').strip.split(" ") %>
+	<% min = startDate[1].split(/\s|\:/)%>
+	<% endMin = endDate[1].split(/\s|\:/)%>
+<% end %>
 <%= form_tag '/admin', :method => :get do %>
  <label>From date</label>
-  <input type ="date" name ="fdate" id = "tdate ">
+  <input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
+  name ="fdate" 
+  <%if startDate.present? && startDate[0]!=""%>
+  value="<%=startDate[0]%>"  
+  <% end %>
+  id = "fdate">
   <label >To date</label>
- <input type ="date" name ="tdate" id = "tdate ">
+ <input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
+  name ="tdate"
+  <%if endDate.present? && endDate[0]!=""%>
+   
+  
+  value="<%=endDate[0]%>"
+  <% end %>
+   id = "tdate ">
 <%= submit_tag "Summary View" %>
 <%= submit_tag "Detailed View" %>
 <% if @data.present?%>
@@ -16,22 +33,29 @@
 
 <table>
 	 <% if @data.present?%>
+	 
 		 <tr>
-		 	<td>From Date: <%= params[:fdate] %></td>
-		 	<td>To Date: <%= params[:tdate] %> </td>
+		 	<%if params[:fdate] != "" && params[:tdate] != "" %>
+		 	
+		 	 
+		 	<td>From Date: <%=startDate[0]%> <%=min[0]%>:<%=min[1]%></td>
+		 	<td>To Date: <%=endDate[0]%> <%=endMin[0]%>:<%=endMin[1]%></td>
+		 	<%end%>
 		 </tr>	
+		 <%count = 0%>
 		 <% if params[:commit] == "Detailed View"%>
 			 <tr>	
 			 	<th>Start Date</th>
 			    <th>End Date</th>	 	
 			 	<th>Schools Name</th>
-			   	<th>Event Title</th>
+			   	<th >Event Title</th>
 			   	<th>Events Content</th>			    
 			    <th>Speaker</th>
 			    <th>Badge Awarded?</th>
 			 </tr>
  
  		<% else if params[:commit] == "Summary View"%>
+ 		
  			<tr>		 	
 			 	<th>Schools Name</th>
 			   	<th>Events Created</th>
@@ -43,12 +67,17 @@
  	
 
  <% @data.each do |dataList| %>
+
    <tr>
    	  	<% dataList.each do |cell| %>
-   		<td><%= cell %></td>
+   		<td width="200px"><%= cell %></td>
     	<% end %>
    </tr>
+    <%count += 1 %>
  <% end %>
  <% end %>
+ <% if params[:commit] == "Detailed View"%>
+ <tr><th>Total Records <%=count%></th></tr>
+ <%end%>
 </table>
 

@@ -122,12 +122,13 @@ class SearchService
   
   def date_search_db(fromdate, todate)
     
-       #fromdate = '2016-05-05 07:37:49.228131'
-       #todate = '2016-06-05 07:37:49.228131'
+    #fromdate = '2016-05-05 07:37:49.228131'
+    #todate = '2016-06-05 07:37:49.228131'
     #Events Created List
+    
     events_created = ActiveRecord::Base.connection.exec_query("
     SELECT e.loc_id, count(e.*)FROM events as e WHERE (e.created_at BETWEEN '#{fromdate}'
-     AND '#{todate}') GROUP BY loc_id ORDER BY loc_id;"     )
+     AND '#{todate}') AND loc_id not in (1) GROUP BY loc_id ORDER BY loc_id;"     )
 
     if events_created.present?
       #Events Claimed List
@@ -135,13 +136,13 @@ class SearchService
       SELECT e.loc_id, count(e.*)FROM events as e WHERE id in (select c.event_id from claims as c 
           where (c.created_at BETWEEN '#{fromdate}'
            AND '#{todate}') ) AND(e.created_at BETWEEN '#{fromdate}'
-           AND '#{todate}') GROUP BY loc_id ORDER BY loc_id;")
+           AND '#{todate}') AND loc_id not in (1) GROUP BY loc_id ORDER BY loc_id;")
       
       #List events for which badges were awarded
       events_badges = ActiveRecord::Base.connection.exec_query("            
       SELECT e.loc_id, count(e.*)FROM events as e WHERE id in (select event_id from user_badges) AND 
       (e.created_at BETWEEN '#{fromdate}'
-           AND '#{todate}') GROUP BY loc_id ORDER BY loc_id;")
+           AND '#{todate}') AND loc_id not in (1) GROUP BY loc_id ORDER BY loc_id;")
           
     
         
@@ -152,6 +153,9 @@ class SearchService
        @display_array = []
        claim_counter = 0
        badge_counter = 0
+       total_events = 0
+       total_claims = 0
+       total_badges = 0
         events_created.each do |events_row|
          puts events_row['loc_id'] + " " + events_row['count']
          @row_array = []
@@ -162,6 +166,7 @@ class SearchService
          puts school.inspect
          @row_array << school.school_name
          @row_array << events_row['count']
+         total_events = total_events + events_row['count'].to_i
        
          # events_claim.each do |claims_row|
          if events_claim.present?
@@ -169,6 +174,7 @@ class SearchService
           if  events_row['loc_id'] == claims_row['loc_id']
              @row_array << claims_row['count']
              claim_counter = claim_counter+1
+             total_claims = total_claims + claims_row['count'].to_i
            else
               @row_array << 0            
           end
@@ -179,6 +185,7 @@ class SearchService
               if  events_row['loc_id'] == badges_row['loc_id']
                  @row_array << badges_row['count']
                  badge_counter = badge_counter + 1
+                 total_badges = total_badges +  badges_row['count'].to_i
                else
                   @row_array << 0
               end
@@ -194,6 +201,12 @@ class SearchService
           @display_array <<  @row_array
           
         end
+        @row_array = []
+        @row_array << "Total"
+        @row_array << total_events
+        @row_array << total_claims
+        @row_array << total_badges
+         @display_array <<  @row_array
         return @display_array
         
       end
@@ -214,7 +227,7 @@ class SearchService
       LEFT JOIN users as u ON u.id = e.speaker_id
       LEFT JOIN user_badges as b ON b.event_id = e.id      
       where (event_start BETWEEN '#{fromdate}'
-      AND '#{todate}')")
+      AND '#{todate}') AND loc_id not in (select id from schools where school_name = 'Please Select A School') ORDER BY e.event_start DESC") 
 
     if events_created.present?
       
@@ -222,6 +235,7 @@ class SearchService
        @display_array = []
        claim_counter = 0
        badge_counter = 0
+       
         events_created.each do |events_row|
          @row_array = []
          @row_array << events_row['event_start']
@@ -244,4 +258,5 @@ class SearchService
         
       end
   end
+  
 end

@@ -1,10 +1,15 @@
 
 <% provide(:title, 'Management Console') %>
-<%if @data.present? && params[:fdate] != "" && params[:tdate] != "" %>
-	<% startDate =  params[:fdate].gsub(/\s+/m, ' ').strip.split(" ")%>
-	 <% endDate = params[:tdate].gsub(/\s+/m, ' ').strip.split(" ") %>
-	<% min = startDate[1].split(/\s|\:/)%>
-	<% endMin = endDate[1].split(/\s|\:/)%>
+<%if @data.present? %>
+	<% if params[:fdate] != "" %>
+		<% startDate =  params[:fdate].gsub(/\s+/m, ' ').strip.split(" ")%>
+	 	<% min = startDate[1].split(/\s|\:/)%>
+	 <% end %>
+	 <% if params[:tdate] != "" %>
+	 	<% endDate = params[:tdate].gsub(/\s+/m, ' ').strip.split(" ") %>
+	 	<% endMin = endDate[1].split(/\s|\:/)%>
+	<% end %>
+	
 <% end %>
 <%= form_tag '/admin', :method => :get do %>
  <label>From date</label>
@@ -30,18 +35,18 @@
 <% end %>
 
 <% end %>
-
+<% if @data.present?%>
+	<%if params[:fdate] != ""  %>
+		From Date: <%=startDate[0]%> <%=min[0]%>:<%=min[1]%>
+	<%end%>
+	<% if  params[:tdate] != ""%>
+		To Date: <%=endDate[0]%> <%=endMin[0]%>:<%=endMin[1]%>
+	<%end%>
+<%end%>
 <table>
 	 <% if @data.present?%>
 	 
-		 <tr>
-		 	<%if params[:fdate] != "" && params[:tdate] != "" %>
-		 	
-		 	 
-		 	<td>From Date: <%=startDate[0]%> <%=min[0]%>:<%=min[1]%></td>
-		 	<td>To Date: <%=endDate[0]%> <%=endMin[0]%>:<%=endMin[1]%></td>
-		 	<%end%>
-		 </tr>	
+			
 		 <%count = 0%>
 		 <% if params[:commit] == "Detailed View"%>
 			 <tr>	

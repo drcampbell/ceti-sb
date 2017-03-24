@@ -238,12 +238,16 @@ class SearchService
        
         events_created.each do |events_row|
          @row_array = []
-         @row_array << events_row['event_start']
-         @row_array << events_row['event_end']
+         @row_array << events_row['event_start'][0...-3]
+         @row_array << events_row['event_end'][0...-3]
          @row_array << events_row['school_name'] 
          @row_array << events_row['title']
          @row_array << events_row['content']
-         @row_array << events_row['name']
+         if events_row['name'] != '' then
+            @row_array << events_row['name']
+          else
+            @row_array << " "
+         end
          
          if events_row['badge_event_id'].present?
            @row_array << 1

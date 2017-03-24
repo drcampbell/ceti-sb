@@ -10,21 +10,24 @@ class AdminController < ApplicationController
         format.html # index.html.erb
         #format.json { render json: list_events(@events).as_json }
         format.csv do
-          headers['Content-Disposition'] = "attachment; filename=\"Event-list\""
+          headers['Content-Disposition'] = "attachment; filename=\"Event-list.csv\""
           headers['Content-Type'] ||= 'text/csv'
         end
 
     end
   end
   def date_search
+    
+    fdate = "1999-01-01 "
+    tdate = Time.now.strftime("%Y/%m/%d ")
     if params != nil && params[:fdate] == "" && params[:tdate] == ""
        #fromdate = '2016-05-05 07:37:49.228131'
        #todate = '2016-06-05 07:37:49.228131'
       # params[:fdate] = "-05-05 07:37:49.228131"
       # params[:tdate] = "2017-03-21 07:37:49.228131"
-      
       fdate = "1999-01-01 12:00"
       tdate = Time.now.strftime("%Y/%m/%d %H:%M")
+
          
       if params[:commit] == "Summary View"
         puts "Summary View"
@@ -49,15 +52,16 @@ class AdminController < ApplicationController
       end
       end
         
-    else if params != nil && params[:fdate] != nil && params[:tdate] != nil
-       
+    else if params != nil && (params[:fdate] != nil && params[:tdate] != nil)
+      if params[:fdate] != "" 
+        fdate = params[:fdate]
+       end
+       if params[:tdate] != ""
+        tdate = params[:tdate]
+       end
        if params[:format] != "csv" then
-         fdate = params[:fdate] << " 12:00:00.0000"
-         tdate = params[:tdate] << " 12:00:00.0000"
-       
-       else
-         fdate = params[:fdate] 
-         tdate = params[:tdate] 
+         fdate = fdate << " 12:00:00.0000"
+         tdate = tdate << " 12:00:00.0000"
        end
        
          
@@ -65,7 +69,7 @@ class AdminController < ApplicationController
       if params[:commit] == "Summary View"
         puts "Summary View"
         @data = SearchService.new.date_search_db(fdate, tdate)
-         @header_array << 'Schools Name'
+         @header_array << 'School Name'
          @header_array << 'Events Created' 
          @header_array << 'Events Claimed'
          @header_array << 'No of Awarded Badges'
@@ -77,9 +81,9 @@ class AdminController < ApplicationController
          
          @header_array << 'Start Date'
          @header_array << 'End Date' 
-         @header_array << 'Schools Name'
+         @header_array << 'School Name'
          @header_array << 'Event Title'
-         @header_array << 'Events Content'
+         @header_array << 'Event Content'
          @header_array << 'Speaker'
          @header_array << 'Badge Awarded?'
          

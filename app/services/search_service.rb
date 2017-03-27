@@ -242,7 +242,11 @@ class SearchService
          @row_array << events_row['event_end'][0...-3]
          @row_array << events_row['school_name'] 
          @row_array << events_row['title']
-         @row_array << events_row['content']
+         if events_row['content'] != '' then
+            @row_array << events_row['content']
+          else
+            @row_array << " "
+         end
          if events_row['name'] != '' then
             @row_array << events_row['name']
           else

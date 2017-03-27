@@ -1,5 +1,6 @@
 
 <% provide(:title, 'Management Console') %>
+<center><h3>Reports</h3></center>
 <%if @data.present? %>
 	<% if params[:fdate] != "" %>
 		<% startDate =  params[:fdate].gsub(/\s+/m, ' ').strip.split(" ")%>
@@ -12,26 +13,34 @@
 	
 <% end %>
 <%= form_tag '/admin', :method => :get do %>
- <label>From date</label>
-  <input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
-  name ="fdate" 
-  <%if startDate.present? && startDate[0]!=""%>
-  value="<%=startDate[0]%>"  
-  <% end %>
-  id = "fdate">
-  <label >To date</label>
- <input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
-  name ="tdate"
-  <%if endDate.present? && endDate[0]!=""%>
-   
-  
-  value="<%=endDate[0]%>"
-  <% end %>
-   id = "tdate ">
-<%= submit_tag "Summary View" %>
-<%= submit_tag "Detailed View" %>
+<center>
+<table style = "max-width:300px">
+	<tr>
+		<td> <label>From date</label></td>
+  		<td><input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
+			  name ="fdate" style = "max-width:150px"
+			  <%if startDate.present? && startDate[0]!=""%>
+			  value="<%=startDate[0]%>"  
+			  <% end %>
+			  id = "fdate">
+  		</td>
+	</tr>
+	<tr>
+		<td>  <label >To date</label></td>
+ 		<td><input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
+			  name ="tdate" style = "max-width:150px"
+			  <%if endDate.present? && endDate[0]!=""%>
+			  	value="<%=endDate[0]%>"
+			  <% end %>
+			  id = "tdate ">
+		</td>
+	</tr>
+	<tr><td colspan=2><%= submit_tag "Summary View" %></td></tr>
+	<tr><td colspan=2><%= submit_tag "Detailed View" %></td></tr>
+</table>
+</center>
 <% if @data.present?%>
-	<%= link_to 'Download CSV', controller: "admin", format: :csv, fdate: params[:fdate], tdate: params[:tdate],commit: params[:commit] %>
+	<h4><%= link_to 'Download CSV', controller: "admin", format: :csv, fdate: params[:fdate], tdate: params[:tdate],commit: params[:commit] %></h4>
 <% end %>
 
 <% end %>
@@ -53,8 +62,8 @@
 			 	<th>Start Date</th>
 			    <th>End Date</th>	 	
 			 	<th>Schools Name</th>
-			   	<th >Event Title</th>
-			   	<th>Events Content</th>			    
+			   	<th>Event Title</th>
+			   	<th>Content</th>			    
 			    <th>Speaker</th>
 			    <th>Badge Awarded?</th>
 			 </tr>

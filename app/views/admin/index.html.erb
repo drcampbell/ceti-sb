@@ -14,7 +14,7 @@
 <% end %>
 <%= form_tag '/admin', :method => :get do %>
 <center>
-<table style = "max-width:300px">
+<table style = "max-width:300px;">
 	<tr>
 		<td> <label>From date</label></td>
   		<td><input type ="date" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" 
@@ -52,7 +52,7 @@
 		To Date: <%=endDate[0]%> <%=endMin[0]%>:<%=endMin[1]%>
 	<%end%>
 <%end%>
-<table>
+<table border = 1>
 	 <% if @data.present?%>
 	 
 			

@@ -94,7 +94,7 @@ class AdminController < ApplicationController
     end
  end
  def admin_user
-    redirect_to(root_url) unless current_user && current_user.role == 'Admin'
+    redirect_to(root_url) unless current_user && current_user.admin?
   end
  end
   

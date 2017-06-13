@@ -100,7 +100,7 @@ class Claim < ActiveRecord::Base
     end
     # Case where claim is confirmed
     if self.update_attribute(:confirmed_by_teacher, true)
-      self.event.update(speaker_id: self.user_id)
+      #self.event.update(speaker_id: self.user_id)
       # Inform the claimant that the teacher has accepted their claim
       if Rails.env.production? and self.user.set_confirm
           UserMailer.confirm_speaker(self.event.user_id, 

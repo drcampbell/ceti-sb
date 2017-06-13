@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   acts_as_taggable
   after_create :init
-  validates :user_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  #validates :user_id, presence: true, numericality: {only_integer: true, greater_than: 0}
   validates :event_start, :event_end, presence: true
   validates :title, length: {minimum: 2, maximum: 256},
             format: {with: /\A(\S+ )*\S+\z/i, 
@@ -130,6 +130,17 @@ class Event < ActiveRecord::Base
       end
     end
   end
+  
+  def getSpeakerInfo()
+    #Select the Claims from Claim table for this event
+    @claims = Claim.where(event_id: self.id, confirmed_by_teacher:true)
+   if @claims.exists?
+     return @claims
+   else
+     return "TBA"
+    end
+  end
+  
 
   def jsonEvent(curr_user)
     school_name = nil
@@ -145,11 +156,12 @@ class Event < ActiveRecord::Base
     result[:event_end] = self.end()
     result[:user_name] = user_name
     result[:loc_name] = school_name
-    if self.speaker_id and self.speaker_id != 0
-      result[:speaker] = User.find(self.speaker_id).name
-    else
-      result[:speaker] = "TBA"
-    end
+    result[:speaker] = getSpeakerInfo()
+   # if self.speaker_id and self.speaker_id != 0
+    #  result[:speaker] = User.find(self.speaker_id).name
+    #else
+     # result[:speaker] = "TBA"
+    #end
     claim = Claim.where(event_id: self.id, user_id: curr_user)
     if claim.exists? and not claim[0].cancelled
       result[:claim_id] = claim[0].id

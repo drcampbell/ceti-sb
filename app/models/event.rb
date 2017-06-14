@@ -135,7 +135,13 @@ class Event < ActiveRecord::Base
     #Select the Claims from Claim table for this event
     @claims = Claim.where(event_id: self.id, confirmed_by_teacher:true)
    if @claims.exists?
-     return @claims
+    claimUserIdArr =  @claims.map {|i| i.user_id  }
+     @users = User.select('id,name').where(:id => claimUserIdArr)
+     if @users.exists?
+       return @users
+     else
+        return "TBA"
+     end
    else
      return "TBA"
     end

@@ -117,11 +117,11 @@ class Claim < ActiveRecord::Base
         if claim.id != self.id
           claim.update(active: false)
           #TODO Add UserMailer?
-          Notification.create(user_id: claim.user_id,
-                              act_user_id: self.event.user_id,
-                              event_id: self.event_id,
-                              n_type: :reject_claim,
-                              read: false)
+         # Notification.create(user_id: claim.user_id,
+         #                     act_user_id: self.event.user_id,
+         #                     event_id: self.event_id,
+         #                    n_type: :reject_claim,
+         #                    read: false)
         end
       end
       return true

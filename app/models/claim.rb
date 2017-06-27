@@ -44,12 +44,14 @@ class Claim < ActiveRecord::Base
     end
   end
 
-  def cancel()
+  def cancel() 
     self.update(active: false)
     self.update(cancelled: true)
     event = self.event
-    if event.speaker_id == self.user_id
-      event.update(speaker_id: 0) # Reset speaker id for search
+    
+    if self.confirmed_by_teacher == true
+     # event.update(speaker_id: 0) # Reset speaker id for search
+     #puts "Delete After approved that event"
       if event.event_start > Time.now
         # Reactivate old claims
         event.claims.map{|claim| claim.reactivate() }
@@ -66,6 +68,7 @@ class Claim < ActiveRecord::Base
       end
     else     
       if event.start > Time.now
+       # puts "Delete After claim that event"
         if Rails.env.production?
           UserMailer.cancel_claim(self.user_id,
                                   event.user_id,
@@ -78,6 +81,7 @@ class Claim < ActiveRecord::Base
                         read: false)     
       end
     end
+    Claim.find(self.id).destroy
   end
 
   def json_list_format
@@ -113,17 +117,17 @@ class Claim < ActiveRecord::Base
                             n_type: :confirm_speaker,
                             read: false)
       # Inform the other claims that the teacher has accepted someone else
-      self.event.claims.each do |claim|
-        if claim.id != self.id
-          claim.update(active: false)
+      #self.event.claims.each do |claim|
+       # if claim.id != self.id
+         # claim.update(active: false)
           #TODO Add UserMailer?
          # Notification.create(user_id: claim.user_id,
          #                     act_user_id: self.event.user_id,
          #                     event_id: self.event_id,
          #                    n_type: :reject_claim,
          #                    read: false)
-        end
-      end
+        #end
+      #end
       return true
     else
       return false

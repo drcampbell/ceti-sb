@@ -42,6 +42,7 @@ class Event < ActiveRecord::Base
   end
 
   def get_pending_claims(user_id)
+    puts "--event-get pending claims"
     filterDate(Event.joins(:claims).where('claims.user_id' => user_id)
       .where.not(speaker_id: user_id)
       .where(active: true)
@@ -49,10 +50,12 @@ class Event < ActiveRecord::Base
   end
 
   def get_pending_events(user_id)
+    puts "--event-get pending events"
     filterDate(Event.joins(:claims).where('events.user_id' => user_id).where('events.speaker_id'=> 0).where(active: true))
   end
 
   def get_my_events(user_id)
+    puts "--event-get_my_events"
     filterDate(Event.where("user_id = ? OR speaker_id = ?",  user_id, user_id).where(active: true))#speaker_id: current_user.id)
   end    
 
@@ -61,7 +64,7 @@ class Event < ActiveRecord::Base
   end
 
   def get_confirmed(user_id)
-    filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where.not(speaker_id: 0).where(active: true))
+    filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where(active: true))
   end
 
   def filterDate(events)
@@ -109,6 +112,7 @@ class Event < ActiveRecord::Base
   end
 
   def cancel(current_id)
+    puts "Cancel with user_id"
     if current_id == self.user_id
       self.update_attribute(:active, false)
       users = []

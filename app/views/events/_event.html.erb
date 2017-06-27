@@ -38,7 +38,7 @@
     <% else %>
       <% unless event.claims.each.nil? %>
         <strong>Claims: </strong>
-        <%= raw event.claims.where(active:true).each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
+        <%= raw event.claims.where(confirmed_by_teacher:true).each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
       <% end %>
     <% end %>
   </p>
@@ -53,7 +53,6 @@
 
   <p>
   <% if (not event.is_canceled) && (event.start() > Time.now) &&
-        (event.claims.where('confirmed_by_teacher = ?', true).count < 1) &&
         (event.claims.where('user_id = ?', current_user.id).count < 1) &&
         (event.user != current_user) %>
         <%= button_to 'Claim This Event',
@@ -73,13 +72,16 @@
   <!-- If you are the owner of the event -->
   <a>
   <% if current_user == event.user and (not event.is_canceled) %>
-    <% if event.event_end < Time.now and event.speaker_id > 0 and not event.complete %>
-      <% speaker = User.find(event.speaker_id) %>
+    <% if event.event_end < Time.now and event.claims.confirmed_by_teacher == true and not event.complete %>
+      claim = Claim.find(event.id)
+      claim.each do |c|
+      <% speaker = User.find(c.user_id) %>
       <%= button_to "Award Badge to #{speaker.name}",
             {action: "award_badge", controller: "users", event_id: event.id, award: true},
             data: { confirm: 'Are you sure?' },
             method: :post,
             class: 'btn-primary' %>
+        <% end %>
       <% end %>
     <% if event.event_start > Time.now %>
       <%= button_to 'Edit the Event',

@@ -10,13 +10,15 @@
   </tr>
 <% end %>
 <% event.claims.each do |claim| %>
+
   <tr><td>&nbsp</td></tr>
   <!-- Create claimant rows -->
   <tr style="margin-bottom: 10px">
     <% if current_user == event.user and 
          event.speaker_id == 0 and 
-         !claim.confirmed_by_teacher and 
-         claim.active %>
+         claim.confirmed_by_teacher == false and 
+         %>
+         
     <div style="width: auto; margin-right: 10px; margin-left: 10px">
       <td>
         <div style="text-align: center;">Make <%= claim.user.name %> the speaker? </div>
@@ -45,7 +47,7 @@
   <!-- Provide cancellation button to claimer/speaker -->
   <% if current_user.id == claim.user_id and claim.active and event.start() > Time.now %>
     <!-- SET cancellation message & CREATE button depending on CLAIMER/SPEAKER -->
-    <% if current_user.id == event.speaker_id %>
+    <% if claim.confirmed_by_teacher == true %>
      <% cancellation = 'Cancel Speaking Engagement' %>
     <% elsif current_user.id == claim.user_id %>
       <% cancellation = 'Cancel Claim' %>

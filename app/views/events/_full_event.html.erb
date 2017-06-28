@@ -82,13 +82,20 @@
   <a>
   <% if current_user == event.user and (not event.is_canceled) %>
     <% if event.event_end < Time.now and not event.complete %>
-      <% speaker = User.find(event.user_id) %>
-      <%= button_to "Award Badge to #{speaker.name}",
-            {action: "award_badge", controller: "users", event_id: event.id, award: true},
-            data: { confirm: 'Are you sure?' },
-            method: :post,
-            class: 'btn-success' %>
+      <% claims = Claim.where(event_id:event.id) %>
+      <% claims.each do |c|%>
+      <!-- award_badge param event_id change to claim id -->
+	      <% speaker = User.find(c.user_id) %>
+	      <% user_badges = UserBadge.where(event_id: event.id).where(user_id:speaker.id).present? %>
+	      <% if user_badges == false && c.rejected == false %>
+		      <%= button_to "Award Badge to #{speaker.name}",
+		            {action: "award_badge", controller: "users", event_id: c.id, award: true},
+		            data: { confirm: 'Are you sure?' },
+		            method: :post,
+		            class: 'btn-success' %>
+		  <% end %>
       <% end %>
+    <% end %>
     <% if event.event_start > Time.now %>
       <%= button_to 'Edit the Event',
             {action: "edit", controller: "events", id:event.id},

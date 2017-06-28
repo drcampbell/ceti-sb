@@ -17,6 +17,7 @@
     <% if current_user == event.user and 
          event.speaker_id == 0 and 
          claim.confirmed_by_teacher == false and 
+         claim.rejected == false
          %>
          
     <div style="width: auto; margin-right: 10px; margin-left: 10px">

@@ -74,27 +74,54 @@ class User < ActiveRecord::Base
 
   def get_event_approvals(params)
    # puts "-- get event approvals--"
-    Event.joins(:claims).where("events.user_id = ? OR claims.user_id = ?",self.id,self.id )
-          .where(active: true)
-          .where('claims.active' => true)
-          .where('claims.confirmed_by_teacher'=> true)
-          .where('claims.rejected' => false)
+   
+   claims = Claim.where(user_id:self.id)
+              .where(confirmed_by_teacher:false)
+              .where(rejected:false)
+   ids = claims.map{|c| c['event_id']}
+  # puts ids
+   Event.where(:id =>ids)
           .where('event_start > ?', Time.now)
-          .paginate(page: params[:page], per_page: params[:per_page])
+          .paginate(page: params[:page], per_page: params[:per_page])     
+   
+   # Event.joins(:claims).where("events.user_id = ? OR claims.user_id = ?",self.id,self.id )
+   #       .where(active: true)
+   #       .where('claims.active' => true)
+   #       .where('claims.confirmed_by_teacher'=> true)
+   #       .where('claims.rejected' => false)
+   #       .where('event_start > ?', Time.now)
+   #       .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def get_all_events(params)
     #puts "--get all events--"
-    Event.where("user_id = ? OR speaker_id = ?",  self.id, 0)
-          .where(active: true) #speaker_id: current_user.id)
-          .where('event_start > ?', Time.now)
-          .paginate(page: params[:page], per_page: params[:per_page])
+    
+    claims = Claim.where(user_id:self.id)
+                .where(rejected:false)
+                
+    ids = claims.map{|c| c['event_id']}
+    
+    Event.where("id IN (?) OR user_id = ?", ids, self.id)
+      .where('event_start > ?', Time.now)
+      .where(active: true)
+      .paginate(page: params[:page], per_page: params[:per_page])
+      
+   # Event.where("user_id = ? OR speaker_id = ?",  self.id, 0)
+   #       .where(active: true) #speaker_id: current_user.id)
+   #       .where('event_start > ?', Time.now)
+   #       .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def get_confirmed(params)
     #puts "---get_confirmed--"
-    Event.where("user_id = ? OR speaker_id = ?", self.id, self.id)
-          .where(active: true)
+    #puts self.id
+    claims =  Claim.where(user_id:self.id)
+            .where(confirmed_by_teacher:true)
+            .where(rejected:false)
+    ids = claims.map{|c| c['event_id']}
+    
+    Event.where("id IN (?)", ids)
+          .where(active: true, complete: false)
           .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end
@@ -179,7 +206,7 @@ class User < ActiveRecord::Base
         UserBadge.create(user_id: claim.user_id,
                          badge_id: badge_id,
                          event_id: event.id,
-                         award_status: 1)
+                         award_status: 1) # 1 is awarded a badges
         Notification.create(user_id: claim.user_id,
                             act_user_id: self.id,
                             event_id: event.id,
@@ -192,7 +219,7 @@ class User < ActiveRecord::Base
         UserBadge.create(user_id: claim.user_id,
                          badge_id: 0,
                          event_id: event.id,
-                         award_status: 0)
+                         award_status: 0) # 0 - Don't awarded a badges
         #event.update(complete: true)
       end
       update_complete(event.id)

@@ -40,29 +40,26 @@ class Event < ActiveRecord::Base
   def event_month
     self.event_start.strftime('%B %Y')
   end
-
+#TODO: Test get_pending_claims
   def get_pending_claims(user_id)
-    puts "--event-get pending claims"
     filterDate(Event.joins(:claims).where('claims.user_id' => user_id)
       .where.not(speaker_id: user_id)
       .where(active: true)
       .where('claims.active' => true))
   end
-
+#TODO: Test get_pending_events
   def get_pending_events(user_id)
-    puts "--event-get pending events"
     filterDate(Event.joins(:claims).where('events.user_id' => user_id).where('events.speaker_id'=> 0).where(active: true))
   end
-
+#TODO: Test get_my_events
   def get_my_events(user_id)
-    puts "--event-get_my_events"
     filterDate(Event.where("user_id = ? OR speaker_id = ?",  user_id, user_id).where(active: true))#speaker_id: current_user.id)
   end    
 
   def is_canceled
     not self.active and not self.complete
   end
-
+#TODO: Test get_confirmed
   def get_confirmed(user_id)
     filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where(active: true))
   end

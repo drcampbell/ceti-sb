@@ -85,15 +85,22 @@ class Claim < ActiveRecord::Base
   end
 
   def json_list_format
+    
+      claim = Claim.where(user_id:self.user_id).where(event_id:self.event_id)
+      confirmed_by_teacher = false
+      if (!claim.blank?) && (claim[0].confirmed_by_teacher == true)
+          confirmed_by_teacher = true
+      end
       user = User.find(self.user_id)
       {
         "user_id" => user.id, 
-        "event_id"=> self.id,
+        "event_id"=> self.event_id,
         "user_name" => user.name,
         "business" => user.business, 
         "job_title" => user.job_title, 
         "school_id"  =>  user.school_id, 
-        "claim_id"=> self.id
+        "claim_id"=> self.id,
+        "confirmed_by_teacher"=>confirmed_by_teacher
       }
   end
 

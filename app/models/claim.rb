@@ -88,8 +88,16 @@ class Claim < ActiveRecord::Base
     
       claim = Claim.where(user_id:self.user_id).where(event_id:self.event_id)
       confirmed_by_teacher = false
-      if (!claim.blank?) && (claim[0].confirmed_by_teacher == true)
-          confirmed_by_teacher = true
+      claim_rejected = false
+      if !claim.blank? 
+        
+          if (claim[0].confirmed_by_teacher == true)
+            confirmed_by_teacher = true
+          end
+          
+          if (claim[0].rejected == true)
+            claim_rejected = true
+          end
       end
       user = User.find(self.user_id)
       {
@@ -100,7 +108,8 @@ class Claim < ActiveRecord::Base
         "job_title" => user.job_title, 
         "school_id"  =>  user.school_id, 
         "claim_id"=> self.id,
-        "confirmed_by_teacher"=>confirmed_by_teacher
+        "confirmed_by_teacher"=>confirmed_by_teacher,
+        "claim_rejected"=>claim_rejected
       }
   end
 

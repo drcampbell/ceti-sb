@@ -4,8 +4,9 @@ class CompleteEventJob < ActiveJob::Base
   def perform()
   	#Notification.create(user_id: 34,act_user_id: 34, event_id: 0, n_type: :message, read:false)
   	#CompleteEventJob.set(queue: :default).perform_later()
-     puts Time.now
-    events = Event.where('event_end < ?', '2017-06-27 13:48:00 - 0400').where(:complete => false)
+     #puts Time.now
+     #'2017-06-30 10:08:00 - 0400'
+    events = Event.where('event_end < ?', Time.now).where(:complete => false)
     
     events.each do |x|
       claims = Claim.where(event_id: x.id).where(confirmed_by_teacher:true)
@@ -17,10 +18,10 @@ class CompleteEventJob < ActiveJob::Base
             
             claims.each do |i|
              
-             userBadges = UserBadge.where(event_id: x.id).where(user_id:i.user_id).present?       
+              userBadges = UserBadge.where(event_id: x.id).where(user_id:i.user_id).present?       
              
               if userBadges == false
-                 puts "create"
+                #puts "create"
            		  Notification.create(user_id: x.user_id,
                                    act_user_id: i.user_id,
                                    event_id: x.id,

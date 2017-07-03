@@ -14,7 +14,7 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     # Get the users events TODO pass in all = true for Android 
     events = SearchService.new.search(Event, {user_id: @user.id, all: true})
     # Get the users badges and convert them to an appropriate format 
-    badges = @user.user_badges.map{ |badge| badge.json_list_format }
+    badges = @user.user_badges.where.not(:badge_id =>0).map{ |badge| badge.json_list_format }
     render json: { user: @user.json_format, 
                    events: events.map{|event| event.json_list_format}.as_json,
                    badges: badges}

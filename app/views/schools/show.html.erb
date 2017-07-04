@@ -8,7 +8,7 @@
 
 <div align="center">
 	
-		<%= image_tag(ENV["S3_BUCKET"]+"badges/"+@badge.get_file_Name(),size: "100x100")%>
+		<%= image_tag(ENV["S3_BUCKET"] + "badges/" + ENV["MODE"] +"/#{@badge.id}/" + @badge.get_file_Name(), size: "100x100")%>
 	
 </div>
 
@@ -30,8 +30,9 @@
 					class: "btn btn-lg btn-primary" %>
 		<% else  %>
 		<div class = "well">
+	
    <%= form_for @badge do |f| %>
-	    <%= f.label :file %>
+	    <%= f.label "Upload new Badge" %>
 	    <%= f.file_field :file %>
 		<%= f.hidden_field :school_id, :value=> @school.id%>
    

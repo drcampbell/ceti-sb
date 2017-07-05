@@ -58,7 +58,8 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     event = Event.find(params[:event_id])
     badge = Badge.find(School.find(event.loc_id).badge_id)
     isAwarded = UserBadge.where(event_id: event.id, badge_id: badge.id).present?
-    response = {badge_url: badge.get_file_Name(), 
+    response = {badge_id: badge.id,
+              badge_url: badge.get_file_Name(), 
              event_name: event.title,
              speaker_name:  User.find(event.speaker_id).name,
              event_id: event.id,

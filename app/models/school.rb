@@ -39,7 +39,8 @@ class School < ActiveRecord::Base
     city_state = self.loc_city+", "+self.loc_state
     return {"id" => self.id, 
 	    "school_name" => self.school_name,
-	    "city_state" => city_state}
+	    "city_state" => city_state,
+	    "badge_id" => self.badge_id}
   end
 
   def handle_abbr

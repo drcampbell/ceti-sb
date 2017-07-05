@@ -55,17 +55,17 @@ class BadgesController < ApplicationController
       aws = AWSServices.new
       
       #Deleting existing badge
-      if school.badge_id.present?
-        existing_badge = Badge.find(school.badge_id)
-        badge_folder_path = "badges/".concat(ENV["MODE"]).concat("/#{existing_badge.id}/")
-        if(existing_badge.file_name.present?)
-          badge_file_path = badge_folder_path + existing_badge.file_name
-          
-          puts "Deleting AWS Object: " + badge_file_path
-          aws.delete badge_file_path
-        end
-        existing_badge.delete
-      end
+      # if school.badge_id.present?
+        # existing_badge = Badge.find(school.badge_id)
+        # badge_folder_path = "badges/".concat(ENV["MODE"]).concat("/#{existing_badge.id}/")
+        # if(existing_badge.file_name.present?)
+          # badge_file_path = badge_folder_path + existing_badge.file_name
+           
+          # puts "Deleting AWS Object: " + badge_file_path
+          # aws.delete badge_file_path
+        # end
+        # existing_badge.delete
+      # end
       school.badge_id = @badge.id
       school.save!
       

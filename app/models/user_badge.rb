@@ -28,14 +28,16 @@ class UserBadge < ActiveRecord::Base
       event_name: event.title,
       badge_url: Badge.find(self.badge_id).get_file_Name(),
       school_name: event.loc_name,
-      badge_id: self.id
+      badge_id: self.badge_id,
+      user_badge_id: self.id
     }
   end
 
   def json_list_format
     {"event_title" => Event.find(self.event_id).title,
-     "badge_id" => self.id,
-     "badge_url" => Badge.find(self.badge_id).get_file_Name()
+     "badge_id" => self.badge_id,
+     "badge_url" => Badge.find(self.badge_id).get_file_Name(),
+     "user_badge_id" => self.id,
     }
   end
 

@@ -14,7 +14,7 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     # Get the users events TODO pass in all = true for Android 
     events = SearchService.new.search(Event, {user_id: @user.id, all: true})
     # Get the users badges and convert them to an appropriate format 
-    badges = @user.user_badges.where.not(:badge_id =>0).map{ |badge| badge.json_list_format }
+    badges = @user.user_badges.where.not(:award_status =>0).map{ |badge| badge.json_list_format }
     render json: { user: @user.json_format, 
                    events: events.map{|event| event.json_list_format}.as_json,
                    badges: badges}
@@ -60,33 +60,41 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
     
     notification = Notification.find(params[:notification_id])
     event = Event.find(notification.event_id)
-    claim = Claim.where(user_id:notification.act_user_id).where(event_id:event.id)
+    claim = Claim.where(user_id:notification.act_user_id).where(event_id:notification.event_id)
     
-    badge = Badge.find(School.find(event.loc_id).badge_id)
+    
     
     isAwarded = false
-    #puts "badges id"
-
-    user_badge = UserBadge.where(event_id: event.id, user_id:notification.act_user_id)
+    isRejected = false
+   
+    badge = nil
+    user_badge = UserBadge.where(event_id: event.id, user_id:notification.act_user_id).order('badge_id')
     
     if !user_badge.blank?
+       badge = Badge.find(user_badge[0]['badge_id'])
+      #puts user_badge[0]['award_status']
        if user_badge[0]['award_status'] != 0
-         if user_badge[0]['event_id'] == event.id && user_badge[0]['badge_id'] == badge.id && user_badge[0]['user_id'] == notification.act_user_id
-            isAwarded = true
-         end
+         #if user_badge[0]['event_id'] == event.id && user_badge[0]['badge_id'] == badge.id && user_badge[0]['user_id'] == notification.act_user_id
+             isAwarded = true
+        # end
+        else
+            isRejected = true
        end
+    else
+      badge = Badge.find(School.find(event.loc_id).badge_id)    
     end
     #puts isAwarded
     response = {badge_url: badge.get_file_Name(), 
              event_name: event.title,
              speaker_name:  User.find(notification.act_user_id).name,
              claim_id: claim[0]['id'], #TODO: event id replace to claim id 
-             isAwarded: isAwarded}
+             isAwarded: isAwarded,
+             isRejected: isRejected}
     render json: response.as_json
   end
 
   def post_award_badge
-    current_user.award_badge(params[:event_id], params[:award])
+    current_user.award_badge(params[:claim_id], params[:award])
     render json: {state:0}
   end
 

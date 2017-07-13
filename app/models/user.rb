@@ -201,8 +201,13 @@ class User < ActiveRecord::Base
       if(award == "false")
         award = false;
       end
+      badge_id = School.find(event.loc_id).badge_id
+      
+      notification = Notification.where(user_id: self.id, act_user_id: claim.user_id, 
+        event_id: event.id, n_type: 4).order(id: :desc)
+      notif =  Notification.find(notification[0]['id'])
       if award
-        badge_id = School.find(event.loc_id).badge_id
+        
         UserBadge.create(user_id: claim.user_id,
                          badge_id: badge_id,
                          event_id: event.id,
@@ -212,15 +217,27 @@ class User < ActiveRecord::Base
                             event_id: event.id,
                             n_type: :new_badge,
                             read: false)
+       if notif.update_attribute(:n_type, :awarded_badge)
+         puts "Notification updated "
+       end
+                            
+                            
+                            
+                          
        
           
         #event.update(complete: true)
       else
         UserBadge.create(user_id: claim.user_id,
-                         badge_id: 0,
+                         badge_id: badge_id,
                          event_id: event.id,
-                         award_status: 0) # 0 - Don't awarded a badges
+                         award_status: 0) # 0 - Rejected badge
         #event.update(complete: true)
+        
+       if notif.update_attribute(:n_type, :rejected_badge)
+         puts "Notification updated "
+       end
+         
       end
       update_complete(event.id)
     end

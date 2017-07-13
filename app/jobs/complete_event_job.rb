@@ -11,7 +11,8 @@ class CompleteEventJob < ActiveJob::Base
     events.each do |x|
       claims = Claim.where(event_id: x.id).where(confirmed_by_teacher:true)
       
-          notification = Notification.where(event_id: x.id, n_type: 4).first
+          notification = Notification.where(event_id: x.id, n_type: :award_badge).first
+          puts notification.n_type
           if notification != nil
             notification.send_gcm()
           else 

@@ -189,8 +189,8 @@ class Event < ActiveRecord::Base
   def pending_claims(params)
     #Claim list in event view page
     claims = Claim.where(event_id: self.id)
-              .order(:confirmed_by_teacher)
-              .order(:rejected)
+              .where(confirmed_by_teacher:false)
+              .where(rejected:false)
               .paginate(page: params[:page])
     return claims.map{|c| c.json_list_format}
   end

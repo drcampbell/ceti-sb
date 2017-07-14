@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       delete  'notifications' => 'users#all_notifications_read'
       get     'users/award_badge' => 'users#get_award_badge'
       post    'users/award_badge' => 'users#post_award_badge'
+      post    'users/reject_badge' => 'users#post_reject_badge'
       get     'users/cancel' => 'registrations#cancel_account'
       post     'users/password' => 'passwords#create'
     end

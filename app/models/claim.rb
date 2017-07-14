@@ -44,15 +44,17 @@ class Claim < ActiveRecord::Base
     end
   end
 
-  def cancel()
+  def cancel() 
     self.update(active: false)
     self.update(cancelled: true)
     event = self.event
-    if event.speaker_id == self.user_id
-      event.update(speaker_id: 0) # Reset speaker id for search
+    
+    if self.confirmed_by_teacher == true
+     # event.update(speaker_id: 0) # Reset speaker id for search
+     #puts "Delete After approved that event"
       if event.event_start > Time.now
         # Reactivate old claims
-        event.claims.map{|claim| claim.reactivate() }
+       #event.claims.map{|claim| claim.reactivate() }
         if Rails.env.production?
           UserMailer.cancel_speaker(self.user_id,
                                 event.user_id,
@@ -66,6 +68,7 @@ class Claim < ActiveRecord::Base
       end
     else     
       if event.start > Time.now
+       # puts "Delete After claim that event"
         if Rails.env.production?
           UserMailer.cancel_claim(self.user_id,
                                   event.user_id,
@@ -78,18 +81,35 @@ class Claim < ActiveRecord::Base
                         read: false)     
       end
     end
+    Claim.find(self.id).destroy
   end
 
   def json_list_format
+    
+      claim = Claim.where(user_id:self.user_id).where(event_id:self.event_id)
+      confirmed_by_teacher = false
+      claim_rejected = false
+      if !claim.blank? 
+        
+          if (claim[0].confirmed_by_teacher == true)
+            confirmed_by_teacher = true
+          end
+          
+          if (claim[0].rejected == true)
+            claim_rejected = true
+          end
+      end
       user = User.find(self.user_id)
       {
         "user_id" => user.id, 
-        "event_id"=> self.id,
+        "event_id"=> self.event_id,
         "user_name" => user.name,
         "business" => user.business, 
         "job_title" => user.job_title, 
         "school_id"  =>  user.school_id, 
-        "claim_id"=> self.id
+        "claim_id"=> self.id,
+        "confirmed_by_teacher"=>confirmed_by_teacher,
+        "claim_rejected"=>claim_rejected
       }
   end
 
@@ -100,7 +120,7 @@ class Claim < ActiveRecord::Base
     end
     # Case where claim is confirmed
     if self.update_attribute(:confirmed_by_teacher, true)
-      self.event.update(speaker_id: self.user_id)
+      #self.event.update(speaker_id: self.user_id)
       # Inform the claimant that the teacher has accepted their claim
       if Rails.env.production? and self.user.set_confirm
           UserMailer.confirm_speaker(self.event.user_id, 
@@ -113,17 +133,17 @@ class Claim < ActiveRecord::Base
                             n_type: :confirm_speaker,
                             read: false)
       # Inform the other claims that the teacher has accepted someone else
-      self.event.claims.each do |claim|
-        if claim.id != self.id
-          claim.update(active: false)
+      #self.event.claims.each do |claim|
+       # if claim.id != self.id
+         # claim.update(active: false)
           #TODO Add UserMailer?
-          Notification.create(user_id: claim.user_id,
-                              act_user_id: self.event.user_id,
-                              event_id: self.event_id,
-                              n_type: :reject_claim,
-                              read: false)
-        end
-      end
+         # Notification.create(user_id: claim.user_id,
+         #                     act_user_id: self.event.user_id,
+         #                     event_id: self.event_id,
+         #                    n_type: :reject_claim,
+         #                    read: false)
+        #end
+      #end
       return true
     else
       return false

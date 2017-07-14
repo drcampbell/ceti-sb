@@ -7,12 +7,21 @@ class SchoolsController < ApplicationController
     respond_to do |format|
         format.html {  }
         #format.json { render json: {schools: @schools.map{|s| s.json_list_format}}.as_json }
+         params[:per_page] = 15
+          @schools = SearchService.new.search(School, params)
+          respond_to do |format|
+              format.html {if @schools.empty? then flash[:alert] = "No schools found" end}
+              #format.json {@schools.map{|s| s.json_list_format}} 
+           end
+          #puts @school
     end
   end
+ 
   
   def near_me
     if not params[:zip]
-      redirect_to schools
+      redirect_to schools_path
+      return
     end
     zip = Zipcode.where(zip: params[:zip]).first
     if params[:radius]

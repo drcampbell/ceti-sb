@@ -60,10 +60,11 @@ class User < ActiveRecord::Base
   end
 
   def get_pending_claims(params)
+    #puts "-- get pending claims --"
     Event.joins(:claims).where('claims.user_id' => self.id)
-          .where.not(speaker_id: self.id)
           .where(active: true, complete: false)
           .where('claims.active' => true)
+          .where('claims.confirmed_by_teacher'=> false)
           .where('claims.cancelled' => false)
           .where('claims.rejected' => false)
           .where('event_start > ?', Time.now)
@@ -72,26 +73,55 @@ class User < ActiveRecord::Base
       #.where('claims.active' => true))
 
   def get_event_approvals(params)
-    Event.joins(:claims).where('events.user_id' => self.id)
-          .where('events.speaker_id'=> 0)
-          .where(active: true)
-          .where('claims.active' => true)
-          .where('claims.rejected' => false)
+   # puts "-- get event approvals--"
+   
+   claims = Claim.where(user_id:self.id)
+              .where(confirmed_by_teacher:false)
+              .where(rejected:false)
+   ids = claims.map{|c| c['event_id']}
+  # puts ids
+   Event.where(:id =>ids)
           .where('event_start > ?', Time.now)
-          .paginate(page: params[:page], per_page: params[:per_page])
+          .paginate(page: params[:page], per_page: params[:per_page])     
+   
+   # Event.joins(:claims).where("events.user_id = ? OR claims.user_id = ?",self.id,self.id )
+   #       .where(active: true)
+   #       .where('claims.active' => true)
+   #       .where('claims.confirmed_by_teacher'=> true)
+   #       .where('claims.rejected' => false)
+   #       .where('event_start > ?', Time.now)
+   #       .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def get_all_events(params)
-    Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
-          .where(active: true) #speaker_id: current_user.id)
-          .where('event_start > ?', Time.now)
-          .paginate(page: params[:page], per_page: params[:per_page])
+    #puts "--get all events--"
+    
+    claims = Claim.where(user_id:self.id)
+                .where(rejected:false)
+                
+    ids = claims.map{|c| c['event_id']}
+    
+    Event.where("id IN (?) OR user_id = ?", ids, self.id)
+      .where('event_start > ?', Time.now)
+      .where(active: true)
+      .paginate(page: params[:page], per_page: params[:per_page])
+      
+   # Event.where("user_id = ? OR speaker_id = ?",  self.id, 0)
+   #       .where(active: true) #speaker_id: current_user.id)
+   #       .where('event_start > ?', Time.now)
+   #       .paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def get_confirmed(params)
-    Event.where("user_id = ? OR speaker_id = ?", self.id, self.id)
-          .where.not(speaker_id: 0)
-          .where(active: true)
+    #puts "---get_confirmed--"
+    #puts self.id
+    claims =  Claim.where(user_id:self.id)
+            .where(confirmed_by_teacher:true)
+            .where(rejected:false)
+    ids = claims.map{|c| c['event_id']}
+    
+    Event.where("id IN (?)", ids)
+          .where(active: true, complete: false)
           .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])
   end
@@ -146,30 +176,85 @@ class User < ActiveRecord::Base
   def unread_notifications()
     return Notification.where(user_id: self.id, read: false).count
   end
+  
+  def update_complete(e_id)
+    
+    puts "update_complete"
+    puts e_id
+    claim = Claim.where(event_id: e_id).where(confirmed_by_teacher: true)
+    user_badges = UserBadge.where(event_id: e_id)
+    #puts claim_count.count
+    #puts user_badges_count.count
+    
+    if claim.count == user_badges.count
+       event = Event.find(e_id)
+       event.update(complete: true)
+    end 
+    
+   end
 
-  def award_badge(event_id, award)
-    event = Event.find(event_id)
+  def award_badge(claim_id, award)
+    claim = Claim.find(claim_id)
+    event = Event.find(claim.event_id)
+    puts "--award_badge--"
+    isAwarded = award
     if self.id == event.user_id
-      if(award == "false")
-        award = false;
+      
+      badge_id = School.find(event.loc_id).badge_id
+      
+      notification = Notification.where(user_id: self.id, act_user_id: claim.user_id, 
+        event_id: event.id, n_type: 4).order(id: :desc)
+      notif =  Notification.find(notification[0]['id'])
+      
+     
+      UserBadge.create(user_id: claim.user_id,
+                       badge_id: badge_id,
+                       event_id: event.id,
+                       award_status: 1) # 1 is awarded a badges
+      Notification.create(user_id: claim.user_id,
+                          act_user_id: self.id,
+                          event_id: event.id,
+                          n_type: :new_badge,
+                          read: false)
+      if notif.update_attribute(:n_type, :awarded_badge)
+        #puts "Notification updated "
       end
-      if award
-        badge_id = School.find(event.loc_id).badge_id
-        UserBadge.create(user_id: event.speaker_id,
-                         badge_id: badge_id,
-                         event_id: event.id)
-        Notification.create(user_id: event.speaker_id,
-                            act_user_id: self.id,
-                            event_id: event.id,
-                            n_type: :new_badge,
-                            read: false)
-        event.update(complete: true)
-      else
-        event.update(complete: true)
-      end
-    end
-  end
 
+        #event.update(complete: true)
+     end
+      update_complete(event.id)
+    end
+ 
+  
+  
+  def reject_badge(claim_id)
+  
+    claim = Claim.find(claim_id)
+    event = Event.find(claim.event_id)
+    puts "--reject_badge--"
+    
+    if self.id == event.user_id
+      
+      badge_id = School.find(event.loc_id).badge_id
+        
+      notification = Notification.where(user_id: self.id, act_user_id: claim.user_id, 
+          event_id: event.id, n_type: 4).order(id: :desc)
+      notif =  Notification.find(notification[0]['id'])
+        
+      UserBadge.create(user_id: claim.user_id,
+                           badge_id: badge_id,
+                           event_id: event.id,
+                           award_status: 0) # 0 - Rejected badge
+          #event.update(complete: true)
+          
+      if notif.update_attribute(:n_type, :rejected_badge)
+          # puts "Notification updated "
+      end
+      update_complete(event.id)
+    end  
+  end
+  
+  
   def get_events()
     return Event.where("user_id = ? OR speaker_id = ?",  self.id, self.id)
                 .where("event_start > ?", Time.now)

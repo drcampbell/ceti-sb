@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   acts_as_taggable
   after_create :init
-  validates :user_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  #validates :user_id, presence: true, numericality: {only_integer: true, greater_than: 0}
   validates :event_start, :event_end, presence: true
   validates :title, length: {minimum: 2, maximum: 256},
             format: {with: /\A(\S+ )*\S+\z/i, 
@@ -40,18 +40,18 @@ class Event < ActiveRecord::Base
   def event_month
     self.event_start.strftime('%B %Y')
   end
-
+#TODO: Test get_pending_claims
   def get_pending_claims(user_id)
     filterDate(Event.joins(:claims).where('claims.user_id' => user_id)
       .where.not(speaker_id: user_id)
       .where(active: true)
       .where('claims.active' => true))
   end
-
+#TODO: Test get_pending_events
   def get_pending_events(user_id)
     filterDate(Event.joins(:claims).where('events.user_id' => user_id).where('events.speaker_id'=> 0).where(active: true))
   end
-
+#TODO: Test get_my_events
   def get_my_events(user_id)
     filterDate(Event.where("user_id = ? OR speaker_id = ?",  user_id, user_id).where(active: true))#speaker_id: current_user.id)
   end    
@@ -59,9 +59,9 @@ class Event < ActiveRecord::Base
   def is_canceled
     not self.active and not self.complete
   end
-
+#TODO: Test get_confirmed
   def get_confirmed(user_id)
-    filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where.not(speaker_id: 0).where(active: true))
+    filterDate(Event.where("user_id = ? OR speaker_id = ?", user_id, user_id).where(active: true))
   end
 
   def filterDate(events)
@@ -109,6 +109,7 @@ class Event < ActiveRecord::Base
   end
 
   def cancel(current_id)
+    puts "Cancel with user_id"
     if current_id == self.user_id
       self.update_attribute(:active, false)
       users = []
@@ -130,6 +131,23 @@ class Event < ActiveRecord::Base
       end
     end
   end
+  
+  def getSpeakerInfo()
+    #Select the Claims from Claim table for this event
+    @claims = Claim.where(event_id: self.id, confirmed_by_teacher:true)
+   if @claims.exists?
+    claimUserIdArr =  @claims.map {|i| i.user_id  }
+     @users = User.select('id,name').where(:id => claimUserIdArr)
+     if @users.exists?
+       return @users
+     else
+        return "TBA"
+     end
+   else
+     return "TBA"
+    end
+  end
+  
 
   def jsonEvent(curr_user)
     school_name = nil
@@ -145,11 +163,12 @@ class Event < ActiveRecord::Base
     result[:event_end] = self.end()
     result[:user_name] = user_name
     result[:loc_name] = school_name
-    if self.speaker_id and self.speaker_id != 0
-      result[:speaker] = User.find(self.speaker_id).name
-    else
-      result[:speaker] = "TBA"
-    end
+    result[:speaker] = getSpeakerInfo()
+   # if self.speaker_id and self.speaker_id != 0
+    #  result[:speaker] = User.find(self.speaker_id).name
+    #else
+     # result[:speaker] = "TBA"
+    #end
     claim = Claim.where(event_id: self.id, user_id: curr_user)
     if claim.exists? and not claim[0].cancelled
       result[:claim_id] = claim[0].id
@@ -168,7 +187,9 @@ class Event < ActiveRecord::Base
   end
 
   def pending_claims(params)
-    claims = Claim.where(event_id: self.id).where(active: true).paginate(page: params[:page])
+    #Claim list in event view page
+    claims = Claim.where(event_id: self.id, confirmed_by_teacher:false, rejected:false)
+              .paginate(page: params[:page])
     return claims.map{|c| c.json_list_format}
   end
 

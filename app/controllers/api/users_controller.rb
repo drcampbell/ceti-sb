@@ -121,7 +121,11 @@ class API::UsersController < API::ApplicationController #before_filter :authenti
 
   def notifications
     pages = 15
-    notifications = current_user.notifications().paginate(page: params[:page], per_page: pages)
+    notifications_undecided = current_user.notifications().where(n_type: 4)
+
+    notifications_decided = current_user.notifications().where.not(n_type: 4)
+                            .paginate(page: params[:page], per_page: pages)
+    notifications = notifications_undecided + notifications_decided
     render json: {notifications: notifications.map{|n| n.json_format}, 
                   count: current_user.unread_notifications()}
   end

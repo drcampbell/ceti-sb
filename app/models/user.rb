@@ -180,7 +180,7 @@ class User < ActiveRecord::Base
   def update_complete(e_id)
     
     puts "update_complete"
-    puts e_id
+    #puts e_id
     claim = Claim.where(event_id: e_id).where(confirmed_by_teacher: true)
     user_badges = UserBadge.where(event_id: e_id)
     #puts claim_count.count

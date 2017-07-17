@@ -4,13 +4,17 @@ class UserBadge < ActiveRecord::Base
 
   def notify()
   	event = Event.find(self.event_id)
-        if Rails.env.production?
+  	#user_badges = UserBadge.where(event_id:self.event_id,user_id: self.user_id,award_status: 1)
+  	          
+  	 if self.award_status == 1    #Awarded       
+        #if Rails.env.production?
           Notification.create(user_id: self.user_id,
   											act_user_id: event.user_id,
   											event_id: event.id,
   											n_type: :new_badge,
   											read: false)
-        end
+        #end
+    end
   end
 
   def get_badge_filename()

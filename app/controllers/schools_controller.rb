@@ -19,12 +19,13 @@ class SchoolsController < ApplicationController
  
   
   def near_me
-    if not params[:zip]
-      redirect_to schools_path
+    puts params[:zip].empty?
+    if !params[:zip] ||  params[:zip].empty?
+      index()
       return
     end
     zip = Zipcode.where(zip: params[:zip]).first
-    if params[:radius]
+    if params[:radius] && !params[:radius].empty?
       radius = eval(params[:radius]) * 1609.34
     else
       radius = 10 * 1609.34

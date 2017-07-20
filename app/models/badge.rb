@@ -22,7 +22,11 @@ class Badge < ActiveRecord::Base
       return self.file.file.file.split("/")[-1]
     
     else
-      return "def_school_badge_small.jpg"
+      if(self.file_name != nil)
+        return self.file_name
+      else
+        return "def_school_badge_small.jpg"
+      end
     end
   end
   

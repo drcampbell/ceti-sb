@@ -219,15 +219,17 @@ class SearchService
        #todate = '2016-06-05 07:37:49.228131'
     #Events Created List
     events_created = ActiveRecord::Base.connection.exec_query("
-      select e.title as title, e.content as content, e.event_start as event_start,
+     select e.title as title, e.content as content, e.event_start as event_start,
         e.event_end as event_end,s.school_name as school_name,
-        u.name as name, b.event_id as badge_event_id     
+        (select string_agg(name, ',') FROM (select u.name as name from users as u where u.id in 
+          ( select user_id from user_badges where event_id = e.id)) as sub) as name,
+        e.id as badge_event_id     
       from events as e      
-      LEFT JOIN schools as s ON s.id = e.loc_id
-      LEFT JOIN users as u ON u.id = e.speaker_id
-      LEFT JOIN user_badges as b ON b.event_id = e.id      
+      LEFT JOIN schools as s ON s.id = e.loc_id  
       where (event_start BETWEEN '#{fromdate}'
-      AND '#{todate}') AND loc_id not in (select id from schools where school_name = 'Please Select A School') ORDER BY e.event_start DESC") 
+      AND '#{todate}') AND loc_id not in 
+      (select id from schools where school_name = 'Please Select A School') 
+      ORDER BY e.event_start DESC") 
 
     if events_created.present?
       

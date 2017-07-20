@@ -40,21 +40,41 @@ class BadgesController < ApplicationController
     puts "Updating badge!!"
     puts params
     @badge = Badge.new
-    # new_file_name = badge_params[:school_id] + "_" + badge_params[:file].filename
-# 
-    # FileUtils.move(badge_params[:file], File.join(File.dirname(badge_params[:file]), new_file_name))
-
     @badge.file = badge_params[:file]
+    @badge.file_name = @badge.file.filename
+     # new_file_name = badge_params[:school_id] 
+    # puts "New File name: #{new_file_name}"
+     # FileUtils.move("badges/#{@badge.file.filename}", new_file_name)
+    # puts "File moved"
+    # @badge.file.filename = new_file_name
    # @badge.fille_name = params[:file]
  
     if @badge.save
       puts "Searching for school Id #{badge_params[:school_id]}"
       school = School.find(badge_params[:school_id])
+      aws = AWSServices.new
+      
+      #Deleting existing badge
+      # if school.badge_id.present?
+        # existing_badge = Badge.find(school.badge_id)
+        # badge_folder_path = "badges/".concat(ENV["MODE"]).concat("/#{existing_badge.id}/")
+        # if(existing_badge.file_name.present?)
+          # badge_file_path = badge_folder_path + existing_badge.file_name
+           
+          # puts "Deleting AWS Object: " + badge_file_path
+          # aws.delete badge_file_path
+        # end
+        # existing_badge.delete
+      # end
       school.badge_id = @badge.id
       school.save!
-      uploader = MyUploader.new
+      
       #uploader.upload "badges/".concat(badge_params[:school_id]).concat("/").concat(@badge.file.filename)
-      uploader.upload "badges/".concat(@badge.file.filename)
+       badge_folder_path = "badges/".concat(ENV["MODE"]).concat("/#{@badge.id}/")
+       badge_file_path = badge_folder_path + @badge.file.filename
+      
+      aws.upload badge_file_path
+      FileUtils.rmtree  "public/" + badge_folder_path
       # badge = Badge.find(school.badge_id)
     # badge.file = file
     # badge.save!

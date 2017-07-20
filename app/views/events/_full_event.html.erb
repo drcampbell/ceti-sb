@@ -46,7 +46,7 @@
     <% else %>
       <% unless event.claims.each.nil? %>
         <strong>Claims: </strong>
-        <%= raw event.claims.where(active:true).each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
+        <%= raw event.claims.where(confirmed_by_teacher:true).each.map(&:user).map {|u| link_to u.name, user_path(u)  }.join(', ') %>
       <% end %>
     <% end %>
   </p>
@@ -62,7 +62,6 @@
 
   <p>
   <% if (not event.is_canceled) && (event.start() > Time.now) &&
-        (event.claims.where('confirmed_by_teacher = ?', true).count < 1) &&
         (event.claims.where('user_id = ?', current_user.id).count < 1) &&
         (event.user != current_user) %>
         <%= button_to 'Claim This Event',
@@ -82,14 +81,21 @@
   <!-- If you are the owner of the event -->
   <a>
   <% if current_user == event.user and (not event.is_canceled) %>
-    <% if event.event_end < Time.now and event.speaker_id > 0 and not event.complete %>
-      <% speaker = User.find(event.speaker_id) %>
-      <%= button_to "Award Badge to #{speaker.name}",
-            {action: "award_badge", controller: "users", event_id: event.id, award: true},
-            data: { confirm: 'Are you sure?' },
-            method: :post,
-            class: 'btn-success' %>
+    <% if event.event_end < Time.now and not event.complete %>
+      <% claims = Claim.where(event_id:event.id) %>
+      <% claims.each do |c|%>
+      <!-- award_badge param event_id change to claim id -->
+	      <% speaker = User.find(c.user_id) %>
+	      <% user_badges = UserBadge.where(event_id: event.id).where(user_id:speaker.id).present? %>
+	      <% if user_badges == false && c.rejected == false %>
+		      <%= button_to "Award Badge to #{speaker.name}",
+		            {action: "award_badge", controller: "users", event_id: c.id, award: true},
+		            data: { confirm: 'Are you sure?' },
+		            method: :post,
+		            class: 'btn-success' %>
+		  <% end %>
       <% end %>
+    <% end %>
     <% if event.event_start > Time.now %>
       <%= button_to 'Edit the Event',
             {action: "edit", controller: "events", id:event.id},

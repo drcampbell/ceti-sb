@@ -55,7 +55,7 @@ class API::SchoolsController < API::ApplicationController
     
     events = Event.where(loc_id: @school.id).where("event_start > ?", Time.now).order("event_start").reverse
     
-    render json: {school: school_message, badge_url: badge.get_file_Name(), events: list_events(events).as_json}
+    render json: {school: school_message,badge_id: badge.id, badge_url: badge.get_file_Name(), events: list_events(events).as_json}
         
    
   end

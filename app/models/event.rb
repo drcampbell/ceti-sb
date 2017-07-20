@@ -96,15 +96,16 @@ class Event < ActiveRecord::Base
   end
 
   def handle_update()
-    Claim.where(event_id: self.id).each do |x|
+    Claim.where(event_id: self.id,rejected:false).each do |x|
       Notification.create(user_id: x.user_id,
                         act_user_id: self.user_id,
                         event_id: self.id,
                         n_type: :event_update,
                         read: false)
-      if User.find(x.user_id).set_updates
+      #if User.find(x.user_id).set_updates
         # TODO UserMailer.send_update().deliver
-      end
+        UserMailer.send_update(x.user_id, self.user_id, self.id).deliver_now
+      #end
     end
   end
 

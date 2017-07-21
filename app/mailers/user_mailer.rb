@@ -35,7 +35,7 @@ class UserMailer < ApplicationMailer
     @recipient = User.find(recip_id)
     @sender = User.find(send_id)
     @event = Event.find(event_id)
-    mail to: @recipient.email, subject: "School Business: #{@sender.name} has update their event."
+    mail to: @recipient.email, subject: "School Business: #{@sender.name} has updated their event."
   end
   
   def event_cancel(recip_id, send_id, event_id)

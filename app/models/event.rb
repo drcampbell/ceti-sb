@@ -102,10 +102,10 @@ class Event < ActiveRecord::Base
                         event_id: self.id,
                         n_type: :event_update,
                         read: false)
-      #if User.find(x.user_id).set_updates
+      if User.find(x.user_id).set_updates
         # TODO UserMailer.send_update().deliver
         UserMailer.send_update(x.user_id, self.user_id, self.id).deliver_now
-      #end
+      end
     end
   end
 

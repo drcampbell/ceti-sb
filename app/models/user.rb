@@ -74,16 +74,23 @@ class User < ActiveRecord::Base
 
   def get_event_approvals(params)
    # puts "-- get event approvals--"
-   
-   claims = Claim.where(user_id:self.id)
+   events = Event.where("events.user_id = ?",self.id )
+          .where(active: true)
+          .where('event_start > ?', Time.now)
+           eventsIds = events.map{|e| e['id']}
+           
+   if eventsIds.present? && eventsIds.count > 0        
+      claims = Claim.where(:event_id => eventsIds)
               .where(confirmed_by_teacher:false)
               .where(rejected:false)
-   ids = claims.map{|c| c['event_id']}
-  # puts ids
-   Event.where(:id =>ids)
+      ids = claims.map{|c| c['event_id']}
+  
+      Event.where(:id =>ids)
           .where('event_start > ?', Time.now)
           .paginate(page: params[:page], per_page: params[:per_page])     
-   
+   else
+     events
+   end
    # Event.joins(:claims).where("events.user_id = ? OR claims.user_id = ?",self.id,self.id )
    #       .where(active: true)
    #       .where('claims.active' => true)

@@ -9,6 +9,22 @@ Make sure docker-compose is installed
 
 1. Database is to be created and loaded with data.
 ```
+$ docker-compose build db 
+
+$ docker-compose up db 
+
+$ docker ps --> This will give you the container name
+
+$ docker exec -it <contianer_name> psql  -U postgres
+
+postgres=# CREATE USER pguser WITH PASSWORD 'password';
+
+postgres=# CREATE DATABASE ebdb;
+
+postgres=# GRANT ALL ON DATABASE ebdb TO pguser;
+
+<ctrl> + d
+
 $ docker-compose run web rake db:create
 
 $ docker-compose run web rake db:schema:load

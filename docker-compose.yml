@@ -1,0 +1,45 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+  web:
+    build: .
+    command: bundle exec puma -p 3000 
+    #command: bundle exec puma -p 3000 -b "ssl://localhost:3000?key=/myapp/server.key&cert=/myapp/server.crt"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3001:3000"
+    environment:
+       - SENDGRID_PASSWORD=Ar6zHx+3izF7oy2mHJTle68Ss5G78PfHExAwrwGoqSqZ
+       - RACK_ENV=test
+       - RAILS_SKIP_MIGRATIONS=false
+       - PORT=25
+       - AWS_SECRET_KEY=*****
+       - AWS_REGION=us-west-1
+       - DOMAIN_NAME=gmail.com
+       - RDS_DB_NAME=ebdb
+       - RDS_USERNAME=pguser
+       - MODE=production
+       - SENDGRID_USERNAME=schoolbusinessapp@gmail.com
+       - RDS_HOSTNAME=db
+       - RDS_PORT=5432
+       - URL=https://ceti-production-spnenzsmun.elasticbeanstalk.com/
+       - S3_BUCKET=https://s3-us-west-1.amazonaws.com/ceti-sb/
+       - EDUCATION_KEY=3e00604ad073298a35d85703f8e9e13f
+       - SMTP=email-smtp.us-west-2.amazonaws.com
+       - SECRET_KEY_BASE=24ec938c56706c0c52bb0a5b87d0b6b742933a2dc16723a7722d6da76d71418632f6d97bc2a917d5eeadbbc74bd4a3d8880820785a7f1dc03d551e7a8a60f98d
+       - RDS_PASSWORD=password
+       - AWS_ACCESS_KEY=AKIAII752PLI63A45FQA
+       - SNS_IOS_APP_ARN=arn:aws:sns:us-west-2:206911043058:app/APNS/ceti-sb-ios-prod
+       - SNS_APP_ARN=arn:aws:sns:us-west-2:206911043058:app/GCM/ceti-sb
+       - RAILS_SKIP_ASSET_COMPILATION=false
+       - DEVISE_SECRET_KEY=d4cd5ce2eae5182e2f1e62edbc92207e7525652f870582ae4afb4403dff469e2a3689ebe489736492315d5c2f31d4646044d2833366361a86a6ffb26ac302040
+       - BUNDLE_WITHOUT=development
+
+    depends_on:
+      - db

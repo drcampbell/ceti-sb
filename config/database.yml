@@ -10,7 +10,7 @@ default: &default
   pool: 5
   timeout: 5000
   adapter: postgresql
-  host: localhost
+  host: db
   username: pguser
   password: password
 
@@ -21,13 +21,13 @@ development:
   pool: 5
   timeout: 5000
   adapter: postgresql
-  host: localhost
+  host: db 
   username: pguser
   password: password
 
 test:
   <<: *default
-  database: test
+  database: ebdb
 #development:
 #  <<: *default
 #  adapter: sqlite3  

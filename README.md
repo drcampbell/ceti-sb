@@ -26,7 +26,7 @@ $ docker-compose run web rake db:migrate
 
 `$ docker-compose up`
 
-4. Open the browser and type `$ localhost:3001`
+4. Open the browser and type ` localhost:3001`
 
 
 

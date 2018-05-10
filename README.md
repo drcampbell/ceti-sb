@@ -1,6 +1,6 @@
-#README#
+# README #
 
-##README FOR DOCKER INSTALLATION##
+## README FOR DOCKER INSTALLATION ##
 
 Install Docker for your OS
 
@@ -8,24 +8,25 @@ Make sure docker-compose is installed
 
 
 1. Database is to be created and loaded with data.
+```
+$ docker-compose run web rake db:create
 
-`docker-compose run web rake db:create
+$ docker-compose run web rake db:schema:load
 
-docker-compose run web rake db:schema:load
+$ docker-compose run web rake db:seed
 
-docker-compose run web rake db:seed
-
-docker-compose run web rake db:migrate`
+$ docker-compose run web rake db:migrate
+```
 
 2. Build the docker container
 
-`docker-compose build`
+`$ docker-compose build`
 
 3. Start the container
 
-`docker-compose up`
+`$ docker-compose up`
 
-4. Open the browser and type localhost:3001
+4. Open the browser and type `$ localhost:3001`
 
 
 

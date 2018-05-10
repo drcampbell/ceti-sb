@@ -20,6 +20,7 @@ docker-compose run web rake db:migrate`
 
 
 
+NOTE: The following steps are the manual way of setting up the app locally.If unsuccessful with docker installation please try the manual route.
 
 ## README for CETI Web ##
 This guide is assuming you are in a linux environment, specifically Ubuntu. This should also work in Debian or other flavors, but can easily be translated to Mac OS X.
